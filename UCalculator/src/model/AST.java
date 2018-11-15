@@ -3,7 +3,6 @@ package model;
 
 import java.time.LocalDateTime;
 import java.time.Period;
-import java.time.chrono.ChronoPeriod;
 
 public class AST {
 
@@ -52,7 +51,7 @@ public class AST {
 
 
         void add(Element e) {
-            if (e.getPriority() < element.getPriority()) {
+            if (e.getPriority() <= element.getPriority()) {
                 if (left == null) {
                     left = new Node(element);
                     element = e;
@@ -74,18 +73,6 @@ public class AST {
 
 
         Result calculate() {
-//            System.out.print("( ");
-//            if (element instanceof SubtractionElement) {
-//                System.out.print(" - ");
-//            } else if (element instanceof AdditionElement) {
-//                System.out.print(" + ");
-//            } else if (element instanceof IntervalElement) {
-//                System.out.print(" , ");
-//            } else if (element instanceof PeriodElement) {
-//                System.out.print(" " + ((PeriodElement)element).get().toString() + " ");
-//            } else if (element instanceof LocalDateTimeElement) {
-//                System.out.print(" " + ((LocalDateTimeElement)element).get().toString() + " ");
-//            }
             if (left == null || right == null) {
                 if (element instanceof PeriodElement) {
                     return new PeriodResult(((PeriodElement)(element)).get());

@@ -2,7 +2,7 @@ package model;
 
 import java.time.LocalDateTime;
 
-class LocalDateTimeResult implements Result {
+public class LocalDateTimeResult implements Result {
 
     private final LocalDateTime localDateTime;
 
@@ -10,7 +10,7 @@ class LocalDateTimeResult implements Result {
         this.localDateTime = localDateTime;
     }
 
-    LocalDateTime get() {
+    public LocalDateTime get() {
         return localDateTime;
     }
 

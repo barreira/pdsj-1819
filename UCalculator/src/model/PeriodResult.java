@@ -10,7 +10,7 @@ public class PeriodResult implements Result {
         this.period = period;
     }
 
-    Period get() {
+    public Period get() {
         return period;
     }
 
