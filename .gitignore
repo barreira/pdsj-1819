@@ -1,4 +1,4 @@
 *.iml
 out/
-UCalculator/.idea
+.idea/
 .DS_Store
