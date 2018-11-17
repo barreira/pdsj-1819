@@ -1,9 +1,6 @@
 package controller;
 
-<<<<<<< HEAD
 import model.*;
-=======
->>>>>>> 432a8577c4aa2e181216fbbe9a0d740dcca9e17b
 import view.Menu;
 import view.UCalculatorView;
 
@@ -126,7 +123,7 @@ public class UCalculatorController {
                         stack.push(i + " days");
                         break;
                     case "2":
-                        model.addElement(new PeriodElement(Period.o));
+                        // model.addElement(new PeriodElement(Period));
                         stack.push("-");
                         break;
                     case "3":
