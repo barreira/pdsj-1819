@@ -11,7 +11,7 @@ public class PeriodElement implements Element {
         this.period = period;
     }
 
-    public Period get() {
+    Period get() {
         return period;
     }
 

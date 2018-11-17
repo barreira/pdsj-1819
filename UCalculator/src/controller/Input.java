@@ -24,17 +24,27 @@ import java.time.LocalDateTime;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.InputMismatchException;
+import java.util.Scanner;
 
 public final class Input {
 
-    public static LocalDate readDate(DateTimeFormatter formatter) {
-        try (final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in))) {
-            return LocalDate.parse(bufferedReader.readLine(), formatter);
-        } catch (IOException | DateTimeParseException e) {
-            return null;
-        }
-    }
+    static LocalDate readDate(DateTimeFormatter formatter) {
+        final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
+        boolean ok = false;
+        LocalDate localDate = LocalDate.now();
 
+        while (!ok) {
+            try {
+                localDate = LocalDate.parse(bufferedReader.readLine(), formatter);
+                ok = true;
+            } catch (IOException e) {
+                System.out.println("Insert new value: ");
+            }
+        }
+
+        return localDate;
+    }
 
     public static LocalDateTime readDateTime(DateTimeFormatter formatter) {
         try (final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in))) {
@@ -44,11 +54,22 @@ public final class Input {
         }
     }
 
+    static int readInt() {
+        final Scanner input = new Scanner(System.in);
+        boolean ok = false;
+        int i = 0;
 
-    static Period readPeriod() {
-        return null;
+        while (!ok) {
+            try {
+                i = input.nextInt();
+                ok = true;
+            } catch (InputMismatchException e) {
+                System.out.println("Insert new value: ");
+            }
+        }
+
+        return i;
     }
-
 
     static String readString() {
         final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
