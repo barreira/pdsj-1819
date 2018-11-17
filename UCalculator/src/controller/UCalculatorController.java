@@ -6,6 +6,7 @@ import view.UCalculatorView;
 
 import java.time.Duration;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.Stack;
@@ -102,7 +103,7 @@ public class UCalculatorController {
         System.out.println("Insert Date: ");
         localDate = Input.readDate(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
         stack.push(localDate.toString());
-
+        model.next(LocalDateTime.of(localDate.getYear(), localDate.getMonth(), localDate.getDayOfMonth(), 0, 0, 0));
         this.localDateOperationMenu();
     }
 
@@ -148,7 +149,7 @@ public class UCalculatorController {
         System.out.println("Insert Duration: ");
         int i = Input.readInt();
         Menu menu = view.getMenu(3);
-        BiFunction<LocalDate, Duration, LocalDate> biFunction = operation.equals("plus") ? UtilitaryDate.datePlusDuration : UtilitaryDate.dateMinusDuration;
+        BiFunction<LocalDateTime, Duration, LocalDateTime> biFunction = operation.equals("plus") ? UtilitaryDate.datePlusDuration : UtilitaryDate.dateMinusDuration;
 
         if (menu != null) {
             String option;
@@ -160,8 +161,8 @@ public class UCalculatorController {
                 switch (option) {
                     case "1":
                         stack.push(i + " days");
-                        model.next(biFunction, Duration.of(i, ChronoUnit.DAYS));
-                        break;
+                        model.next(biFunction, Duration.ofDays(i));
+                        return;
                     case "2":
                         stack.push(i + " working days");
                         model.next(UtilitaryDate.datePlusWorkingDays, i);

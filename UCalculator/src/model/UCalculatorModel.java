@@ -1,35 +1,35 @@
 package model;
 
 import java.time.Duration;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.function.BiFunction;
 
 public final class UCalculatorModel {
 
-    private LocalDateCalculator localDateCalculator;
+    private LocalDateTimeCalculator LocalDateTimeCalculator;
 
     public UCalculatorModel() {
-        localDateCalculator = new LocalDateCalculator();
+        LocalDateTimeCalculator = new LocalDateTimeCalculator();
     }
 
-    public void next(LocalDate localDate) {
-        localDateCalculator.push(localDate);
+    public void next(LocalDateTime LocalDateTime) {
+        LocalDateTimeCalculator.push(LocalDateTime);
     }
 
-    public void next(BiFunction<LocalDate, Duration, LocalDate> biFunction, Duration duration) {
-        localDateCalculator.push(biFunction, duration);
+    public void next(BiFunction<LocalDateTime, Duration, LocalDateTime> biFunction, Duration duration) {
+        LocalDateTimeCalculator.push(biFunction, duration);
     }
 
-    public void next(BiFunction<LocalDate, Integer, LocalDate> biFunction, int argument) {
-        localDateCalculator.push(biFunction, argument);
+    public void next(BiFunction<LocalDateTime, Integer, LocalDateTime> biFunction, int argument) {
+        LocalDateTimeCalculator.push(biFunction, argument);
     }
 
 
     public void previous() {
-        localDateCalculator.pop();
+        LocalDateTimeCalculator.pop();
     }
 
-    public LocalDate compute() {
-        return localDateCalculator.peek();
+    public LocalDateTime compute() {
+        return LocalDateTimeCalculator.peek();
     }
 }
