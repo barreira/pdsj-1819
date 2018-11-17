@@ -12,21 +12,22 @@ public final class UCalculatorView {
     public UCalculatorView() {
         menus = Map.ofEntries(
                 entry(0, new Menu("Main Menu", Arrays.asList(
-                        new Option("Local Date Time LocalDateCalculator    ", "1"),
-                        new Option("Timezone Date Time LocalDateCalculator ", "2"),
-                        new Option("Meeting Schedule              ", "3"),
-                        new Option("End Session                   ", "0")))),
-                entry(1, new Menu("Local Date Time LocalDateCalculator", Arrays.asList(
-                        new Option("Date Time LocalDateCalculator  ", "1"),
-                        new Option("Weeks LocalDateCalculator      ", "2"),
-                        new Option("Time Units LocalDateCalculator ", "3"),
-                        new Option("Back                  ", "0")))),
+                        new Option("Local Date Time Calculator    ","1"),
+                        new Option("Timezone Date Time Calculator ","2"),
+                        new Option("Meeting Schedule              ","3"),
+                        new Option("End Session                   ","0")))),
+                entry(1, new Menu("Local Date Time Calculator", Arrays.asList(
+                        new Option("Date Calculator       ","1"),
+                        new Option("Interval Calculator   ","2"),
+                        new Option("Time Units Calculator ","3"),
+                        new Option("Weeks Calculator      ","4"),
+                        new Option("Back                  ","0")))),
                 entry(2, new Menu("Operation", Arrays.asList(
-                        new Option("Plus     ", "1"),
-                        new Option("Minus    ", "2"),
-                        new Option("Interval ", "3"),
-                        new Option("Back     ", "4"),
-                        new Option("Cancel   ", "0")))),
+                        new Option("Plus     ","1"),
+                        new Option("Minus    ","2"),
+                        new Option("Solve    ","3"),
+                        new Option("Back     ","4"),
+                        new Option("Cancel   ","0")))),
                 entry(3, new Menu("Duration in", Arrays.asList(
                         new Option("Days         ", "1"),
                         new Option("Working Days ", "2"),
