@@ -29,7 +29,7 @@ public final class UCalculatorModel {
         LocalDateTimeCalculator.pop();
     }
 
-    public LocalDateTime compute() {
+    public LocalDateTime solve() {
         return LocalDateTimeCalculator.peek();
     }
 }

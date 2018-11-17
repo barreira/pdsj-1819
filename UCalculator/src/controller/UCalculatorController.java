@@ -1,6 +1,7 @@
 package controller;
 
-import model.*;
+import model.UCalculatorModel;
+import model.UtilitaryDate;
 import view.Menu;
 import view.UCalculatorView;
 
@@ -8,7 +9,6 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
 import java.util.Stack;
 import java.util.function.BiFunction;
 
@@ -122,20 +122,21 @@ public class UCalculatorController {
                 switch (option) {
                     case "1":
                         stack.push("+");
-                        //TODO: passar para ENUM
-                        this.durationMenu("plus");
+                        this.durationMenu(Operation.ADDITION);
                         break;
                     case "2":
                         stack.push("-");
+                        this.durationMenu(Operation.SUBTRACTION);
                         break;
                     case "3":
-                        System.out.println(model.compute());
+                        System.out.println(model.solve());
                         break;
                     case "4":
-                        // TODO:
+                        // TODO: this function logic
                         model.previous();
                         break;
                     case "0":
+                        // TODO: Cancel logic
                         break;
                     default:
                         System.out.println("Invalid option.");
@@ -145,12 +146,13 @@ public class UCalculatorController {
         localDateCalculator();
     }
 
-    private void durationMenu(String operation) {
-        System.out.println("Insert Duration: ");
-        int i = Input.readInt();
-        Menu menu = view.getMenu(3);
-        BiFunction<LocalDateTime, Duration, LocalDateTime> biFunction = operation.equals("plus") ? UtilitaryDate.datePlusDuration : UtilitaryDate.dateMinusDuration;
+    private void durationMenu(Enum<Operation> operation) {
+        System.out.print("Insert duration: ");
+        int duration = Input.readInt();
+        // BiFunction<LocalDateTime, Duration, LocalDateTime> biFunction = operation == Operation.ADDITION ? UtilitaryDate.datePlusDuration : UtilitaryDate.dateMinusDuration;
 
+        Menu menu = view.getMenu(3);
+        boolean exit = false;
         if (menu != null) {
             String option;
 
@@ -160,12 +162,16 @@ public class UCalculatorController {
 
                 switch (option) {
                     case "1":
-                        stack.push(i + " days");
-                        model.next(biFunction, Duration.ofDays(i));
-                        return;
+                        BiFunction<LocalDateTime, Duration, LocalDateTime> biFunction = operation == Operation.ADDITION ? UtilitaryDate.datePlusDuration : UtilitaryDate.dateMinusDuration;
+                        model.next(biFunction, Duration.ofDays(duration));
+                        stack.push(duration + " days");
+                        exit = true;
+                        break;
                     case "2":
-                        stack.push(i + " working days");
-                        model.next(UtilitaryDate.datePlusWorkingDays, i);
+                        // TODO: create BiFunction to subtract working days
+                        model.next(UtilitaryDate.datePlusWorkingDays, duration);
+                        stack.push(duration + " working days");
+                        exit = true;
                         break;
                     case "3":
                         break;
@@ -176,7 +182,7 @@ public class UCalculatorController {
                     default:
                         System.out.println("Invalid option.");
                 }
-            } while (!option.equals("0"));
+            } while (!option.equals("0") && !exit);
         }
     }
 
@@ -196,5 +202,9 @@ public class UCalculatorController {
 
     private void meetingSchedule() {
         System.out.println("MEETING SCHEDULE");
+    }
+
+    private enum Operation {
+        ADDITION, SUBTRACTION
     }
 }

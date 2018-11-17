@@ -11,42 +11,42 @@ public final class UCalculatorView {
 
     public UCalculatorView() {
         menus = Map.ofEntries(
-                entry(0, new Menu("Main Menu", Arrays.asList(
-                        new Option("Local Date Time Calculator    ","1"),
-                        new Option("Timezone Date Time Calculator ","2"),
-                        new Option("Meeting Schedule              ","3"),
-                        new Option("End Session                   ","0")))),
-                entry(1, new Menu("Local Date Time Calculator", Arrays.asList(
-                        new Option("Date Calculator       ","1"),
-                        new Option("Interval Calculator   ","2"),
-                        new Option("Time Units Calculator ","3"),
-                        new Option("Weeks Calculator      ","4"),
-                        new Option("Back                  ","0")))),
-                entry(2, new Menu("Operation", Arrays.asList(
-                        new Option("Plus     ","1"),
-                        new Option("Minus    ","2"),
-                        new Option("Solve    ","3"),
-                        new Option("Back     ","4"),
-                        new Option("Cancel   ","0")))),
-                entry(3, new Menu("Duration in", Arrays.asList(
-                        new Option("Days         ", "1"),
+                entry(0, new Menu("MAIN MENU", Arrays.asList(
+                        new Option("Local Date Time Calculator -- ", "1"),
+                        new Option("Timezone Date Time Calculator ", "2"),
+                        new Option("Meeting Schedule ------------ ", "3"),
+                        new Option("End Session ----------------- ", "0")))),
+                entry(1, new Menu("LOCAL DATE TIME CALCULATOR", Arrays.asList(
+                        new Option("Date Calculator ----- ", "1"),
+                        new Option("Interval Calculator - ", "2"),
+                        new Option("Time Units Calculator ", "3"),
+                        new Option("Weeks Calculator ---- ", "4"),
+                        new Option("Back ---------------- ", "0")))),
+                entry(2, new Menu("SELECT OPERATION", Arrays.asList(
+                        new Option("Add ---- ", "1"),
+                        new Option("Subtract ", "2"),
+                        new Option("Solve -- ", "3"),
+                        new Option("Back --- ", "4"),
+                        new Option("Cancel - ", "0")))),
+                entry(3, new Menu("SELECT DURATION UNITS", Arrays.asList(
+                        new Option("Days ------- ", "1"),
                         new Option("Working Days ", "2"),
-                        new Option("Weeks        ", "3"),
-                        new Option("Fortnights   ", "4"),
-                        new Option("Months       ", "5"),
-                        new Option("Years        ", "6"),
-                        new Option("Back         ", "7"),
-                        new Option("Cancel       ", "0")))),
-                entry(4, new Menu("Result in", Arrays.asList(
-                        new Option("Days         ", "1"),
+                        new Option("Weeks ------ ", "3"),
+                        new Option("Fortnights - ", "4"),
+                        new Option("Months ----- ", "5"),
+                        new Option("Years ------ ", "6"),
+                        new Option("Back ------- ", "7"),
+                        new Option("Cancel ----- ", "0")))),
+                entry(4, new Menu("SELECT RESULT UNITS", Arrays.asList(
+                        new Option("Days ------- ", "1"),
                         new Option("Working Days ", "2"),
-                        new Option("Weeks        ", "3"),
-                        new Option("Fortnights   ", "4"),
-                        new Option("Months       ", "5"),
-                        new Option("Years        ", "6"),
-                        new Option("Period       ", "7"),
-                        new Option("Back         ", "8"),
-                        new Option("Cancel       ", "0"))))
+                        new Option("Weeks ------ ", "3"),
+                        new Option("Fortnights - ", "4"),
+                        new Option("Months ----- ", "5"),
+                        new Option("Years ------ ", "6"),
+                        new Option("Period ----- ", "7"),
+                        new Option("Back ------- ", "8"),
+                        new Option("Cancel ----- ", "0"))))
         );
     }
 
