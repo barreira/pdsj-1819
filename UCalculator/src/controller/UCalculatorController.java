@@ -71,7 +71,7 @@ public class UCalculatorController {
 
                 switch (option) {
                     case "1":
-                        localDateMenu();
+                        localDateCalculator();
                         break;
                     case "2":
                         weeksCalculator();
@@ -90,10 +90,10 @@ public class UCalculatorController {
 
     // private void localDateCalculator() {
     //    state.clear();
-    //    this.localDateMenu();
+    //    this.localDateCalculator();
     // }
 
-    private void localDateMenu() {
+    private void localDateCalculator() {
         System.out.print("Insert date: ");
         LocalDate localDate = Input.readDate(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
         state.push(localDate.toString());
@@ -136,9 +136,9 @@ public class UCalculatorController {
                         // TODO: Cancel logic
                         break;
                     default:
-                        System.out.println("Invalid option.");
+                        System.out.println("Invalid option!");
                 }
-            } while (!option.equals("0") && !exit);
+            } while (!(option.equals("0") && !exit));
         }
         localDateTimeCalculator();
     }
