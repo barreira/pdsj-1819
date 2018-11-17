@@ -1,6 +1,9 @@
 package controller;
 
+<<<<<<< HEAD
 import model.*;
+=======
+>>>>>>> 432a8577c4aa2e181216fbbe9a0d740dcca9e17b
 import view.Menu;
 import view.UCalculatorView;
 
