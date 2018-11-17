@@ -1,7 +1,7 @@
 package controller;
 
+import model.DateUtils;
 import model.UCalculatorModel;
-import model.UtilitaryDate;
 import view.Menu;
 import view.UCalculatorView;
 
@@ -9,6 +9,7 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
 import java.util.Stack;
 import java.util.function.BiFunction;
 
@@ -31,7 +32,6 @@ public class UCalculatorController {
     public void setModel(final UCalculatorModel model) {
         this.model = model;
     }
-
 
     public void startFlow() {
         Menu menu = view.getMenu(0);
@@ -74,7 +74,8 @@ public class UCalculatorController {
 
                 switch (option) {
                     case "1":
-                        localDateCalculator();
+                        stack.clear();
+                        localDateMenu();
                         break;
                     case "2":
                         weeksCalculator();
@@ -85,29 +86,24 @@ public class UCalculatorController {
                     case "0":
                         break;
                     default:
-                        System.out.println("Invalid option.");
+                        System.out.println("Invalid option!");
                 }
             } while (!option.equals("0"));
         }
     }
 
-    private void localDateCalculator() {
-        stack.clear();
-        this.localDateMenu();
-    }
-
+    // private void localDateCalculator() {
+    //    stack.clear();
+    //    this.localDateMenu();
+    // }
 
     private void localDateMenu() {
-        LocalDate localDate;
-
-        System.out.println("Insert Date: ");
-        localDate = Input.readDate(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+        System.out.print("Insert date: ");
+        LocalDate localDate = Input.readDate(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
         stack.push(localDate.toString());
-        model.next(LocalDateTime.of(localDate.getYear(), localDate.getMonth(), localDate.getDayOfMonth(), 0, 0, 0));
+        model.next(localDate.atTime(0, 0));
         this.localDateOperationMenu();
     }
-
-
 
     private void localDateOperationMenu() {
         Menu menu = view.getMenu(2);
@@ -117,6 +113,8 @@ public class UCalculatorController {
 
             do {
                 menu.show();
+                this.show();
+                System.out.print("Insert option: ");
                 option = Input.readString();
 
                 switch (option) {
@@ -143,13 +141,13 @@ public class UCalculatorController {
                 }
             } while (!option.equals("0") && !option.equals("4"));
         }
-        localDateCalculator();
+        localDateTimeCalculator();
     }
 
     private void durationMenu(Enum<Operation> operation) {
         System.out.print("Insert duration: ");
         int duration = Input.readInt();
-        // BiFunction<LocalDateTime, Duration, LocalDateTime> biFunction = operation == Operation.ADDITION ? UtilitaryDate.datePlusDuration : UtilitaryDate.dateMinusDuration;
+        // BiFunction<LocalDateTime, Duration, LocalDateTime> biFunction = operation == Operation.ADDITION ? DateUtils.datePlusDuration : DateUtils.dateMinusDuration;
 
         Menu menu = view.getMenu(3);
         boolean exit = false;
@@ -158,18 +156,23 @@ public class UCalculatorController {
 
             do {
                 menu.show();
+                this.show();
+                System.out.print("Insert option: ");
                 option = Input.readString();
 
                 switch (option) {
                     case "1":
-                        BiFunction<LocalDateTime, Duration, LocalDateTime> biFunction = operation == Operation.ADDITION ? UtilitaryDate.datePlusDuration : UtilitaryDate.dateMinusDuration;
+                        BiFunction<LocalDateTime, Duration, LocalDateTime> biFunction =
+                                operation == Operation.ADDITION ?
+                                        DateUtils.datePlusDuration : DateUtils.dateMinusDuration;
+
                         model.next(biFunction, Duration.ofDays(duration));
                         stack.push(duration + " days");
                         exit = true;
                         break;
                     case "2":
                         // TODO: create BiFunction to subtract working days
-                        model.next(UtilitaryDate.datePlusWorkingDays, duration);
+                        model.next(DateUtils.datePlusWorkingDays, duration);
                         stack.push(duration + " working days");
                         exit = true;
                         break;
@@ -186,8 +189,6 @@ public class UCalculatorController {
         }
     }
 
-
-    // TODO: João
     private void weeksCalculator() {
         System.out.println("WEEKS CALCULATOR HERE");
     }
@@ -202,6 +203,10 @@ public class UCalculatorController {
 
     private void meetingSchedule() {
         System.out.println("MEETING SCHEDULE");
+    }
+
+    private void show() {
+        System.out.println("Actual state: " + Arrays.toString(stack.toArray()));
     }
 
     private enum Operation {

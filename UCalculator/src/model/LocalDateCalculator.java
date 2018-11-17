@@ -5,12 +5,12 @@ import java.time.LocalDateTime;
 import java.util.Stack;
 import java.util.function.BiFunction;
 
-class LocalDateTimeCalculator {
+class LocalDateCalculator {
 
     // State of operation results to backtrack
     private Stack<LocalDateTime> stack;
 
-    LocalDateTimeCalculator() {
+    LocalDateCalculator() {
         stack = new Stack<>();
     }
 
@@ -26,8 +26,8 @@ class LocalDateTimeCalculator {
         stack.push(biFunction.apply(stack.peek(), argument));
     }
 
-    void pop() {
-        stack.pop();
+    LocalDateTime pop() {
+        return stack.pop();
     }
 
     LocalDateTime peek() {
