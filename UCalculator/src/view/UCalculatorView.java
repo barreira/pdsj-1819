@@ -46,7 +46,11 @@ public final class UCalculatorView {
                         new Option("Years ------ ", "6"),
                         new Option("Period ----- ", "7"),
                         new Option("Back ------- ", "8"),
-                        new Option("Cancel ----- ", "0"))))
+                        new Option("Cancel ----- ", "0")))),
+                entry(5, new Menu("Weeks Calculator", Arrays.asList(
+                        new Option("Week number of Date - ", "1"),
+                        new Option("Date of Week number - ", "2"),
+                        new Option("Back ---------------- ", "0"))))
         );
     }
 

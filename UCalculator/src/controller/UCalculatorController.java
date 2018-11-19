@@ -1,6 +1,7 @@
 package controller;
 
 import model.DateUtils;
+import model.Pair;
 import model.UCalculatorModel;
 import view.Menu;
 import view.UCalculatorView;
@@ -8,6 +9,7 @@ import view.UCalculatorView;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.Year;
 import java.time.format.DateTimeFormatter;
 import java.util.Stack;
 import java.util.function.BiFunction;
@@ -74,10 +76,13 @@ public class UCalculatorController {
                         localDateCalculator();
                         break;
                     case "2":
-                        weeksCalculator();
+                        intervalCalculator();
                         break;
                     case "3":
                         timeUnitsCalculator();
+                        break;
+                    case "4":
+                        weeksCalculator();
                         break;
                     case "0":
                         break;
@@ -188,12 +193,60 @@ public class UCalculatorController {
         }
     }
 
-    private void weeksCalculator() {
-        System.out.println("WEEKS CALCULATOR HERE");
+    private void intervalCalculator() {
+        System.out.println("INTERVAL CALCULATOR");
     }
 
     private void timeUnitsCalculator() {
         System.out.println("TIME UNITS CALCULATOR");
+    }
+
+    private void weeksCalculator() {
+        Menu menu = view.getMenu(5);
+
+        if (menu != null) {
+            String option;
+
+            do {
+                menu.show();
+                option = Input.readString();
+
+                switch (option) {
+                    case "1":
+                        weekNumberOfLocalDate();
+                        break;
+                    case "2":
+                        localDateOfWeekNumber();
+                        break;
+                    case "0":
+                        break;
+                    default:
+                        System.out.println("Invalid option.");
+                }
+            } while (!option.equals("0"));
+        }
+    }
+
+    private void weekNumberOfLocalDate() {
+        LocalDateTime localDateTime;
+
+        System.out.println("Insert Date: ");
+        localDateTime = Input.readDate(DateTimeFormatter.ofPattern("dd/MM/yyyy")).atTime(0, 0);
+        System.out.println(DateUtils.weekNumberOfLocalDate(localDateTime));
+    }
+
+    private void localDateOfWeekNumber() {
+        System.out.println("Insert Week Number: ");
+        int weekNumber = Input.readInt();
+        System.out.println("Insert Year: ");
+        int year = Input.readInt();
+
+        Pair<LocalDateTime, LocalDateTime> res = DateUtils.localDateOfYearWeekNumber(weekNumber, Year.of(year));
+        LocalDateTime start = res.getFirst();
+        LocalDateTime end = res.getSecond();
+
+        System.out.println("Week number " + weekNumber + " of " + year + " starts at " + start.toLocalDate().toString()
+                           + " and ends at " + end.toLocalDate().toString() + ".");
     }
 
     private void timeZoneDateTimeCalculator() {
