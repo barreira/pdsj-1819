@@ -1,5 +1,8 @@
 package view;
 
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Map;
 
@@ -19,8 +22,7 @@ public final class UCalculatorView {
                 entry(1, new Menu("LOCAL DATE TIME CALCULATOR", Arrays.asList(
                         new Option("Date Calculator ----- ", "1"),
                         new Option("Interval Calculator - ", "2"),
-                        new Option("Time Units Calculator ", "3"),
-                        new Option("Weeks Calculator ---- ", "4"),
+                        new Option("Weeks Calculator ---- ", "3"),
                         new Option("Back ---------------- ", "0")))),
                 entry(2, new Menu("SELECT OPERATION", Arrays.asList(
                         new Option("Add ---- ", "1"),
@@ -35,8 +37,7 @@ public final class UCalculatorView {
                         new Option("Fortnights - ", "4"),
                         new Option("Months ----- ", "5"),
                         new Option("Years ------ ", "6"),
-                        new Option("Back ------- ", "7"),
-                        new Option("Cancel ----- ", "0")))),
+                        new Option("Back ------- ", "0")))),
                 entry(4, new Menu("SELECT RESULT UNITS", Arrays.asList(
                         new Option("Days ------- ", "1"),
                         new Option("Working Days ", "2"),
@@ -45,7 +46,6 @@ public final class UCalculatorView {
                         new Option("Months ----- ", "5"),
                         new Option("Years ------ ", "6"),
                         new Option("Period ----- ", "7"),
-                        new Option("Back ------- ", "8"),
                         new Option("Cancel ----- ", "0")))),
                 entry(5, new Menu("Weeks Calculator", Arrays.asList(
                         new Option("Week number of Date - ", "1"),
@@ -56,5 +56,26 @@ public final class UCalculatorView {
 
     public Menu getMenu(final int key) {
         return menus.get(key);
+    }
+
+
+    public void displayMessage(final String message) {
+        System.out.print(message);
+    }
+
+
+    public void displaySpacing() {
+        System.out.println("\n".repeat(10));
+    }
+
+
+    public void displayLocalDate(final LocalDate date, final DateTimeFormatter formatter) {
+        System.out.println(date.format(formatter));
+    }
+
+
+    public void displayPeriod(final Period period) {
+        System.out.println(period.getYears() + " years, " + period.getMonths() + " months, and " +
+                period.getDays() + " days");
     }
 }

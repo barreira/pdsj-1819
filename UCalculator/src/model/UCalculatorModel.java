@@ -1,8 +1,9 @@
 package model;
 
 import java.time.Duration;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalUnit;
 import java.util.function.BiFunction;
 
 public final class UCalculatorModel {
@@ -13,15 +14,16 @@ public final class UCalculatorModel {
         localDateCalculator = new LocalDateCalculator();
     }
 
-    public void next(LocalDateTime LocalDateTime) {
-        localDateCalculator.push(LocalDateTime);
+    public void next(LocalDate LocalDate) {
+        localDateCalculator.push(LocalDate);
     }
 
-    public void next(BiFunction<LocalDateTime, Duration, LocalDateTime> biFunction, Duration duration) {
-        localDateCalculator.push(biFunction, duration);
+    public void next(BiFunction<LocalDate, Pair<Integer, TemporalUnit>, LocalDate> biFunction,
+                     int duration, TemporalUnit temporalUnit) {
+        localDateCalculator.push(biFunction, duration, temporalUnit);
     }
 
-    public void next(BiFunction<LocalDateTime, Integer, LocalDateTime> biFunction, int argument) {
+    public void next(BiFunction<LocalDate, Integer, LocalDate> biFunction, int argument) {
         localDateCalculator.push(biFunction, argument);
     }
 
@@ -29,7 +31,11 @@ public final class UCalculatorModel {
         localDateCalculator.pop();
     }
 
-    public LocalDateTime solve() {
+    public LocalDate solve() {
         return localDateCalculator.peek();
+    }
+
+    public void clear() {
+        localDateCalculator.clear();
     }
 }

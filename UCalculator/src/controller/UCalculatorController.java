@@ -6,15 +6,16 @@ import model.UCalculatorModel;
 import view.Menu;
 import view.UCalculatorView;
 
-import java.time.Duration;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.Year;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.Stack;
-import java.util.function.BiFunction;
 
 public class UCalculatorController {
+
+    private enum Operator {
+        ADDITION, SUBTRACTION
+    }
 
     private UCalculatorView view;
     private UCalculatorModel model;
@@ -39,12 +40,12 @@ public class UCalculatorController {
             String option;
             do {
                 menu.show();
-                System.out.print("Insert option: ");
+                view.displayMessage("Insert option: ");
                 option = Input.readString();
 
                 switch (option) {
                     case "1":
-                        localDateTimeCalculator();
+                        localDateCalculatorMenu();
                         break;
                     case "2":
                         timeZoneDateTimeCalculator();
@@ -55,20 +56,23 @@ public class UCalculatorController {
                     case "0":
                         break;
                     default:
-                        System.out.println("Invalid option!");
+                        view.displayMessage("Invalid option!\n");
                 }
             } while (!option.equals("0"));
         }
     }
 
-    private void localDateTimeCalculator() {
+    private void localDateCalculatorMenu() {
         Menu menu = view.getMenu(1);
+
+        model.clear();
+        state.clear();
 
         if (menu != null) {
             String option;
             do {
                 menu.show();
-                System.out.print("Insert option: ");
+                view.displayMessage("Insert option: ");
                 option = Input.readString();
 
                 switch (option) {
@@ -79,30 +83,22 @@ public class UCalculatorController {
                         intervalCalculator();
                         break;
                     case "3":
-                        timeUnitsCalculator();
-                        break;
-                    case "4":
                         weeksCalculator();
                         break;
                     case "0":
                         break;
                     default:
-                        System.out.println("Invalid option!");
+                        view.displayMessage("Invalid option!\n");
                 }
             } while (!option.equals("0"));
         }
     }
 
-    // private void localDateCalculator() {
-    //    state.clear();
-    //    this.localDateCalculator();
-    // }
-
     private void localDateCalculator() {
-        System.out.print("Insert date: ");
+        view.displayMessage("Insert date: ");
         LocalDate localDate = Input.readDate(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
         state.push(localDate.toString());
-        model.next(localDate.atTime(0, 0));
+        model.next(localDate);
         this.localDateOperationMenu();
     }
 
@@ -110,95 +106,174 @@ public class UCalculatorController {
         Menu menu = view.getMenu(2);
 
         if (menu != null) {
-            String option;
             boolean exit = false;
+            String option;
+
             do {
+                this.showSpacing();
                 menu.show();
-                this.show();
-                System.out.print("Insert option: ");
+                view.displayMessage(this.stateToString());
+                view.displayMessage("Insert option: ");
                 option = Input.readString();
 
                 switch (option) {
                     case "1":
                         state.push("+");
-                        this.durationMenu(Operation.ADDITION);
+                        this.durationMenu(Operator.ADDITION);
                         break;
                     case "2":
                         state.push("-");
-                        this.durationMenu(Operation.SUBTRACTION);
+                        this.durationMenu(Operator.SUBTRACTION);
                         break;
                     case "3":
-                        state.clear();
-                        System.out.println("Result: " + model.solve().format(DateTimeFormatter.ISO_LOCAL_DATE));
+                        this.showSpacing();
+                        view.displayMessage("Result: ");
+                        view.displayLocalDate(model.solve(), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
                         exit = true;
                         break;
                     case "4":
-                        // TODO: review usage of this operation
                         model.previous();
                         state.pop();
+
+                        if (state.empty()) {
+                            this.localDateCalculator();
+                        } else {
+                            if (state.peek().equals("+")) {
+                                this.durationMenu(Operator.ADDITION);
+                            } else {
+                                this.durationMenu(Operator.SUBTRACTION);
+                            }
+                        }
+
+                        exit = true;
                         break;
                     case "0":
-                        // TODO: Cancel logic
                         break;
                     default:
-                        System.out.println("Invalid option!");
+                        view.displayMessage("Invalid option!\n");
                 }
-            } while (!(option.equals("0") && !exit));
+            } while (!option.equals("0") && !exit);
         }
-        localDateTimeCalculator();
     }
 
-    private void durationMenu(Enum<Operation> operation) {
-        System.out.print("Insert duration: ");
-        int duration = Input.readInt();
-        // BiFunction<LocalDateTime, Duration, LocalDateTime> biFunction = operation == Operation.ADDITION ? DateUtils.datePlusDuration : DateUtils.dateMinusDuration;
+    private void durationMenu(Enum<Operator> operation) {
+        view.displayMessage("Insert duration: ");
 
-        Menu menu = view.getMenu(3);
+        final int duration = Input.readInt();
+        final Menu menu = view.getMenu(3);
         boolean exit = false;
+
         if (menu != null) {
             String option;
 
             do {
+                this.showSpacing();
                 menu.show();
-                this.show();
-                System.out.print("Insert option: ");
+                view.displayMessage(this.stateToString());
+                view.displayMessage("Insert option: ");
                 option = Input.readString();
 
                 switch (option) {
                     case "1":
-                        BiFunction<LocalDateTime, Duration, LocalDateTime> biFunction =
-                                operation == Operation.ADDITION ?
-                                        DateUtils.datePlusDuration : DateUtils.dateMinusDuration;
-
-                        model.next(biFunction, Duration.ofDays(duration));
+                        model.next(operation == Operator.ADDITION ?
+                                DateUtils.datePlusDuration : DateUtils.dateMinusDuration, duration, ChronoUnit.DAYS);
                         state.push(duration + " days");
                         exit = true;
                         break;
                     case "2":
-                        // TODO: create BiFunction to subtract working days
-                        model.next(DateUtils.datePlusWorkingDays, duration);
+                        model.next(operation == Operator.ADDITION ?
+                                DateUtils.datePlusWorkingDays : DateUtils.dateMinusWorkingDays, duration);
                         state.push(duration + " working days");
                         exit = true;
                         break;
                     case "3":
+                        model.next(operation == Operator.ADDITION ? 
+                                DateUtils.datePlusDuration : DateUtils.dateMinusDuration, duration, ChronoUnit.WEEKS);
+                        state.push(duration + " weeks");
+                        exit = true;
                         break;
                     case "4":
+                        model.next(operation == Operator.ADDITION ?
+                                DateUtils.datePlusFortnights : DateUtils.dateMinusFortnights, duration);
+                        state.push(duration + " fortnights");
+                        exit = true;
+                        break;
+                    case "5":
+                        model.next(operation == Operator.ADDITION ?
+                                DateUtils.datePlusDuration : DateUtils.dateMinusDuration, duration, ChronoUnit.MONTHS);
+                        state.push(duration + " months");
+                        exit = true;
+                        break;
+                    case "6":
+                        model.next(operation == Operator.ADDITION ?
+                                DateUtils.datePlusDuration : DateUtils.dateMinusDuration, duration, ChronoUnit.YEARS);
+                        state.push(duration + " years");
+                        exit = true;
                         break;
                     case "0":
+                        state.pop();
+                        exit = true;
                         break;
                     default:
-                        System.out.println("Invalid option!");
+                        view.displayMessage("Invalid option!\n");
                 }
             } while (!option.equals("0") && !exit);
         }
     }
 
     private void intervalCalculator() {
-        System.out.println("INTERVAL CALCULATOR");
-    }
+        view.displayMessage("Insert first date: ");
+        final LocalDate first = Input.readDate(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+        view.displayMessage("Insert second date: ");
+        final LocalDate second = Input.readDate(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+        final Menu menu = view.getMenu(4);
 
-    private void timeUnitsCalculator() {
-        System.out.println("TIME UNITS CALCULATOR");
+        if (menu != null) {
+            String option;
+            boolean exit = false;
+
+            do {
+                view.displaySpacing();
+                menu.show();
+                view.displayMessage("Insert option: ");
+                option = Input.readString();
+
+                switch (option) {
+                    case "1":
+                        view.displayMessage(DateUtils.intervalInUnit(first, second, ChronoUnit.DAYS) + " days");
+                        exit = true;
+                        break;
+                    case "2":
+                        view.displayMessage(DateUtils.intervalInWorkingDays(first, second) + " working days");
+                        exit = true;
+                        break;
+                    case "3":
+                        view.displayMessage(DateUtils.intervalInUnit(first, second, ChronoUnit.WEEKS) + " weeks");
+                        exit = true;
+                        break;
+                    case "4":
+                        view.displayMessage(DateUtils.intervalInFortnights(first, second) + " fortnights");
+                        exit = true;
+                        break;
+                    case "5":
+                        view.displayMessage(DateUtils.intervalInUnit(first, second, ChronoUnit.MONTHS) + " months");
+                        exit = true;
+                        break;
+                    case "6":
+                        view.displayMessage(DateUtils.intervalInUnit(first, second, ChronoUnit.YEARS) + " years");
+                        exit = true;
+                        break;
+                    case "7":
+                        view.displayPeriod(DateUtils.intervalBetweenDates.apply(first, second));
+                        exit = true;
+                        break;
+                    case "0":
+                        break;
+                    default:
+                        view.displayMessage("Invalid option!");
+                }
+            } while (!option.equals("0") && !exit);
+        }
     }
 
     private void weeksCalculator() {
@@ -208,6 +283,7 @@ public class UCalculatorController {
             String option;
 
             do {
+                this.showSpacing();
                 menu.show();
                 option = Input.readString();
 
@@ -221,32 +297,32 @@ public class UCalculatorController {
                     case "0":
                         break;
                     default:
-                        System.out.println("Invalid option.");
+                        view.displayMessage("Invalid option!\n");
                 }
             } while (!option.equals("0"));
         }
     }
 
     private void weekNumberOfLocalDate() {
-        LocalDateTime localDateTime;
+        LocalDate localDate;
 
-        System.out.println("Insert Date: ");
-        localDateTime = Input.readDate(DateTimeFormatter.ofPattern("dd/MM/yyyy")).atTime(0, 0);
-        System.out.println(DateUtils.weekNumberOfLocalDate(localDateTime));
+        view.displayMessage("Insert Date: ");
+        localDate = Input.readDate(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+        view.displayMessage("Week: " + DateUtils.weekNumberOfLocalDate(localDate) + "\n");
     }
 
     private void localDateOfWeekNumber() {
-        System.out.println("Insert Week Number: ");
+        view.displayMessage("Insert Week Number: ");
         int weekNumber = Input.readInt();
-        System.out.println("Insert Year: ");
+        view.displayMessage("Insert Year: ");
         int year = Input.readInt();
 
-        Pair<LocalDateTime, LocalDateTime> res = DateUtils.localDateOfYearWeekNumber(weekNumber, Year.of(year));
-        LocalDateTime start = res.getFirst();
-        LocalDateTime end = res.getSecond();
+        Pair<LocalDate, LocalDate> res = DateUtils.localDateOfYearWeekNumber(weekNumber, year);
+        LocalDate start = res.getFirst();
+        LocalDate end = res.getSecond();
 
-        System.out.println("Week number " + weekNumber + " of " + year + " starts at " + start.toLocalDate().toString()
-                           + " and ends at " + end.toLocalDate().toString() + ".");
+        view.displayMessage("Week number " + weekNumber + " of " + year + " starts at " + start.toString()
+                           + " and ends at " + end.toString() + ".\n");
     }
 
     private void timeZoneDateTimeCalculator() {
@@ -257,15 +333,20 @@ public class UCalculatorController {
         System.out.println("MEETING SCHEDULE");
     }
 
-    private void show() {
-        System.out.print("State:");
+    private String stateToString() {
+        final StringBuilder s = new StringBuilder("State: ");
+
         for (Object o : state.toArray()) {
-            System.out.print(" " + o);
+            s.append(" ");
+            s.append(o);
         }
-        System.out.println();
+
+        s.append("\n");
+
+        return s.toString();
     }
 
-    private enum Operation {
-        ADDITION, SUBTRACTION
+    private void showSpacing() {
+        System.out.print("\n".repeat(10));
     }
 }

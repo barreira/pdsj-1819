@@ -1,36 +1,42 @@
 package model;
 
 import java.time.Duration;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.temporal.TemporalUnit;
 import java.util.Stack;
 import java.util.function.BiFunction;
 
 class LocalDateCalculator {
 
     // State of operation results to backtrack
-    private Stack<LocalDateTime> stack;
+    private Stack<LocalDate> stack;
 
     LocalDateCalculator() {
         stack = new Stack<>();
     }
 
-    void push(LocalDateTime LocalDateTime) {
-        stack.push(LocalDateTime);
+    void push(LocalDate LocalDate) {
+        stack.push(LocalDate);
     }
 
-    void push(BiFunction<LocalDateTime, Duration, LocalDateTime> biFunction, Duration duration) {
-        stack.push(biFunction.apply(stack.peek(), duration));
+    void push(BiFunction<LocalDate, Pair<Integer, TemporalUnit>, LocalDate> biFunction, int duration,
+              TemporalUnit temporalUnit) {
+        stack.push(biFunction.apply(stack.peek(), new Pair<>(duration, temporalUnit)));
     }
 
-    void push(BiFunction<LocalDateTime, Integer, LocalDateTime> biFunction, int argument) {
+    void push(BiFunction<LocalDate, Integer, LocalDate> biFunction, int argument) {
         stack.push(biFunction.apply(stack.peek(), argument));
     }
 
-    LocalDateTime pop() {
+    LocalDate pop() {
         return stack.pop();
     }
 
-    LocalDateTime peek() {
+    LocalDate peek() {
         return stack.peek();
+    }
+
+    void clear() {
+        stack.clear();
     }
 }

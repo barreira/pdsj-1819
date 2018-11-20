@@ -1,23 +1,19 @@
 package model;
 
 import java.time.*;
-import java.time.temporal.IsoFields;
-import java.time.temporal.TemporalAdjusters;
+import java.time.temporal.*;
 import java.util.function.BiFunction;
-import java.util.function.Function;
 
-import static java.time.DayOfWeek.SUNDAY;
-import static java.time.DayOfWeek.SATURDAY;
-import static java.time.temporal.ChronoUnit.DAYS;
+import static java.time.DayOfWeek.*;
 
 public final class DateUtils {
-    public static final BiFunction<LocalDateTime, Duration, LocalDateTime> datePlusDuration = LocalDateTime::plus;
-    public static final BiFunction<Duration, Duration, Duration> durationPlusDuration = Duration::plus;
-    public static final BiFunction<LocalDateTime, Duration, LocalDateTime> dateMinusDuration = LocalDateTime::minus;
-    public static final BiFunction<Duration, Duration, Duration> durationMinusDuration = Duration::minus;
-    public static final BiFunction<LocalDate, LocalDate, Period> intervalBetweenDates = Period::between;
+    public static final BiFunction<LocalDate, Pair<Integer, TemporalUnit>, LocalDate> datePlusDuration =
+            (x, y) -> x.isSupported(y.getSecond()) ? x.plus(y.getFirst(), y.getSecond()) : x;
 
-    public static final BiFunction<LocalDateTime, Integer, LocalDateTime> datePlusWorkingDays = (x, y) -> {
+    public static final BiFunction<LocalDate, Pair<Integer, TemporalUnit>, LocalDate> dateMinusDuration =
+            (x, y) -> x.isSupported(y.getSecond()) ? x.minus(y.getFirst(), y.getSecond()) : x;
+
+    public static final BiFunction<LocalDate, Integer, LocalDate> datePlusWorkingDays = (x, y) -> {
         int count = 0;
         while(count < y) {
             DayOfWeek dow = x.getDayOfWeek();
@@ -29,17 +25,70 @@ public final class DateUtils {
         return x;
     };
 
-    public static final BiFunction<LocalDateTime, Integer, LocalDateTime> datePlusFortnights = (x, y) -> x.plusDays(y * 14);
+    public static final BiFunction<LocalDate, Integer, LocalDate> dateMinusWorkingDays = (x, y) -> {
+        int count = 0;
+        while(count < y) {
+            DayOfWeek dow = x.getDayOfWeek();
+            if(!(dow.equals(SATURDAY) || dow.equals(SUNDAY))){
+                count++;
+            }
+            x = x.minusDays(1);
+        }
+        return x;
+    };
 
-    public static int weekNumberOfLocalDate(LocalDateTime localDateTime) {
-        return localDateTime.get(IsoFields.WEEK_OF_WEEK_BASED_YEAR);
+    public static final BiFunction<LocalDate, Integer, LocalDate> datePlusFortnights =
+            (x, y) -> x.plusDays(y * 14);
+
+    public static final BiFunction<LocalDate, Integer, LocalDate> dateMinusFortnights =
+            (x, y) -> x.minusDays(y * 14);
+
+
+    public static final BiFunction<LocalDate, LocalDate, Period> intervalBetweenDates = Period::between;
+
+    public static long intervalInUnit(LocalDate first, LocalDate second, ChronoUnit chronoUnit) {
+        try {
+            return first.until(second, chronoUnit);
+        } catch (Exception e) {
+            return -1;
+        }
     }
 
-    public static Pair<LocalDateTime, LocalDateTime> localDateOfYearWeekNumber(int weekNumber, Year year) {
-        LocalDate firstMonday = year.atDay(1).with(TemporalAdjusters.nextOrSame(DayOfWeek.MONDAY));
-        LocalDate start = firstMonday.plusWeeks(weekNumber - 1);
-        LocalDate end = start.with(TemporalAdjusters.next(DayOfWeek.SUNDAY));
+    public static long intervalInFortnights(LocalDate first, LocalDate second) {
+        try {
+            return first.until(second, ChronoUnit.WEEKS) / 2;
+        } catch (Exception e) {
+            return -1;
+        }
+    }
 
-        return new Pair<>(start.atTime(0, 0), end.atTime(0, 0));
+    public static long intervalInWorkingDays(LocalDate first, LocalDate second) {
+        if (first.getDayOfWeek() == SATURDAY || first.getDayOfWeek() == SUNDAY) {
+            first = first.with(TemporalAdjusters.next(MONDAY));
+        }
+
+        if (second.getDayOfWeek() == SATURDAY || second.getDayOfWeek() == SUNDAY) {
+            second = second.with(TemporalAdjusters.previous(FRIDAY));
+        }
+
+        try {
+            final long days = first.until(second, ChronoUnit.DAYS);
+            final long weeks = first.with(TemporalAdjusters.previousOrSame(MONDAY)).until(second.with(TemporalAdjusters.nextOrSame(FRIDAY)), ChronoUnit.WEEKS);
+
+            return days - weeks * 2 + 1;
+        } catch (Exception e) {
+            return -1;
+        }
+    }
+
+    public static int weekNumberOfLocalDate(LocalDate localDate) {
+        return localDate.get(IsoFields.WEEK_OF_WEEK_BASED_YEAR);
+    }
+
+    public static Pair<LocalDate, LocalDate> localDateOfYearWeekNumber(int weekNumber, int y) {
+        final LocalDate start = Year.of(y).atDay(1).with(TemporalAdjusters.nextOrSame(DayOfWeek.MONDAY))
+                .plusWeeks(weekNumber - 1);
+
+        return new Pair<>(start, start.with(TemporalAdjusters.next(DayOfWeek.SUNDAY)));
     }
 }
