@@ -6,14 +6,15 @@ import java.util.function.BiFunction;
 
 import static java.time.DayOfWeek.*;
 
-public final class DateUtils {
-    public static final BiFunction<LocalDate, Pair<Integer, TemporalUnit>, LocalDate> datePlusDuration =
+final class DateUtils {
+
+    static final BiFunction<LocalDate, Pair<Integer, TemporalUnit>, LocalDate> datePlusDuration =
             (x, y) -> x.isSupported(y.getSecond()) ? x.plus(y.getFirst(), y.getSecond()) : x;
 
-    public static final BiFunction<LocalDate, Pair<Integer, TemporalUnit>, LocalDate> dateMinusDuration =
+    static final BiFunction<LocalDate, Pair<Integer, TemporalUnit>, LocalDate> dateMinusDuration =
             (x, y) -> x.isSupported(y.getSecond()) ? x.minus(y.getFirst(), y.getSecond()) : x;
 
-    public static final BiFunction<LocalDate, Integer, LocalDate> datePlusWorkingDays = (x, y) -> {
+    static final BiFunction<LocalDate, Integer, LocalDate> datePlusWorkingDays = (x, y) -> {
         int count = 0;
         while(count < y) {
             DayOfWeek dow = x.getDayOfWeek();
@@ -25,7 +26,7 @@ public final class DateUtils {
         return x;
     };
 
-    public static final BiFunction<LocalDate, Integer, LocalDate> dateMinusWorkingDays = (x, y) -> {
+    static final BiFunction<LocalDate, Integer, LocalDate> dateMinusWorkingDays = (x, y) -> {
         int count = 0;
         while(count < y) {
             DayOfWeek dow = x.getDayOfWeek();
@@ -37,16 +38,15 @@ public final class DateUtils {
         return x;
     };
 
-    public static final BiFunction<LocalDate, Integer, LocalDate> datePlusFortnights =
+    static final BiFunction<LocalDate, Integer, LocalDate> datePlusFortnights =
             (x, y) -> x.plusDays(y * 14);
 
-    public static final BiFunction<LocalDate, Integer, LocalDate> dateMinusFortnights =
+    static final BiFunction<LocalDate, Integer, LocalDate> dateMinusFortnights =
             (x, y) -> x.minusDays(y * 14);
 
+    static final BiFunction<LocalDate, LocalDate, Period> intervalBetweenDates = Period::between;
 
-    public static final BiFunction<LocalDate, LocalDate, Period> intervalBetweenDates = Period::between;
-
-    public static long intervalInUnit(LocalDate first, LocalDate second, ChronoUnit chronoUnit) {
+    static long intervalInUnit(LocalDate first, LocalDate second, ChronoUnit chronoUnit) {
         try {
             return first.until(second, chronoUnit);
         } catch (Exception e) {
@@ -54,7 +54,7 @@ public final class DateUtils {
         }
     }
 
-    public static long intervalInFortnights(LocalDate first, LocalDate second) {
+    static long intervalInFortnights(LocalDate first, LocalDate second) {
         try {
             return first.until(second, ChronoUnit.WEEKS) / 2;
         } catch (Exception e) {
@@ -62,7 +62,7 @@ public final class DateUtils {
         }
     }
 
-    public static long intervalInWorkingDays(LocalDate first, LocalDate second) {
+    static long intervalInWorkingDays(LocalDate first, LocalDate second) {
         if (first.getDayOfWeek() == SATURDAY || first.getDayOfWeek() == SUNDAY) {
             first = first.with(TemporalAdjusters.next(MONDAY));
         }
@@ -81,11 +81,11 @@ public final class DateUtils {
         }
     }
 
-    public static int weekNumberOfLocalDate(LocalDate localDate) {
+    static int weekNumberOfLocalDate(LocalDate localDate) {
         return localDate.get(IsoFields.WEEK_OF_WEEK_BASED_YEAR);
     }
 
-    public static Pair<LocalDate, LocalDate> localDateOfYearWeekNumber(int weekNumber, int y) {
+    static Pair<LocalDate, LocalDate> localDateOfYearWeekNumber(int weekNumber, int y) {
         final LocalDate start = Year.of(y).atDay(1).with(TemporalAdjusters.nextOrSame(DayOfWeek.MONDAY))
                 .plusWeeks(weekNumber - 1);
 

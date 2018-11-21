@@ -1,4 +1,4 @@
-/**
+/*
  * Classe que abstrai a utilização da classe Scanner, escondendo todos os
  * problemas relacionados com excepções, e que oferece métodos simples e
  * robustos para a leitura de valores de tipos simples e String.
@@ -14,6 +14,7 @@
  * @author F. Mário Martins
  * @version 1.0 (6/2006)
  */
+
 package controller;
 
 import java.io.BufferedReader;
@@ -21,7 +22,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.InputMismatchException;
@@ -38,7 +38,7 @@ public final class Input {
             try {
                 localDate = LocalDate.parse(bufferedReader.readLine(), formatter);
                 ok = true;
-            } catch (IOException e) {
+            } catch (IOException | DateTimeParseException e) {
                 System.out.println("Insert new value: ");
             }
         }
