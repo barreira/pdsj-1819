@@ -15,50 +15,50 @@ public final class UCalculatorView {
     public UCalculatorView() {
         menus = Map.ofEntries(
                 entry(0, new Menu("MAIN MENU", Arrays.asList(
-                        new Option("Local Date Time Calculator -- ", "1"),
-                        new Option("Timezone Date Time Calculator ", "2"),
-                        new Option("Meeting Schedule ------------ ", "3"),
-                        new Option("End Session ----------------- ", "0")))),
+                        new Option("Local Date Time Calculator ----", "1"),
+                        new Option("Timezone Date Time Calculator -", "2"),
+                        new Option("Meeting Schedule --------------", "3"),
+                        new Option("End Session -------------------", "0")))),
                 entry(1, new Menu("LOCAL DATE TIME CALCULATOR", Arrays.asList(
-                        new Option("Date Calculator ----- ", "1"),
-                        new Option("Interval Calculator - ", "2"),
-                        new Option("Weeks Calculator ---- ", "3"),
-                        new Option("Back ---------------- ", "0")))),
+                        new Option("Date Calculator -----", "1"),
+                        new Option("Interval Calculator -", "2"),
+                        new Option("Weeks Calculator ----", "3"),
+                        new Option("Back ----------------", "0")))),
                 entry(2, new Menu("SELECT OPERATION", Arrays.asList(
-                        new Option("Add ---- ", "1"),
-                        new Option("Subtract ", "2"),
-                        new Option("Solve -- ", "3"),
-                        new Option("Back --- ", "4"),
-                        new Option("Cancel - ", "0")))),
+                        new Option("Add ------", "1"),
+                        new Option("Subtract -", "2"),
+                        new Option("Solve ----", "3"),
+                        new Option("Back -----", "4"),
+                        new Option("Cancel ---", "0")))),
                 entry(3, new Menu("SELECT DURATION UNITS", Arrays.asList(
-                        new Option("Days ------- ", "1"),
-                        new Option("Working Days ", "2"),
-                        new Option("Weeks ------ ", "3"),
-                        new Option("Fortnights - ", "4"),
-                        new Option("Months ----- ", "5"),
-                        new Option("Years ------ ", "6"),
-                        new Option("Back ------- ", "0")))),
+                        new Option("Days ---------", "1"),
+                        new Option("Working Days -", "2"),
+                        new Option("Weeks --------", "3"),
+                        new Option("Fortnights ---", "4"),
+                        new Option("Months -------", "5"),
+                        new Option("Years --------", "6"),
+                        new Option("Back ---------", "0")))),
                 entry(4, new Menu("SELECT RESULT UNITS", Arrays.asList(
-                        new Option("Days ------- ", "1"),
-                        new Option("Working Days ", "2"),
-                        new Option("Weeks ------ ", "3"),
-                        new Option("Fortnights - ", "4"),
-                        new Option("Months ----- ", "5"),
-                        new Option("Years ------ ", "6"),
-                        new Option("Period ----- ", "7"),
-                        new Option("Cancel ----- ", "0")))),
+                        new Option("Days ---------", "1"),
+                        new Option("Working Days -", "2"),
+                        new Option("Weeks --------", "3"),
+                        new Option("Fortnights ---", "4"),
+                        new Option("Months -------", "5"),
+                        new Option("Years --------", "6"),
+                        new Option("Period -------", "7"),
+                        new Option("Cancel -------", "0")))),
                 entry(5, new Menu("Weeks Calculator", Arrays.asList(
-                        new Option("Week number of Date - ", "1"),
-                        new Option("Date of Week number - ", "2"),
-                        new Option("Back ---------------- ", "0")))),
-                entry(6, new Menu("TimeZone Calculator", Arrays.asList(
-                        new Option("TimeZone Converter - ", "1"),
-                        new Option("Travel Calculator  - ", "2"),
-                        new Option("Back --------------- ", "0")))),
-                entry(7, new Menu("TimeZone Selector", Arrays.asList(
-                        new Option("Local to Zone - ", "1"),
-                        new Option("Zone to Zone  - ", "2"),
-                        new Option("Back ---------- ", "0"))))
+                        new Option("Week number of Date -", "1"),
+                        new Option("Date of Week number -", "2"),
+                        new Option("Back ----------------", "0")))),
+                entry(6, new Menu("Timezone Calculator", Arrays.asList(
+                        new Option("Timezone Converter -", "1"),
+                        new Option("Travel Calculator --", "2"),
+                        new Option("Back ---------------", "0")))),
+                entry(7, new Menu("Timezone Selector", Arrays.asList(
+                        new Option("Local to Zone -", "1"),
+                        new Option("Zone to Zone --", "2"),
+                        new Option("Back ----------", "0"))))
         );
     }
 
@@ -80,7 +80,6 @@ public final class UCalculatorView {
     public void displayLocalDate(final LocalDate date, final DateTimeFormatter formatter) {
         System.out.println(date.format(formatter));
     }
-
 
     public void displayPeriod(final Period period) {
         System.out.println(period.getYears() + " years, " + period.getMonths() + " months, and " +

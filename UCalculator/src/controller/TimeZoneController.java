@@ -54,8 +54,10 @@ class TimeZoneController {
     }
 
     private void timezoneConverter() {
-        view.displayMessage("Insert a date (dd/MM/yyyy HH:mm): ");
-        final LocalDateTime localDateTime = Input.readDateTime(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
+        // view.displayMessage("Insert a date (dd/MM/yyyy HH:mm): ");
+        //final LocalDateTime localDateTime = Input.readDateTime(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
+
+        final LocalDateTime localDateTime = LocalDateTime.now();
         boolean isLocal = true;
         boolean exit = false;
         final Menu menu = view.getMenu(7);
@@ -85,7 +87,7 @@ class TimeZoneController {
             } while (!option.equals("0") && !exit);
         }*/
 
-        view.displayMessage("Enter a Location: ");
+        view.displayMessage("Enter a location (0 to exit): ");
         final String location = Input.readString();
         final List<String> ids = model.getMatchedTimezoneIDs(location);
         final ZoneId zoneId = ZoneId.of(ids.get(0));
