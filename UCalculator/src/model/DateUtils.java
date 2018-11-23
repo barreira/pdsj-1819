@@ -2,6 +2,7 @@ package model;
 
 import java.time.*;
 import java.time.temporal.*;
+import java.time.zone.ZoneRulesException;
 import java.util.function.BiFunction;
 
 import static java.time.DayOfWeek.*;
@@ -90,5 +91,15 @@ final class DateUtils {
                 .plusWeeks(weekNumber - 1);
 
         return new Pair<>(start, start.with(TemporalAdjusters.next(DayOfWeek.SUNDAY)));
+    }
+
+    static LocalDateTime convertToTimezone(final String timezoneID, final LocalDateTime localDateTime) {
+        try {
+            final ZoneId zoneId = ZoneId.of(timezoneID);
+            final ZonedDateTime zonedDateTime = ZonedDateTime.of(localDateTime, zoneId);
+            return localDateTime.plusSeconds(zonedDateTime.getOffset().getTotalSeconds());
+        } catch (ZoneRulesException e) {
+            return localDateTime;
+        }
     }
 }

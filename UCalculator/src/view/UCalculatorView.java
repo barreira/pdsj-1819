@@ -50,7 +50,15 @@ public final class UCalculatorView {
                 entry(5, new Menu("Weeks Calculator", Arrays.asList(
                         new Option("Week number of Date - ", "1"),
                         new Option("Date of Week number - ", "2"),
-                        new Option("Back ---------------- ", "0"))))
+                        new Option("Back ---------------- ", "0")))),
+                entry(6, new Menu("TimeZone Calculator", Arrays.asList(
+                        new Option("TimeZone Converter - ", "1"),
+                        new Option("Travel Calculator  - ", "2"),
+                        new Option("Back --------------- ", "0")))),
+                entry(7, new Menu("TimeZone Selector", Arrays.asList(
+                        new Option("Local to Zone - ", "1"),
+                        new Option("Zone to Zone  - ", "2"),
+                        new Option("Back ---------- ", "0"))))
         );
     }
 

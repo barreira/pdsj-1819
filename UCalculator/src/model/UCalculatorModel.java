@@ -1,15 +1,19 @@
 package model;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.Period;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
 
 public final class UCalculatorModel {
 
     private LocalDateCalculator localDateCalculator;
+    private TimeZoneCalculator timeZoneCalculator;
 
     public UCalculatorModel() {
         localDateCalculator = new LocalDateCalculator();
+        timeZoneCalculator = new TimeZoneCalculator();
     }
 
     public void initLocalDateCalculator(LocalDate LocalDate) {
@@ -74,5 +78,20 @@ public final class UCalculatorModel {
 
     public Pair<LocalDate, LocalDate> localDateOfWeekNumber(final int weekNumber, final int year) {
         return DateUtils.localDateOfYearWeekNumber(weekNumber, year);
+    }
+
+
+    /********************************************** TimeZone Calculator **********************************************/
+
+    public void initTimeZoneIDs() {
+        timeZoneCalculator.initTimeZoneIDs();
+    }
+
+    public List<String> getMatchedTimezoneIDs(final String id) {
+        return timeZoneCalculator.getMatchedTimeZoneIDs(id);
+    }
+
+    public LocalDateTime getTimezone(final String id, LocalDateTime localDateTime) {
+        return DateUtils.convertToTimezone(id, localDateTime);
     }
 }

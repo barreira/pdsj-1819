@@ -37,7 +37,11 @@ public class UCalculatorController {
 
                         break;
                     case "2":
-                        //timeZoneDateTimeCalculator();
+                        TimeZoneController timeZoneController = new TimeZoneController();
+
+                        timeZoneController.setView(view);
+                        timeZoneController.setModel(model);
+                        timeZoneController.startFlow();
                         break;
                     case "3":
                         //meetingSchedule();

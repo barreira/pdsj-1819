@@ -27,7 +27,7 @@ import java.time.format.DateTimeParseException;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
-public final class Input {
+final class Input {
 
     static LocalDate readDate(DateTimeFormatter formatter) {
         final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
@@ -46,12 +46,21 @@ public final class Input {
         return localDate;
     }
 
-    public static LocalDateTime readDateTime(DateTimeFormatter formatter) {
-        try (final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in))) {
-            return LocalDateTime.parse(bufferedReader.readLine(), formatter);
-        } catch (IOException | DateTimeParseException e) {
-            return null;
+    static LocalDateTime readDateTime(DateTimeFormatter formatter) {
+        final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
+        boolean ok = false;
+        LocalDateTime localDateTime = LocalDateTime.now();
+
+        while (!ok) {
+            try {
+                localDateTime = LocalDateTime.parse(bufferedReader.readLine(), formatter);
+                ok = true;
+            } catch (IOException | DateTimeParseException e) {
+                System.out.println("Insert new value: ");
+            }
         }
+
+        return localDateTime;
     }
 
     static int readInt() {
