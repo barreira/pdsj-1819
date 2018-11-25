@@ -4,12 +4,10 @@ import model.UCalculatorModel;
 import view.Menu;
 import view.UCalculatorView;
 
-import java.sql.Date;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.*;
 import java.util.List;
 
 class TimeZoneController {
@@ -54,51 +52,133 @@ class TimeZoneController {
     }
 
     private void timezoneConverter() {
-        // view.displayMessage("Insert a date (dd/MM/yyyy HH:mm): ");
-        //final LocalDateTime localDateTime = Input.readDateTime(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
-
-        final LocalDateTime localDateTime = LocalDateTime.now();
-        boolean isLocal = true;
-        boolean exit = false;
-        final Menu menu = view.getMenu(7);
-
-
-        /*if (menu != null) {
-            String option;
-            do {
-                menu.show();
-                view.displayMessage("Insert option: ");
-                option = Input.readString();
-
-                switch (option) {
-                    case "1":
-                        isLocal = true;
-                        exit = true;
-                        break;
-                    case "2":
-                        isLocal = false;
-                        exit = true;
-                        break;
-                    case "0":
-                        break;
-                    default:
-                        view.displayMessage("Invalid option!\n");
-                }
-            } while (!option.equals("0") && !exit);
-        }*/
-
         view.displayMessage("Enter a location (0 to exit): ");
         final String location = Input.readString();
-        final List<String> ids = model.getMatchedTimezoneIDs(location);
-        final ZoneId zoneId = ZoneId.of(ids.get(0));
-        final ZonedDateTime zonedDateTime = ZonedDateTime.of(localDateTime, zoneId);
-        //localDateTime.plus(zonedDateTime.getOffset())
 
-        //System.out.println(zonedDateTime.getOffset().getTotalSeconds());
-        System.out.println(localDateTime.plusSeconds(zonedDateTime.getOffset().getTotalSeconds()).format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")));
+        if(!location.equals("0")) {
+            final List<String> ids = model.getMatchedTimezoneIDs(location);
+
+            if(ids.size() > 1) {
+                Paging paging = new Paging(5, ids);
+                boolean next = true;
+                String option;
+
+                do {
+                    view.displaySpacing();
+
+                    if (next) {
+                        view.displayPage(paging.nextPage(), paging.getCurrentPage(), paging.getTotalPages());
+                    } else {
+                        view.displayPage(paging.previousPage(), paging.getCurrentPage(), paging.getTotalPages());
+                    }
+
+                    view.displayMessage("Insert option: ");
+                    option = Input.readString();
+
+                    try {
+                        int op = Integer.parseInt(option);
+                        String s = paging.get(op - 1);
+
+                        if (s.equals("")) {
+                            if (op != 0) {
+                                view.displayMessage("Invalid option!\n");
+                            }
+                        } else {
+                            LocalDateTime result = model.getTimezone(s, LocalDateTime.now());
+                            view.displayMessage("Current timezone at " + s + " is " + result.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")) + ".\n");
+                            break;
+                        }
+                    } catch (NumberFormatException e) {
+                        switch (option) {
+                            case "n":
+                                next = true;
+                                break;
+                            case "p":
+                                next = false;
+                                break;
+                            default:
+                                view.displayMessage("Invalid option!\n");
+                                break;
+                        }
+                    }
+                } while (!option.equals("0"));
+            } else if (ids.size() == 0){
+                view.displayMessage("Location not found!\n");
+            } else {
+                view.displayMessage(
+                        "Current timezone at " + ids.get(0) + " is " +
+                                model.getTimezone(ids.get(0), LocalDateTime.now())
+                                        .format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")) + ".\n");
+
+            }
+        }
     }
 
     private void travelCalculator() {
+        view.displayMessage("Enter your destination (0 to exit): ");
+        final String location = Input.readString();
 
+        if(!location.equals("0")) {
+            final List<String> ids = model.getMatchedTimezoneIDs(location);
+
+            if(ids.size() > 1) {
+                Paging paging = new Paging(5, ids);
+                boolean next = true;
+                String option;
+
+                do {
+                    view.displaySpacing();
+
+                    if (next) {
+                        view.displayPage(paging.nextPage(), paging.getCurrentPage(), paging.getTotalPages());
+                    } else {
+                        view.displayPage(paging.previousPage(), paging.getCurrentPage(), paging.getTotalPages());
+                    }
+
+                    view.displayMessage("Insert option: ");
+                    option = Input.readString();
+
+                    try {
+                        int op = Integer.parseInt(option);
+                        String s = paging.get(op - 1);
+
+                        if (s.equals("")) {
+                            if (op != 0) {
+                                view.displayMessage("Invalid option!\n");
+                            }
+                        } else {
+                            view.displayMessage("Insert departure datetime (dd/MM/yyyy HH:mm): ");
+                            LocalDateTime localDateTime = Input.readDateTime(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
+                            view.displayMessage("Insert departure datetime (HH:mm): ");
+                            LocalTime localTime = Input.readTime(DateTimeFormatter.ofPattern("HH:mm"));
+
+                            view.displayMessage(model.getArrivalTime(s, localDateTime, localTime).format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")));
+                            break;
+                        }
+                        //TODO complete
+                    } catch (NumberFormatException e) {
+                        switch (option) {
+                            case "n":
+                                next = true;
+                                break;
+                            case "p":
+                                next = false;
+                                break;
+                            default:
+                                view.displayMessage("Invalid option!\n");
+                                break;
+                        }
+                    }
+                } while (!option.equals("0"));
+            } else if (ids.size() == 0){
+                view.displayMessage("Location not found!\n");
+            } else {
+                view.displayMessage(
+                        "Current timezone at " + ids.get(0) + " is " +
+                                model.getTimezone(ids.get(0), LocalDateTime.now())
+                                        .format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")) + ".\n");
+
+            }
+        }
     }
 }

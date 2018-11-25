@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 import static java.util.Map.entry;
@@ -54,11 +55,7 @@ public final class UCalculatorView {
                 entry(6, new Menu("Timezone Calculator", Arrays.asList(
                         new Option("Timezone Converter -", "1"),
                         new Option("Travel Calculator --", "2"),
-                        new Option("Back ---------------", "0")))),
-                entry(7, new Menu("Timezone Selector", Arrays.asList(
-                        new Option("Local to Zone -", "1"),
-                        new Option("Zone to Zone --", "2"),
-                        new Option("Back ----------", "0"))))
+                        new Option("Back ---------------", "0"))))
         );
     }
 
@@ -84,5 +81,20 @@ public final class UCalculatorView {
     public void displayPeriod(final Period period) {
         System.out.println(period.getYears() + " years, " + period.getMonths() + " months, and " +
                 period.getDays() + " days");
+    }
+
+    public void displayPage(List<String> elements, int currentPage, int totalPages) {
+        int i = 1;
+        for(String element : elements) {
+            // TODO format output strings
+            System.out.println(element + " " + i);
+            i++;
+        }
+        System.out.println("Page " + currentPage + " of " + totalPages);
+        System.out.println("Previous - p");
+        System.out.println("Next     - n");
+        System.out.println("Cancel   - 0");
+
+
     }
 }

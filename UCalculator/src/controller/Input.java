@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.InputMismatchException;
@@ -61,6 +62,23 @@ final class Input {
         }
 
         return localDateTime;
+    }
+
+    static LocalTime readTime(DateTimeFormatter formatter) {
+        final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
+        boolean ok = false;
+        LocalTime localTime = LocalTime.now();
+
+        while (!ok) {
+            try {
+                localTime = LocalTime.parse(bufferedReader.readLine(), formatter);
+                ok = true;
+            } catch (IOException | DateTimeParseException e) {
+                System.out.println("Insert new value: ");
+            }
+        }
+
+        return localTime;
     }
 
     static int readInt() {

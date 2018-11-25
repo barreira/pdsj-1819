@@ -98,8 +98,13 @@ final class DateUtils {
             final ZoneId zoneId = ZoneId.of(timezoneID);
             final ZonedDateTime zonedDateTime = ZonedDateTime.of(localDateTime, zoneId);
             return localDateTime.plusSeconds(zonedDateTime.getOffset().getTotalSeconds());
-        } catch (ZoneRulesException e) {
+        } catch (DateTimeException e) {
             return localDateTime;
         }
+    }
+
+    static LocalDateTime getArrivalTime(String timezoneId, LocalDateTime departureTime, LocalTime travelTime) {
+        return DateUtils.convertToTimezone(timezoneId, departureTime).plusHours(travelTime.getHour())
+                .plusMinutes(travelTime.getMinute());
     }
 }

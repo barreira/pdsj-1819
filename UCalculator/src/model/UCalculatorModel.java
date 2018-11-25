@@ -2,7 +2,9 @@ package model;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.Period;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
@@ -93,5 +95,9 @@ public final class UCalculatorModel {
 
     public LocalDateTime getTimezone(final String id, LocalDateTime localDateTime) {
         return DateUtils.convertToTimezone(id, localDateTime);
+    }
+
+    public LocalDateTime getArrivalTime(String timezoneId, LocalDateTime departureTime, LocalTime travelTime) {
+        return DateUtils.getArrivalTime(timezoneId, departureTime, travelTime);
     }
 }
