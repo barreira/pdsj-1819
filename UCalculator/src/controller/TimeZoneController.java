@@ -114,6 +114,7 @@ class TimeZoneController {
         }
     }
 
+    // TODO joão tenta acabar esta função abarcando escalas
     private void travelCalculator() {
         view.displayMessage("Enter your destination (0 to exit): ");
         final String location = Input.readString();
