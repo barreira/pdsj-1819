@@ -1,7 +1,6 @@
 package controller;
 
 import model.UCalculatorModel;
-import view.Menu;
 import view.UCalculatorView;
 
 public class UCalculatorController {
@@ -18,40 +17,36 @@ public class UCalculatorController {
     }
 
     public void startFlow() {
-        Menu menu = view.getMenu(0);
+        String option;
+        do {
+            view.displayMenu(0);
+            view.displayMessage("Insert option: ");
+            option = Input.readString();
 
-        if (menu != null) {
-            String option;
-            do {
-                menu.show();
-                view.displayMessage("Insert option: ");
-                option = Input.readString();
+            switch (option) {
+                case "1":
+                    LocalCalculatorController localCalculatorController = new LocalCalculatorController();
 
-                switch (option) {
-                    case "1":
-                        LocalCalculatorController localCalculatorController = new LocalCalculatorController();
+                    localCalculatorController.setView(view);
+                    localCalculatorController.setModel(model);
+                    localCalculatorController.startFlow();
 
-                        localCalculatorController.setView(view);
-                        localCalculatorController.setModel(model);
-                        localCalculatorController.startFlow();
+                    break;
+                case "2":
+                    TimeZoneController timeZoneController = new TimeZoneController();
 
-                        break;
-                    case "2":
-                        TimeZoneController timeZoneController = new TimeZoneController();
-
-                        timeZoneController.setView(view);
-                        timeZoneController.setModel(model);
-                        timeZoneController.startFlow();
-                        break;
-                    case "3":
-                        //meetingSchedule();
-                        break;
-                    case "0":
-                        break;
-                    default:
-                        view.displayMessage("Invalid option!\n");
-                }
-            } while (!option.equals("0"));
-        }
+                    timeZoneController.setView(view);
+                    timeZoneController.setModel(model);
+                    timeZoneController.startFlow();
+                    break;
+                case "3":
+                    //meetingSchedule();
+                    break;
+                case "0":
+                    break;
+                default:
+                    view.displayMessage("Invalid option!\n");
+            }
+        } while (!option.equals("0"));
     }
 }

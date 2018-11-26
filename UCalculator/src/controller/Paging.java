@@ -229,4 +229,12 @@ public class Paging
             return "";
         }
     }
+
+    List<String> currentPage() {
+        List<String> ret = new ArrayList<>();
+        for (int i = 0; i < pageSize && index + i < elements.size(); i++) {
+            ret.add(elements.get(index + i));
+        }
+        return ret;
+    }
 }

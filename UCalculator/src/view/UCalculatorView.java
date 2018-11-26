@@ -11,7 +11,7 @@ import static java.util.Map.entry;
 
 public final class UCalculatorView {
 
-    private Map<Integer, Menu> menus;
+    private final Map<Integer, Menu> menus;
 
     public UCalculatorView() {
         menus = Map.ofEntries(
@@ -59,20 +59,17 @@ public final class UCalculatorView {
         );
     }
 
-    public Menu getMenu(final int key) {
-        return menus.get(key);
-    }
-
-
     public void displayMessage(final String message) {
         System.out.print(message);
     }
 
+    public void displayMessage(final String message, final boolean withSpacing) {
+        if (withSpacing) {
+            this.displaySpacing();
+        }
 
-    public void displaySpacing() {
-        System.out.println("\n".repeat(10));
+        System.out.println(message);
     }
-
 
     public void displayLocalDate(final LocalDate date, final DateTimeFormatter formatter) {
         System.out.println(date.format(formatter));
@@ -83,7 +80,8 @@ public final class UCalculatorView {
                 period.getDays() + " days");
     }
 
-    public void displayPage(List<String> elements, int currentPage, int totalPages) {
+    public void displayPage(final List<String> elements, final int currentPage, final int totalPages) {
+        this.displaySpacing();
         int i = 1;
         for(String element : elements) {
             // TODO format output strings
@@ -91,10 +89,17 @@ public final class UCalculatorView {
             i++;
         }
         System.out.println("Page " + currentPage + " of " + totalPages);
-        System.out.println("Previous - p");
-        System.out.println("Next     - n");
-        System.out.println("Cancel   - 0");
+    }
 
+    public void displayMenu(final int menu) {
+        this.displaySpacing();
 
+        if (menus.containsKey(menu)) {
+            this.menus.get(menu).show();
+        }
+    }
+
+    private void displaySpacing() {
+        System.out.println("\n".repeat(10));
     }
 }

@@ -9,19 +9,19 @@ import java.util.stream.Collectors;
 
 class TimeZoneCalculator {
 
-    private Set<String> timeZoneIDs;
+    private Set<String> zoneIds;
 
     TimeZoneCalculator() {
         // TODO: verificar se natural orden é necessário
-        timeZoneIDs = new TreeSet<>(Comparator.naturalOrder());
+        zoneIds = new TreeSet<>(Comparator.naturalOrder());
     }
 
     void initTimeZoneIDs() {
-        timeZoneIDs = ZoneId.getAvailableZoneIds();
-        // timeZoneIDs.forEach(System.out::println);
+        zoneIds = ZoneId.getAvailableZoneIds();
+        // zoneIds.forEach(System.out::println);
     }
 
-    List<String> getMatchedTimeZoneIDs(final String id) {
-        return timeZoneIDs.stream().filter(s -> s.toLowerCase().replace("_", " ").contains(id.toLowerCase())).collect(Collectors.toList());
+    List<String> getMatchedZoneIds(final String id) {
+        return zoneIds.stream().filter(s -> s.toLowerCase().replace("_", " ").contains(id.toLowerCase())).collect(Collectors.toList());
     }
 }

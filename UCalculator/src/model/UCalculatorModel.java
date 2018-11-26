@@ -4,7 +4,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.Period;
-import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
@@ -90,10 +89,10 @@ public final class UCalculatorModel {
     }
 
     public List<String> getMatchedTimezoneIDs(final String id) {
-        return timeZoneCalculator.getMatchedTimeZoneIDs(id);
+        return timeZoneCalculator.getMatchedZoneIds(id);
     }
 
-    public LocalDateTime getTimezone(final String id, LocalDateTime localDateTime) {
+    public LocalDateTime getTimeZone(final String id, LocalDateTime localDateTime) {
         return DateUtils.convertToTimezone(id, localDateTime);
     }
 

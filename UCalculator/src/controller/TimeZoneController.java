@@ -6,7 +6,6 @@ import view.UCalculatorView;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
@@ -24,35 +23,31 @@ class TimeZoneController {
     }
 
     void startFlow() {
-        Menu menu = view.getMenu(6);
-
         model.initTimeZoneIDs();
 
-        if (menu != null) {
-            String option;
-            do {
-                menu.show();
-                view.displayMessage("Insert option: ");
-                option = Input.readString();
+        String option;
+        do {
+            view.displayMenu(6);
+            view.displayMessage("Insert option: ");
+            option = Input.readString();
 
-                switch (option) {
-                    case "1":
-                        timezoneConverter();
-                        break;
-                    case "2":
-                        travelCalculator();
-                        break;
-                    case "0":
-                        break;
-                    default:
-                        view.displayMessage("Invalid option!\n");
-                }
-            } while (!option.equals("0"));
-        }
+            switch (option) {
+                case "1":
+                    timezoneConverter();
+                    break;
+                case "2":
+                    travelCalculator();
+                    break;
+                case "0":
+                    break;
+                default:
+                    view.displayMessage("Invalid option!\n");
+            }
+        } while (!option.equals("0"));
     }
 
     private void timezoneConverter() {
-        view.displayMessage("Enter a location (0 to exit): ");
+        view.displayMessage("Enter a location (0 to cancel): ");
         final String location = Input.readString();
 
         if(!location.equals("0")) {
@@ -60,18 +55,21 @@ class TimeZoneController {
 
             if(ids.size() > 1) {
                 Paging paging = new Paging(5, ids);
-                boolean next = true;
+                int flag = 0;
                 String option;
 
                 do {
-                    view.displaySpacing();
-
-                    if (next) {
+                    if (flag == 0) {
                         view.displayPage(paging.nextPage(), paging.getCurrentPage(), paging.getTotalPages());
-                    } else {
+                    } else if (flag == 1){
                         view.displayPage(paging.previousPage(), paging.getCurrentPage(), paging.getTotalPages());
+                    } else {
+                        view.displayPage(paging.currentPage(), paging.getCurrentPage(), paging.getTotalPages());
                     }
 
+                    view.displayMessage("Previous - p\n");
+                    view.displayMessage("Next ----- n\n");
+                    view.displayMessage("Cancel --- 0\n");
                     view.displayMessage("Insert option: ");
                     option = Input.readString();
 
@@ -84,19 +82,20 @@ class TimeZoneController {
                                 view.displayMessage("Invalid option!\n");
                             }
                         } else {
-                            LocalDateTime result = model.getTimezone(s, LocalDateTime.now());
+                            LocalDateTime result = model.getTimeZone(s, LocalDateTime.now());
                             view.displayMessage("Current timezone at " + s + " is " + result.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")) + ".\n");
                             break;
                         }
                     } catch (NumberFormatException e) {
                         switch (option) {
                             case "n":
-                                next = true;
+                                flag = 0;
                                 break;
                             case "p":
-                                next = false;
+                                flag = 1;
                                 break;
                             default:
+                                flag = 2;
                                 view.displayMessage("Invalid option!\n");
                                 break;
                         }
@@ -107,7 +106,7 @@ class TimeZoneController {
             } else {
                 view.displayMessage(
                         "Current timezone at " + ids.get(0) + " is " +
-                                model.getTimezone(ids.get(0), LocalDateTime.now())
+                                model.getTimeZone(ids.get(0), LocalDateTime.now())
                                         .format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")) + ".\n");
 
             }
@@ -128,14 +127,15 @@ class TimeZoneController {
                 String option;
 
                 do {
-                    view.displaySpacing();
-
                     if (next) {
                         view.displayPage(paging.nextPage(), paging.getCurrentPage(), paging.getTotalPages());
                     } else {
                         view.displayPage(paging.previousPage(), paging.getCurrentPage(), paging.getTotalPages());
                     }
 
+                    view.displayMessage("Previous - p\n");
+                    view.displayMessage("Next ----- n\n");
+                    view.displayMessage("Cancel --- 0\n");
                     view.displayMessage("Insert option: ");
                     option = Input.readString();
 
@@ -176,7 +176,7 @@ class TimeZoneController {
             } else {
                 view.displayMessage(
                         "Current timezone at " + ids.get(0) + " is " +
-                                model.getTimezone(ids.get(0), LocalDateTime.now())
+                                model.getTimeZone(ids.get(0), LocalDateTime.now())
                                         .format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")) + ".\n");
 
             }
