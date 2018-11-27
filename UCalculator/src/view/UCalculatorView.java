@@ -55,7 +55,13 @@ public final class UCalculatorView {
                 entry(6, new Menu("Timezone Calculator", Arrays.asList(
                         new Option("Timezone Converter -", "1"),
                         new Option("Travel Calculator --", "2"),
-                        new Option("Back ---------------", "0"))))
+                        new Option("Back ---------------", "0")))),
+                entry(7, new Menu("SCHEDULER MANAGER", Arrays.asList(
+                        new Option("Add -----", "1"),
+                        new Option("Edit ----", "2"),
+                        new Option("Consult -", "3"),
+                        new Option("Remove --", "4"),
+                        new Option("Back ----", "0"))))
         );
     }
 

@@ -40,7 +40,11 @@ public class UCalculatorController {
                     timeZoneController.startFlow();
                     break;
                 case "3":
-                    //meetingSchedule();
+                    ScheduleController schedulerController = new ScheduleController();
+                    schedulerController.setView(view);
+                    schedulerController.setModel(model);
+                    schedulerController.startFlow();
+
                     break;
                 case "0":
                     break;
