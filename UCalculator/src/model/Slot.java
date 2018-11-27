@@ -7,12 +7,22 @@ public class Slot {
     private String description;
     private LocalDateTime start;
     private LocalDateTime end;
+    private boolean last;
 
-    public Slot(long id, String description, LocalDateTime start, LocalDateTime end) {
+    Slot(long id, String description, LocalDateTime start, LocalDateTime end, boolean last) {
         this.id = id;
         this.description = description;
         this.start = start;
         this.end = end;
+        this.last = last;
+    }
+
+    Slot(Slot s) {
+        this.id = s.getId();
+        this.description = s.getDescription();
+        this.start = s.getStart();
+        this.end = s.getEnd();
+        this.last = s.isLast();
     }
 
     public long getId() {
@@ -44,6 +54,14 @@ public class Slot {
         this.end = end;
     }
 
+    public boolean isLast() {
+        return last;
+    }
+
+    public void setLast(boolean last) {
+        this.last = last;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -63,5 +81,10 @@ public class Slot {
         result += "Start: " + start + "\n";
         result += "End: " + end + "\n";
         return result;
+    }
+
+    @Override
+    public Slot clone() {
+        return new Slot(this);
     }
 }

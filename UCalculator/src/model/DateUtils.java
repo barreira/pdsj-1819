@@ -107,4 +107,8 @@ final class DateUtils {
         return DateUtils.convertToTimezone(timezoneId, departureTime).plusHours(travelTime.getHour())
                 .plusMinutes(travelTime.getMinute());
     }
+
+    static boolean intersects(LocalDateTime start1, LocalDateTime end1, LocalDateTime start2, LocalDateTime end2) {
+        return end1.isAfter(start2) && start1.isBefore(end2);
+    }
 }
