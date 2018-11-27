@@ -59,15 +59,15 @@ public class Schedule {
         });
 
         this.idCounter++;
-        //schedule.values().forEach(m -> m.forEach((k, v) -> System.out.println(k + " " + v.toString())));
         return true;
     }
 
-    public void remove(long id) {
+    public List<Slot> remove(long id) {
+        List<Slot> slots = new ArrayList<>();
         if (this.idCounter > id) {
-            schedule.values().forEach(v -> v.remove(id));
+            schedule.values().forEach(v -> slots.add(v.remove(id)));
         }
-        schedule.values().forEach(m -> m.forEach((k, v) -> System.out.println(k + " " + v.toString())));
+        return slots;
     }
 
     public List<Slot> consult(LocalDate date) {
@@ -98,14 +98,16 @@ public class Schedule {
     }
 
     public boolean edit(long id, LocalDateTime start, LocalDateTime end) {
-        List<Slot> slots = this.consult(id);
+        List<Slot> slots = this.remove(id);
+        boolean success = false;
         if (slots != null) {
-            String description = slots.get(0).getDescription();
-            this.remove(id);
-            return this.add(description, start, end);
-        } else {
-            return false;
+            if (!this.add(slots.get(0).getDescription(), start, end)) {
+                this.add(slots.get(0).getDescription(), slots.get(0).getStart(), slots.get(slots.size() - 1).getEnd());
+            } else {
+                success = true;
+            }
         }
+        return success;
     }
 }
 
