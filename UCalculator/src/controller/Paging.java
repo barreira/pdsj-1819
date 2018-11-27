@@ -8,12 +8,9 @@
 
 package controller;
 
-import static java.util.stream.Collectors.joining;
-
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.function.Function;
 
 public class Paging
 {
@@ -193,8 +190,7 @@ public class Paging
         sb.append(index);
         sb.append("\n");
         
-        sb.append(elements.stream()
-                     .collect(joining("\n")));
+        sb.append(String.join("\n", elements));
         
         return sb.toString();
     }

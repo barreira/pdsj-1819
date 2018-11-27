@@ -97,6 +97,20 @@ public final class UCalculatorView {
         System.out.println("Page " + currentPage + " of " + totalPages);
     }
 
+    public void displayPage(final List<String> elements, final int currentPage, final int totalPages, boolean enumerate) {
+        this.displaySpacing();
+        int i = 1;
+        for(String element : elements) {
+            System.out.print(element);
+            if (enumerate) {
+                System.out.print(" " + i);
+            }
+            System.out.println();
+            i++;
+        }
+        System.out.println("Page " + currentPage + " of " + totalPages);
+    }
+
     public void displayMenu(final int menu) {
         this.displaySpacing();
 

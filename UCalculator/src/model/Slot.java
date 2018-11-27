@@ -77,10 +77,12 @@ public class Slot {
 
     @Override
     public String toString() {
-        String result = "Description: " + description + "\n";
-        result += "Start: " + start + "\n";
-        result += "End: " + end + "\n";
-        return result;
+        // String result = "Description: " + description + "\n";
+        // result += "Start: " + start + "\n";
+        // result += "End: " + end + "\n";
+        // return result;
+
+        return description + ": " + start + ", " + end;
     }
 
     @Override
