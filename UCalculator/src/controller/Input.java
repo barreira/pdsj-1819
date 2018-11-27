@@ -92,6 +92,7 @@ final class Input {
                 ok = true;
             } catch (InputMismatchException e) {
                 System.out.println("Insert new value: ");
+                input.next();
             }
         }
 

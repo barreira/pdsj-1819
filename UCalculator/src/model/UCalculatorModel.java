@@ -1,10 +1,9 @@
 package model;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.Period;
+import java.time.*;
 import java.time.temporal.ChronoUnit;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public final class UCalculatorModel {
@@ -79,10 +78,22 @@ public final class UCalculatorModel {
         return DateUtils.weekNumberOfLocalDate(localDate);
     }
 
-    public Pair<LocalDate, LocalDate> localDateOfWeekNumber(final int weekNumber, final int year) {
-        return DateUtils.localDateOfYearWeekNumber(weekNumber, year);
+    public Pair<LocalDate, LocalDate> dateOfWeekNumber(final int weekNumber, final int year) {
+        return DateUtils.dateOfWeekNumber(weekNumber, year);
     }
 
+    public List<LocalDate> daysOfWeekInMonth(final int year, final int month, final DayOfWeek dayOfWeek, final int place) {
+        if (place != 6) { // se não existir, retorna lista = {null}
+            return Collections.singletonList(DateUtils.dateOfDayOfWeekInMonth(year, month, dayOfWeek, place));
+        }
+        else { // se não existir 5.ª ocorrência, retorna lista = {1.ª, 2.ª, 3.ª, 4.ª, null}
+            return Arrays.asList(DateUtils.dateOfDayOfWeekInMonth(year, month, dayOfWeek, 1),
+                                 DateUtils.dateOfDayOfWeekInMonth(year, month, dayOfWeek, 2),
+                                 DateUtils.dateOfDayOfWeekInMonth(year, month, dayOfWeek, 3),
+                                 DateUtils.dateOfDayOfWeekInMonth(year, month, dayOfWeek, 4),
+                                 DateUtils.dateOfDayOfWeekInMonth(year, month, dayOfWeek, 5));
+        }
+    }
 
     /* ********************************************* TimeZone Calculator **********************************************/
 

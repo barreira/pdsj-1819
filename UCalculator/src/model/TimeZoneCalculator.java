@@ -12,7 +12,7 @@ class TimeZoneCalculator {
     private Set<String> zoneIds;
 
     TimeZoneCalculator() {
-        // TODO: verificar se natural orden é necessário
+        // TODO: verificar se natural orden ï¿½ necessï¿½rio
         zoneIds = new TreeSet<>(Comparator.naturalOrder());
     }
 

@@ -2,12 +2,16 @@ package controller;
 
 import model.Pair;
 import model.UCalculatorModel;
-import view.Menu;
 import view.UCalculatorView;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.Month;
 import java.time.format.DateTimeFormatter;
+import java.time.format.TextStyle;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
+import java.util.Locale;
 import java.util.Stack;
 
 class LocalCalculatorController {
@@ -263,6 +267,8 @@ class LocalCalculatorController {
                 case "2":
                     localDateOfWeekNumber();
                     break;
+                case "3":
+                    daysOfWeekInMonth();
                 case "0":
                     break;
                 default:
@@ -285,12 +291,89 @@ class LocalCalculatorController {
         view.displayMessage("Insert Year: ");
         int year = Input.readInt();
 
-        Pair<LocalDate, LocalDate> res = model.localDateOfWeekNumber(weekNumber, year);
+        Pair<LocalDate, LocalDate> res = model.dateOfWeekNumber(weekNumber, year);
         LocalDate start = res.getFirst();
         LocalDate end = res.getSecond();
 
-        view.displayMessage("Week number " + weekNumber + " of " + year + " starts at " + start.toString()
-                + " and ends at " + end.toString() + ".\n");
+        view.displayMessage("Week number " + weekNumber + " of " + year + " starts at " + start.toString() +
+                " and ends at " + end.toString() + ".\n");
+    }
+
+    private void daysOfWeekInMonth() {
+        view.displayMessage("Insert Month: ");
+        int month = Input.readInt();
+        view.displayMessage("Insert Year: ");
+        int year = Input.readInt();
+
+        DayOfWeek dayOfWeek = dayOfWeekMenu();
+        if (dayOfWeek == null) return;
+
+        int place = dayOfWeekPlaceMenu();
+
+        if (place >= 1 && place <= 5) {
+            LocalDate localDate = model.daysOfWeekInMonth(year, month, dayOfWeek, place).get(0);
+
+            if (localDate != null) {
+                view.displayLocalDate(localDate, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+            }
+            else {
+                view.displayMessage(Month.of(month).getDisplayName(TextStyle.FULL, Locale.getDefault()) + " of " +
+                                    year + " only has " + (place - 1) + " " +
+                                    dayOfWeek.getDisplayName(TextStyle.FULL, Locale.getDefault()) + "s");
+            }
+        }
+        else if (place == 6) {
+            List<LocalDate> localDates = model.daysOfWeekInMonth(year, month, dayOfWeek, place);
+
+            for (LocalDate ld : localDates) {
+                if (ld != null) {
+                    view.displayLocalDate(ld, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+                }
+            }
+        }
+    }
+
+    private DayOfWeek dayOfWeekMenu() {
+        DayOfWeek dayOfWeek = null;
+        boolean exit = false;
+
+        while (!exit) {
+            view.displayMenu(16);
+            int option = Input.readInt();
+
+            if (option >= 1 && option <= 7) {
+                dayOfWeek = DayOfWeek.of(option);
+                exit = true;
+            }
+            else if (option == 0) {
+                exit = true;
+            }
+            else {
+                view.displayMessage("Invalid option!\n");
+            }
+        }
+
+        return dayOfWeek;
+    }
+
+    private int dayOfWeekPlaceMenu() {
+        int ret = -1;
+        boolean exit = false;
+
+        while (!exit) {
+            view.displayMenu(17);
+            int place = Input.readInt();
+
+            if (place >= 0 && place <= 6) {
+                ret = place;
+                exit = true;
+            }
+            else {
+                view.displayMessage("Invalid option!\n");
+            }
+        }
+
+        return ret;
     }
 
     private String stateToString() {

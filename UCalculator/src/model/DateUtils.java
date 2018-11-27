@@ -86,11 +86,27 @@ final class DateUtils {
         return localDate.get(IsoFields.WEEK_OF_WEEK_BASED_YEAR);
     }
 
-    static Pair<LocalDate, LocalDate> localDateOfYearWeekNumber(int weekNumber, int y) {
+    static Pair<LocalDate, LocalDate> dateOfWeekNumber(int weekNumber, int y) {
         final LocalDate start = Year.of(y).atDay(1).with(TemporalAdjusters.nextOrSame(DayOfWeek.MONDAY))
                 .plusWeeks(weekNumber - 1);
 
         return new Pair<>(start, start.with(TemporalAdjusters.next(DayOfWeek.SUNDAY)));
+    }
+
+    static LocalDate dateOfDayOfWeekInMonth(int year, int month, DayOfWeek dayOfWeek, int place) {
+        LocalDate localDate = YearMonth.of(year, month).atDay(1)
+                                                       .with(TemporalAdjusters.nextOrSame(dayOfWeek));
+        place--;
+
+        for (int i = 0; i < place; i++) {
+            localDate = localDate.plusWeeks(1);
+        }
+
+        return isDateInMonth(localDate, month) ? localDate : null;
+    }
+
+    static Boolean isDateInMonth(LocalDate localDate, int month) {
+        return (localDate.getMonth().getValue() == month);
     }
 
     static LocalDateTime convertToTimezone(final String timezoneID, final LocalDateTime localDateTime) {
