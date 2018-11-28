@@ -10,13 +10,12 @@ package controller;
 
 import java.util.List;
 import java.util.ArrayList;
-import java.util.stream.Collectors;
 
 public class Paging {
-    private List<String> elements; // list of elements to display
+    private final List<String> elements; // list of elements to display
     private int currentPage; // index of current page
-    private int pageSize; // number of elements per page
-    private int totalPages; // total number of pages
+    private final int pageSize; // number of elements per page
+    private final int totalPages; // total number of pages
 
     Paging(List<String> elements, int pageSize) {
         this.elements = new ArrayList<>(elements);
@@ -24,12 +23,12 @@ public class Paging {
         this.pageSize = pageSize;
         this.totalPages = (int) Math.ceil((double) elements.size() / pageSize);
     }
-    
 
     Paging(Paging p) {
-        pageSize = p.getPageSize();
-        totalPages = p.getTotalPages();
-        elements = p.getElements();
+        this.pageSize = p.getPageSize();
+        this.currentPage = 0;
+        this.totalPages = p.getTotalPages();
+        this.elements = p.getElements();
     }
 
     List<String> getElements() {
