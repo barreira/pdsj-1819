@@ -1,6 +1,6 @@
 package controller;
 
-import model.Slot;
+import model.OLDSlot;
 import model.UCalculatorModel;
 import view.UCalculatorView;
 
@@ -68,7 +68,7 @@ public class ScheduleController {
         view.displayMessage("Insert date (dd/MM/yyyy): ");
         LocalDate localDate = Input.readDate(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
 
-        Paging paging = new Paging(model.consult(localDate).stream().map(Slot::toString).collect(Collectors.toList()), 3);
+        Paging paging = new Paging(model.consult(localDate).stream().map(OLDSlot::toString).collect(Collectors.toList()), 3);
         String option;
 
         view.displayPage(paging.currentPage(), paging.getCurrentPage(), paging.getTotalPages());

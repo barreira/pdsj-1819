@@ -24,13 +24,6 @@ public class Paging {
         this.totalPages = (int) Math.ceil((double) elements.size() / pageSize);
     }
 
-    Paging(Paging p) {
-        this.pageSize = p.getPageSize();
-        this.currentPage = 0;
-        this.totalPages = p.getTotalPages();
-        this.elements = p.getElements();
-    }
-
     List<String> getElements() {
         return elements;
     }
@@ -119,9 +112,5 @@ public class Paging {
     public String toString() {
         return "(ps = " + pageSize + ", tp = " + totalPages + ", cp = " + currentPage + "e =\n" +
                 String.join("\n", elements) + ")";
-    }
-
-    public Paging clone() {
-        return new Paging(this);
     }
 }

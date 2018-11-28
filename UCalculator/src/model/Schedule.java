@@ -1,121 +1,76 @@
 package model;
 
+import java.time.Duration;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoField;
-import java.time.temporal.ChronoUnit;
+import java.time.LocalTime;
+import java.time.temporal.TemporalAdjusters;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class Schedule {
-    private long idCounter;
-    private Map<LocalDate, Map<Long, Slot>> schedule;
+    private static final int DEFAULT_SLOT_SIZE = 30;
+    private final int slotSize;
+    private int startSlot;
+    private int endSlot;
+    private final int totalSlots;
+    private final Map<LocalDate, List<TakenSlot>> schedule;
 
-    Schedule() {
-        idCounter = 1;
-        schedule = new HashMap<>();
+    Schedule(final int slotSize) {
+        this.slotSize = 1440 % slotSize == 0 ? slotSize : DEFAULT_SLOT_SIZE;
+        this.schedule = new HashMap<>();
+        this.startSlot = 1;
+        this.totalSlots = 1440 / this.slotSize;
+        this.endSlot = this.totalSlots;
     }
 
-    boolean add(String description, LocalDateTime start, LocalDateTime end) {
-        if (add(idCounter, description, start, end)) {
-            idCounter++;
-            return true;
+    Schedule() {
+        this(DEFAULT_SLOT_SIZE);
+    }
+
+    public int getSlotSize() {
+        return slotSize;
+    }
+
+    public int getStartSlot() {
+        return startSlot;
+    }
+
+    public int getEndSlot() {
+        return endSlot;
+    }
+
+    public int setStartSlot(int startSlot) {
+        this.startSlot = startSlot < 1 || startSlot > endSlot ? this.startSlot : startSlot;
+        return this.startSlot;
+    }
+
+    public int setEndSlot(int endSlot) {
+        this.endSlot = endSlot < startSlot || endSlot > totalSlots ? this.endSlot : endSlot;
+        return this.endSlot;
+    }
+
+    boolean fillSlot(int slotId, LocalDate date, String description, List<String> people, int numSlots) {
+        if (slotId < 1 || startSlot - 1 + slotId > endSlot) {
+            return false;
+        }
+
+        List<TakenSlot> slots = schedule.get(date);
+        if (slots == null) {
+            slots = new ArrayList<>(numSlots);
+            LocalTime start = LocalTime.of(0, 0).plus(Duration.ofMinutes((startSlot + slotId - 1) * slotSize));
+            LocalTime end = start.plus(Duration.ofMinutes(numSlots * slotSize));
+            slots.add(new TakenSlot(slotId, start, end, true, description, people));
+
+
+           schedule.put(date, slots);
         }
         return false;
     }
 
-    List<Slot> remove(long id) {
-        List<Slot> slots = new ArrayList<>();
-        if (this.idCounter > id) {
-            schedule.values().forEach(v -> slots.add(v.remove(id)));
-        }
-        return slots;
+    boolean fillSlot(int slotId, LocalDate date, String description, List<String> people) {
+        return fillSlot(slotId, date, description, people, 1);
     }
 
-    List<Slot> consult(LocalDate date) {
-        Map<Long, Slot> value = schedule.get(date);
-        List<Slot> slots = new ArrayList<>();
-        if (value != null) {
-            slots = value.values().stream().map(Slot::clone).collect(Collectors.toList());
-            slots.sort(Comparator.comparing(Slot::getStart, LocalDateTime::compareTo));
-        }
-        return slots;
-    }
 
-    List<Slot> consult(long id) {
-        return schedule.values()
-                .stream()
-                .map(slots -> slots.get(id))
-                .filter(Objects::nonNull)
-                .map(Slot::clone)
-                .collect(Collectors.toList());
-    }
-
-    void edit(long id, String description) {
-        schedule.values()
-                .stream()
-                .map(slots -> slots.get(id))
-                .filter(Objects::nonNull)
-                .forEach(s -> s.setDescription(description));
-    }
-
-    public boolean edit(long id, LocalDateTime start, LocalDateTime end) {
-        List<Slot> slots = this.remove(id);
-        boolean success = false;
-        if (slots != null) {
-            if (!this.add(id, slots.get(0).getDescription(), start, end)) {
-                this.add(id, slots.get(0).getDescription(), slots.get(0).getStart(), slots.get(slots.size() - 1).getEnd());
-            } else {
-                success = true;
-            }
-        }
-        return success;
-    }
-
-    private boolean add(long id, String description, LocalDateTime start, LocalDateTime end) {
-        if (!start.isBefore(end)) {
-            return false;
-        }
-
-        long days = ChronoUnit.DAYS.between(start, end);
-        List<Slot> slots = new ArrayList<>();
-
-        if (days == 0) {
-            slots.add(new Slot(id, description, start, end, true));
-        } else {
-            slots.add(new Slot(id, description, start, start.toLocalDate().atTime(23, 59), false));
-
-            for (int i = 1; i < days; i++) {
-                slots.add(new Slot(id, description,
-                        start.plusDays(i).toLocalDate().atTime(0, 0),
-                        start.plusDays(i).toLocalDate().atTime(23, 59), false));
-            }
-
-            slots.add(new Slot(id, description, start.plusDays(days).toLocalDate().atTime(0, 0), end, true));
-        }
-
-        for (Slot s : slots) {
-            Map<Long, Slot> value = schedule.get(s.getStart().toLocalDate());
-            if (value != null) {
-                if(value.values().stream().anyMatch(v -> DateUtils.intersects(s.getStart(), s.getEnd(), v.getStart(), v.getEnd()))) {
-                    return false;
-                }
-            }
-        }
-
-        slots.forEach(s -> {
-            if (!schedule.containsKey(s.getStart().toLocalDate())) {
-                Map<Long, Slot> value = new HashMap<>();
-                value.put(s.getId(), s);
-                schedule.put(s.getStart().toLocalDate(), value);
-            } else {
-                Map<Long, Slot> value = schedule.get(s.getStart().toLocalDate());
-                value.put(s.getId(), s);
-            }
-        });
-
-        return true;
-    }
 }
 
 

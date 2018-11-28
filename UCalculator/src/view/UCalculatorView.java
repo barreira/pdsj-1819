@@ -18,7 +18,7 @@ public final class UCalculatorView {
                 entry(0, new Menu("MAIN MENU", Arrays.asList(
                         new Option("Local Date Time Calculator ----", "1"),
                         new Option("Timezone Date Time Calculator -", "2"),
-                        new Option("Meeting Schedule --------------", "3"),
+                        new Option("Meeting OLDSchedule --------------", "3"),
                         new Option("End Session -------------------", "0")))),
                 entry(1, new Menu("LOCAL DATE TIME CALCULATOR", Arrays.asList(
                         new Option("Date Calculator -----", "1"),
