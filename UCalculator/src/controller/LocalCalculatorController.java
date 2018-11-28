@@ -338,7 +338,7 @@ class LocalCalculatorController {
         boolean exit = false;
 
         while (!exit) {
-            view.displayMenu(16);
+            view.displayMenu(6);
             int option = Input.readInt();
 
             if (option >= 1 && option <= 7) {
@@ -361,7 +361,7 @@ class LocalCalculatorController {
         boolean exit = false;
 
         while (!exit) {
-            view.displayMenu(17);
+            view.displayMenu(7);
             int place = Input.readInt();
 
             if (place >= 0 && place <= 6) {

@@ -53,7 +53,7 @@ public final class UCalculatorView {
                         new Option("Date of Week number -------", "2"),
                         new Option("Days of the Week in Month -", "3"),
                         new Option("Back ----------------------", "0")))),
-                entry(16, new Menu("SELECT DAY OF THE WEEK", Arrays.asList(
+                entry(6, new Menu("SELECT DAY OF THE WEEK", Arrays.asList(
                         new Option("Monday ----", "1"),
                         new Option("Tuesday ---", "2"),
                         new Option("Wednesday -", "3"),
@@ -62,7 +62,7 @@ public final class UCalculatorView {
                         new Option("Saturday --", "6"),
                         new Option("Sunday ----", "7"),
                         new Option("Cancel ----", "0")))),
-                entry(17, new Menu("SELECT PLACE", Arrays.asList(
+                entry(7, new Menu("SELECT PLACE", Arrays.asList(
                         new Option("First --", "1"),
                         new Option("Second -", "2"),
                         new Option("Third --", "3"),
@@ -70,11 +70,11 @@ public final class UCalculatorView {
                         new Option("Fifth --", "5"),
                         new Option("All ----", "6"),
                         new Option("Cancel -", "0")))),
-                entry(6, new Menu("Timezone Calculator", Arrays.asList(
+                entry(8, new Menu("Timezone Calculator", Arrays.asList(
                         new Option("Timezone Converter -", "1"),
                         new Option("Travel Calculator --", "2"),
                         new Option("Back ---------------", "0")))),
-                entry(7, new Menu("SCHEDULER MANAGER", Arrays.asList(
+                entry(9, new Menu("SCHEDULER MANAGER", Arrays.asList(
                         new Option("Add -----", "1"),
                         new Option("Edit ----", "2"),
                         new Option("Consult -", "3"),

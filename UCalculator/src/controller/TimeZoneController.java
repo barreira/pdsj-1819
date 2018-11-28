@@ -27,7 +27,7 @@ class TimeZoneController {
 
         String option;
         do {
-            view.displayMenu(6);
+            view.displayMenu(8);
             view.displayMessage("Insert option: ");
             option = Input.readString();
 

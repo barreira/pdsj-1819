@@ -24,7 +24,7 @@ public class ScheduleController {
     void startFlow() {
         String option;
         do {
-            view.displayMenu(7);
+            view.displayMenu(9);
             view.displayMessage("Insert option: ");
             option = Input.readString();
 
