@@ -1,8 +1,8 @@
 /**
  * Classe auxiliar para a exibição de resultados por página.
  *
- * @author Diogo Silva    - A76407
- * @author Rafael Braga   - A61799
+ * @author Diogo Silva  - A76407
+ * @author Rafael Braga - A61799
  * @version 2018.11.25
  */
 
@@ -45,6 +45,22 @@ public class Paging {
 
     int getCurrentPage() {
         return currentPage + 1;
+    }
+
+    String getElement(int indexOfPage) {
+        try {
+            return elements.get(currentPage * pageSize + indexOfPage);
+        } catch (IndexOutOfBoundsException e) {
+            return null;
+        }
+    }
+
+    List<String> currentPage() {
+        List<String> page = new ArrayList<>();
+        for (int i = currentPage; i < currentPage + pageSize && i < elements.size() ; i++) {
+            page.add(elements.get(i));
+        }
+        return page;
     }
 
     List<String> nextPage() {
@@ -92,43 +108,20 @@ public class Paging {
             return true;
         }
         
-        if (o == null || (this.getClass() != o.getClass())) {
+        if (o == null || this.getClass() != o.getClass()) {
             return false;
         }
         
         Paging p = (Paging) o;
-        
-        return (pageSize == p.getPageSize() && totalPages == p.getTotalPages() && currentPage == p.getCurrentPage() && elements.equals(p.getElements()));
+        return totalPages == p.getTotalPages() && pageSize == p.getPageSize() && elements.equals(p.getElements());
     }
 
     public String toString() {
-        return "Paginacao: " + pageSize +
-                " " +
-                totalPages +
-                " " +
-                currentPage +
-                "\n" +
-                String.join("\n", elements);
+        return "(ps = " + pageSize + ", tp = " + totalPages + ", cp = " + currentPage + "e =\n" +
+                String.join("\n", elements) + ")";
     }
 
     public Paging clone() {
         return new Paging(this);
-    }
-
-
-    String getElement(int index) {
-        try {
-            return elements.get(currentPage * pageSize + index);
-        } catch (IndexOutOfBoundsException e) {
-            return null;
-        }
-    }
-
-    List<String> currentPage() {
-        List<String> page = new ArrayList<>();
-        for (int i = currentPage; i < currentPage + pageSize && i < elements.size() ; i++) {
-            page.add(elements.get(i));
-        }
-        return page;
     }
 }
