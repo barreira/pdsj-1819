@@ -54,8 +54,8 @@ class TimeZoneController {
             final List<String> ids = model.getMatchedTimezoneIDs(location);
 
             if(ids.size() > 1) {
-                Paging paging = new Paging(5, ids);
-                int flag = 0;
+                Paging paging = new Paging(ids, 5);
+                int flag = 2;
                 String option;
 
                 do {
@@ -75,7 +75,7 @@ class TimeZoneController {
 
                     try {
                         int op = Integer.parseInt(option);
-                        String s = paging.get(op - 1);
+                        String s = paging.getElement(op - 1);
 
                         if (s.equals("")) {
                             if (op != 0) {
@@ -113,7 +113,6 @@ class TimeZoneController {
         }
     }
 
-    // TODO jo�o tenta acabar esta fun��o abarcando escalas
     private void travelCalculator() {
         view.displayMessage("Enter your destination (0 to exit): ");
         final String location = Input.readString();
@@ -122,7 +121,7 @@ class TimeZoneController {
             final List<String> ids = model.getMatchedTimezoneIDs(location);
 
             if(ids.size() > 1) {
-                Paging paging = new Paging(5, ids);
+                Paging paging = new Paging( ids, 5);
                 boolean next = true;
                 String option;
 
@@ -141,7 +140,7 @@ class TimeZoneController {
 
                     try {
                         int op = Integer.parseInt(option);
-                        String s = paging.get(op - 1);
+                        String s = paging.getElement(op - 1);
 
                         if (s.equals("")) {
                             if (op != 0) {
