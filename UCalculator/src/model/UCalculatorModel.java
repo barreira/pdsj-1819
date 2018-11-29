@@ -10,12 +10,12 @@ public final class UCalculatorModel {
 
     private LocalDateCalculator localDateCalculator;
     private TimeZoneCalculator timeZoneCalculator;
-    private OLDSchedule schedule;
+    // private Schedule schedule;
 
     public UCalculatorModel() {
         localDateCalculator = new LocalDateCalculator();
         timeZoneCalculator = new TimeZoneCalculator();
-        schedule = new OLDSchedule();
+        // schedule = new Schedule();
     }
 
     public void initLocalDateCalculator(LocalDate LocalDate) {
@@ -116,17 +116,18 @@ public final class UCalculatorModel {
     /* ********************************************* OLDSchedule **********************************************/
 
     public boolean addSlot(String description, LocalDateTime begin, LocalDateTime end) {
-        return schedule.add(description, begin, end);
+        return false;
+        // return schedule.add(description, begin, end);
     }
-
+    /*
     public void removeSlot(long id) {
         schedule.remove(id);
     }
-    public List<OLDSlot> consult(LocalDate date) {
+    public List<Slot> consult(LocalDate date) {
         return schedule.consult(date);
     }
 
-    public List<OLDSlot> consult(long id) {
+    public List<Slot> consult(long id) {
         return schedule.consult(id);
     }
 
@@ -137,4 +138,5 @@ public final class UCalculatorModel {
     public boolean edit(long id, LocalDateTime begin, LocalDateTime end) {
         return schedule.edit(id, begin, end);
     }
+    */
 }

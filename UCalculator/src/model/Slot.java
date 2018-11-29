@@ -1,27 +1,35 @@
 package model;
 
 import java.time.LocalTime;
+// available -
+// unavailable -
+//
 
-public abstract class Slot {
+// Map<Slot, Map<LocalDate, Properties>> slots
+// slots.get(id)
+
+class Slot {
     private final long id;
     private final LocalTime start;
     private final LocalTime end;
 
-    public Slot(long id, LocalTime start, LocalTime end) {
+    Slot(long id, LocalTime start, LocalTime end) {
         this.id = id;
         this.start = start;
         this.end = end;
     }
 
-    public long getId() {
+    long getId() {
         return id;
     }
 
-    public LocalTime getStart() {
+    LocalTime getStart() {
         return start;
     }
 
-    public LocalTime getEnd() {
+    LocalTime getEnd() {
         return end;
     }
+
+
 }

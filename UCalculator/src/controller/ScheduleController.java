@@ -1,6 +1,5 @@
 package controller;
 
-import model.OLDSlot;
 import model.UCalculatorModel;
 import view.UCalculatorView;
 
@@ -65,6 +64,7 @@ public class ScheduleController {
     }
 
     private void consult() {
+        /*
         view.displayMessage("Insert date (dd/MM/yyyy): ");
         LocalDate localDate = Input.readDate(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
 
@@ -93,6 +93,7 @@ public class ScheduleController {
                     view.displayMessage("Invalid option!");
             }
         } while (!option.equals("0"));
+        */
     }
 
     private void remove() {

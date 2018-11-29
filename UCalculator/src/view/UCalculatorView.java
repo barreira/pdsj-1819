@@ -92,7 +92,7 @@ public final class UCalculatorView {
             this.displaySpacing();
         }
 
-        System.out.println(message);
+        System.out.println("[31m" + message);
     }
 
     public void displayLocalDate(final LocalDate date, final DateTimeFormatter formatter) {
