@@ -143,6 +143,12 @@ public class Schedule {
         removed.forEach(System.out::println);
         return removed;
     }
+
+    public boolean edit(final int old_slotId, final LocalDate old_date, final int new_slotId, final LocalDate new_date) {
+        List<Task> tasks = this.remove(old_slotId, old_date);
+        this.fillSlot(new_slotId, new_date, tasks.get(0).getTitle(), tasks.get(0).getPeople(), tasks.size());
+        return true;
+    }
 }
 
 

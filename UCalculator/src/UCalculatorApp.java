@@ -11,10 +11,10 @@ public class UCalculatorApp {
     public static void main(String[] args) {
 
         Schedule schedule = new Schedule(60);
-        schedule.fillSlot(21, LocalDate.now(), "atuaprima", Arrays.asList("diogo", "rafa"), 7);
-        schedule.fillSlot(23, LocalDate.now(), "atuaprima2", Arrays.asList("diogo", "rafa"), 2);
-        schedule.remove(21, LocalDate.now());
+        schedule.fillSlot(21, LocalDate.now(), "atuaprima", Arrays.asList("diogo", "rafa"), 2);
+        // schedule.fillSlot(23, LocalDate.now(), "atuaprima2", Arrays.asList("diogo", "rafa"), 2);
 
+        schedule.edit(21, LocalDate.now(), 22, LocalDate.now().plusDays(2));
 
         UCalculatorView view = new UCalculatorView();
         UCalculatorModel model = new UCalculatorModel();
