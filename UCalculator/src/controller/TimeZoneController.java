@@ -1,13 +1,16 @@
 package controller;
 
 import model.UCalculatorModel;
-import view.Menu;
 import view.UCalculatorView;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.AbstractMap.SimpleEntry;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 class TimeZoneController {
 
@@ -114,22 +117,71 @@ class TimeZoneController {
     }
 
     private void travelCalculator() {
-        view.displayMessage("Enter your destination (0 to exit): ");
+        Map<String, SimpleEntry<LocalTime, LocalTime>> connections = new LinkedHashMap<>(); // <ConnLocation, <DuracaoVoo, TempoEntreVoos>>
+        LocalDateTime end, endLocal;
+        String option;
+
+        view.displayMessage("Insert departure datetime (dd/MM/yyyy HH:mm): ");
+        LocalDateTime start = Input.readDateTime(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
+
+        do {
+            view.displayMenu(19);
+            view.displayMessage("Insert option: ");
+            option = Input.readString();
+
+            switch (option) {
+                case "1":
+                    addConnection(connections);
+                    break;
+                case "2":
+                    if (connections.size() == 0) {
+                        view.displayMessage("You must insert at least one connection!\n");
+                    }
+                    break;
+                case "0":
+                    return;
+                default:
+                    view.displayMessage("Invalid option!\n");
+            }
+        } while (!option.equals("2"));
+
+        for (Entry<String, SimpleEntry<LocalTime, LocalTime>> c : connections.entrySet()) {
+            LocalTime duration = c.getValue().getKey();
+            LocalTime timeBetween = c.getValue().getValue();
+
+            start = start.plusHours(timeBetween.getHour()).plusMinutes(timeBetween.getMinute());
+            end = start.plusHours(duration.getHour()).plusMinutes(duration.getMinute());
+            endLocal = model.getArrivalTime(c.getKey(), start, duration);
+
+            view.displayMessage("Arrival at " + c.getKey() + " at ");
+            view.displayLocalDateTime(end, DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
+            view.displayMessage(" (");
+            view.displayLocalDateTime(endLocal, DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
+            view.displayMessage(" local)\n");
+
+            start = end;
+        }
+    }
+
+    private void addConnection(Map<String, SimpleEntry<LocalTime, LocalTime>> connections) {
+        view.displayMessage("Enter connection location (0 to cancel): ");
         final String location = Input.readString();
 
-        if(!location.equals("0")) {
+        if (!location.equals("0")) {
             final List<String> ids = model.getMatchedTimezoneIDs(location);
 
-            if(ids.size() > 1) {
-                Paging paging = new Paging( ids, 5);
-                boolean next = true;
+            if (ids.size() > 1) {
+                Paging paging = new Paging(ids, 5);
+                int flag = 2;
                 String option;
 
                 do {
-                    if (next) {
+                    if (flag == 0) {
                         view.displayPage(paging.nextPage(), paging.getCurrentPage(), paging.getTotalPages());
-                    } else {
+                    } else if (flag == 1){
                         view.displayPage(paging.previousPage(), paging.getCurrentPage(), paging.getTotalPages());
+                    } else {
+                        view.displayPage(paging.currentPage(), paging.getCurrentPage(), paging.getTotalPages());
                     }
 
                     view.displayMessage("Previous - p\n");
@@ -137,34 +189,45 @@ class TimeZoneController {
                     view.displayMessage("Cancel --- 0\n");
                     view.displayMessage("Insert option: ");
                     option = Input.readString();
+                    String s;
 
                     try {
                         int op = Integer.parseInt(option);
-                        String s = paging.getElement(op - 1);
+                        s = paging.getElement(op - 1);
 
-                        if (s.equals("")) {
-                            if (op != 0) {
-                                view.displayMessage("Invalid option!\n");
+                        if (s != null) {
+                            if (s.equals("")) {
+                                if (op != 0) {
+                                    view.displayMessage("Invalid option!\n");
+                                }
+                            } else {
+                                view.displayMessage("Insert flight duration (HH:mm): ");
+                                LocalTime duration = Input.readTime(DateTimeFormatter.ofPattern("HH:mm"));
+                                LocalTime between = LocalTime.of(0, 0);
+
+                                if (connections.size() != 0) {
+                                    view.displayMessage("Insert time between flights (HH:mm): ");
+                                    between = Input.readTime(DateTimeFormatter.ofPattern("HH:mm"));
+                                }
+
+                                SimpleEntry res = connections.put(s, new SimpleEntry<>(duration, between));
+
+                                if (res != null) { // já há entry com key igual
+                                    view.displayMessage("Invalid location: already has a connection associated");
+                                }
+                                break;
                             }
-                        } else {
-                            view.displayMessage("Insert departure datetime (dd/MM/yyyy HH:mm): ");
-                            LocalDateTime localDateTime = Input.readDateTime(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
-                            view.displayMessage("Insert departure datetime (HH:mm): ");
-                            LocalTime localTime = Input.readTime(DateTimeFormatter.ofPattern("HH:mm"));
-
-                            view.displayMessage(model.getArrivalTime(s, localDateTime, localTime).format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")));
-                            break;
                         }
-                        //TODO complete
                     } catch (NumberFormatException e) {
                         switch (option) {
                             case "n":
-                                next = true;
+                                flag = 0;
                                 break;
                             case "p":
-                                next = false;
+                                flag = 1;
                                 break;
                             default:
+                                flag = 2;
                                 view.displayMessage("Invalid option!\n");
                                 break;
                         }
@@ -173,11 +236,20 @@ class TimeZoneController {
             } else if (ids.size() == 0){
                 view.displayMessage("Location not found!\n");
             } else {
-                view.displayMessage(
-                        "Current timezone at " + ids.get(0) + " is " +
-                                model.getTimeZone(ids.get(0), LocalDateTime.now())
-                                        .format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")) + ".\n");
+                view.displayMessage("Insert flight duration (HH:mm): ");
+                LocalTime duration = Input.readTime(DateTimeFormatter.ofPattern("HH:mm"));
+                LocalTime between = LocalTime.of(0, 0);
 
+                if (connections.size() != 0) {
+                    view.displayMessage("Insert time between flights (HH:mm): ");
+                    between = Input.readTime(DateTimeFormatter.ofPattern("HH:mm"));
+                }
+
+                SimpleEntry res = connections.put(ids.get(0), new SimpleEntry<>(duration, between));
+
+                if (res != null) {
+                    view.displayMessage("Invalid location: already has a connection associated");
+                }
             }
         }
     }
