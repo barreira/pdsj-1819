@@ -311,10 +311,10 @@ class LocalCalculatorController {
         int place = dayOfWeekPlaceMenu();
 
         if (place >= 1 && place <= 5) {
-            LocalDate localDate = model.daysOfWeekInMonth(year, month, dayOfWeek, place).get(0);
+            List<LocalDate> localDates = model.daysOfWeekInMonth(year, month, dayOfWeek, place);
 
-            if (localDate != null) {
-                view.displayLocalDate(localDate, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+            if (localDates != null) {
+                view.displayLocalDate(localDates.get(0), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
             }
             else {
                 view.displayMessage(Month.of(month).getDisplayName(TextStyle.FULL, Locale.getDefault()) + " of " +

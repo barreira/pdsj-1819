@@ -6,6 +6,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import static java.util.Collections.singletonList;
+
 public final class UCalculatorModel {
 
     private LocalDateCalculator localDateCalculator;
@@ -84,7 +86,10 @@ public final class UCalculatorModel {
 
     public List<LocalDate> daysOfWeekInMonth(final int year, final int month, final DayOfWeek dayOfWeek, final int place) {
         if (place != 6) { // se não existir, retorna lista = {null}
-            return Collections.singletonList(DateUtils.dateOfDayOfWeekInMonth(year, month, dayOfWeek, place));
+            LocalDate ld = DateUtils.dateOfDayOfWeekInMonth(year, month, dayOfWeek, place);
+
+            return (ld == null) ? null
+                                : singletonList(DateUtils.dateOfDayOfWeekInMonth(year, month, dayOfWeek, place));
         }
         else { // se não existir 5.ª ocorrência, retorna lista = {1.ª, 2.ª, 3.ª, 4.ª, null}
             return Arrays.asList(DateUtils.dateOfDayOfWeekInMonth(year, month, dayOfWeek, 1),
