@@ -1,9 +1,7 @@
 package model;
 
-import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.AbstractMap.SimpleEntry;
 
@@ -13,10 +11,13 @@ public class Schedule {
     private final List<SimpleEntry<LocalTime, LocalTime>> slots;
     private int startSlot;
     private int endSlot;
-    private final List<Map<LocalDate, SimpleEntry<Boolean, Description>>> schedule;
+    private int taskId;
+    private final List<Map<LocalDate, SimpleEntry<Boolean, Task>>> schedule;
+    private final Map<Integer, SimpleEntry<Integer, LocalDate>> task_slot_date;
 
     public Schedule(final int slotSize) {
         this.slotSize = 1440 % slotSize == 0 ? slotSize : DEFAULT_SLOT_SIZE;
+        taskId = 1;
         this.slots = new ArrayList<>();
         this.schedule = new ArrayList<>();
 
@@ -28,6 +29,8 @@ public class Schedule {
 
         this.startSlot = 1;
         this.endSlot = slots.size();
+
+        task_slot_date = new HashMap<>();
     }
 
     Schedule() {
@@ -56,35 +59,46 @@ public class Schedule {
         return this.endSlot;
     }
 
-    public boolean fillSlot(int slotId, LocalDate date, String description, List<String> people, int duration) {
+    public boolean fillSlot(final int slotId, final LocalDate date, final String description, final List<String> people, final int duration) {
         if (slotId < 1 || startSlot + slotId - 1 > endSlot || duration < 1) {
             return false;
         }
 
         LocalDate aux = date;
+
         int k = startSlot + slotId - 2;
         for (int i = 0; i < duration; i++) {
+
             for (int j = k; j < endSlot && i < duration; j++, i++) {
                 if (schedule.get(j).get(date) != null) {
                     return false;
                 }
             }
+
             i--;
             k = 0;
             aux = aux.plusDays(1);
         }
 
+        aux = date;
         k = startSlot + slotId - 2;
         for (int i = 0; i < duration; i++) {
+
             for (int j = k; j < endSlot && i < duration; j++, i++) {
-                schedule.get(j).put(date, new SimpleEntry<>(true, new Description(description, people, i == duration - 1)));
+                schedule.get(j).put(aux, new SimpleEntry<>(true, new Task(taskId, j, aux, description, people, i == duration - 1)));
             }
+
             i--;
             k = 0;
-            date = date.plusDays(1);
+            aux = aux.plusDays(1);
         }
 
+        task_slot_date.put(taskId, new SimpleEntry<>(slotId, date));
+
+        taskId++;
+
         for (int i = 0; i < schedule.size(); i++) {
+
             if (schedule.get(i) != null) {
                 System.out.println("Slot " + (i + 1) + " " + slots.get(i).getKey() + " " + slots.get(i).getValue());
                 schedule.get(i).forEach((x, v) -> System.out.println(x + " " + v.getValue().toString()));
@@ -94,11 +108,41 @@ public class Schedule {
         return true;
     }
 
-    public boolean fillSlot(int slotId, LocalDate date, String description, List<String> people) {
+    public boolean fillSlot(final int slotId, final LocalDate date, final String description, final List<String> people) {
         return fillSlot(slotId, date, description, people, 1);
     }
 
+    public List<Task> remove(final int slotId, final LocalDate date) {
+        final List<Task> removed = new ArrayList<>();
 
+        SimpleEntry<Boolean, Task> task = schedule.get(startSlot + slotId - 2).get(date);
+
+        if (task == null || !task.getKey()) {
+            return removed;
+        }
+
+        int taskId = task.getValue().getTaskId();
+        boolean exit = false;
+        LocalDate aux = task_slot_date.get(taskId).getValue();
+
+        int j = task_slot_date.get(taskId).getKey() + startSlot - 2;
+
+        while (!exit) {
+            for (int i = j; i < endSlot && !exit;  i++) {
+                SimpleEntry<Boolean, Task> it = schedule.get(i).get(aux);
+                if (it == null || taskId != it.getValue().getTaskId()) {
+                    exit = true;
+                } else {
+                    removed.add(schedule.get(i).remove(aux).getValue());
+                }
+            }
+            aux = aux.plusDays(1);
+            j = startSlot - 1;
+        }
+        task_slot_date.remove(taskId);
+        removed.forEach(System.out::println);
+        return removed;
+    }
 }
 
 

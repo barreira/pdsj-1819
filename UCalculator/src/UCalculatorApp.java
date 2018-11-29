@@ -13,7 +13,7 @@ public class UCalculatorApp {
         Schedule schedule = new Schedule(60);
         schedule.fillSlot(21, LocalDate.now(), "atuaprima", Arrays.asList("diogo", "rafa"), 7);
         schedule.fillSlot(23, LocalDate.now(), "atuaprima2", Arrays.asList("diogo", "rafa"), 2);
-
+        schedule.remove(21, LocalDate.now());
 
 
         UCalculatorView view = new UCalculatorView();
