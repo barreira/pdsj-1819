@@ -122,7 +122,7 @@ public final class UCalculatorModel {
 
     public boolean addSlot(String description, LocalDateTime begin, LocalDateTime end) {
         return false;
-        // return schedule.add(description, begin, end);
+        // return schedule.addTask(description, begin, end);
     }
     /*
     public void removeSlot(long id) {

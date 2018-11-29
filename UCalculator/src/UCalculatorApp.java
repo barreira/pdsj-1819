@@ -1,5 +1,5 @@
 import controller.UCalculatorController;
-import model.Schedule;
+import model.schedule.Schedule;
 import model.UCalculatorModel;
 import view.UCalculatorView;
 
@@ -11,10 +11,16 @@ public class UCalculatorApp {
     public static void main(String[] args) {
 
         Schedule schedule = new Schedule(60);
-        schedule.fillSlot(21, LocalDate.now(), "atuaprima", Arrays.asList("diogo", "rafa"), 2);
-        // schedule.fillSlot(23, LocalDate.now(), "atuaprima2", Arrays.asList("diogo", "rafa"), 2);
+        schedule.addTask(LocalDate.now(), 21, 1, "atuaprima", Arrays.asList("diogo", "rafa"));
+        schedule.editTask(LocalDate.now(), 21, LocalDate.now().plusDays(2), 1, 1);
 
-        schedule.edit(21, LocalDate.now(), 22, LocalDate.now().plusDays(2));
+        System.out.println("#".repeat(20));
+        System.out.println("DATE " + LocalDate.now());
+        schedule.consult(LocalDate.now()).forEach(System.out::println);
+        System.out.println("#".repeat(20));
+        System.out.println("DATE " + LocalDate.now().plusDays(2));
+        schedule.consult(LocalDate.now().plusDays(2)).forEach(System.out::println);
+
 
         UCalculatorView view = new UCalculatorView();
         UCalculatorModel model = new UCalculatorModel();
