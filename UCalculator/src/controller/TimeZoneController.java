@@ -6,9 +6,11 @@ import view.UCalculatorView;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.AbstractMap.SimpleEntry;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 class TimeZoneController {
 
@@ -115,7 +117,7 @@ class TimeZoneController {
     }
 
     private void travelCalculator() {
-        Map<String, LocalTime> connections = new LinkedHashMap<>();
+        Map<String, SimpleEntry<LocalTime, LocalTime>> connections = new LinkedHashMap<>(); // <ConnLocation, <DuracaoVoo, TempoEntreVoos>>
         LocalDateTime end, endLocal;
         String option;
 
@@ -143,9 +145,13 @@ class TimeZoneController {
             }
         } while (!option.equals("2"));
 
-        for (Map.Entry<String, LocalTime> c : connections.entrySet()) {
-            end = start.plusHours(c.getValue().getHour()).plusMinutes(c.getValue().getMinute());
-            endLocal = model.getArrivalTime(c.getKey(), start, c.getValue());
+        for (Entry<String, SimpleEntry<LocalTime, LocalTime>> c : connections.entrySet()) {
+            LocalTime duration = c.getValue().getKey();
+            LocalTime timeBetween = c.getValue().getValue();
+
+            start = start.plusHours(timeBetween.getHour()).plusMinutes(timeBetween.getMinute());
+            end = start.plusHours(duration.getHour()).plusMinutes(duration.getMinute());
+            endLocal = model.getArrivalTime(c.getKey(), start, duration);
 
             view.displayMessage("Arrival at " + c.getKey() + " at ");
             view.displayLocalDateTime(end, DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
@@ -157,7 +163,7 @@ class TimeZoneController {
         }
     }
 
-    private void addConnection(Map<String, LocalTime> connections) {
+    private void addConnection(Map<String, SimpleEntry<LocalTime, LocalTime>> connections) {
         view.displayMessage("Enter connection location (0 to cancel): ");
         final String location = Input.readString();
 
@@ -197,10 +203,16 @@ class TimeZoneController {
                             } else {
                                 view.displayMessage("Insert flight duration (HH:mm): ");
                                 LocalTime duration = Input.readTime(DateTimeFormatter.ofPattern("HH:mm"));
+                                LocalTime between = LocalTime.of(0, 0);
 
-                                LocalTime res = connections.put(s, duration);
+                                if (connections.size() != 0) {
+                                    view.displayMessage("Insert time between flights (HH:mm): ");
+                                    between = Input.readTime(DateTimeFormatter.ofPattern("HH:mm"));
+                                }
 
-                                if (res != null) {
+                                SimpleEntry res = connections.put(s, new SimpleEntry<>(duration, between));
+
+                                if (res != null) { // já há entry com key igual
                                     view.displayMessage("Invalid location: already has a connection associated");
                                 }
                                 break;
@@ -226,8 +238,14 @@ class TimeZoneController {
             } else {
                 view.displayMessage("Insert flight duration (HH:mm): ");
                 LocalTime duration = Input.readTime(DateTimeFormatter.ofPattern("HH:mm"));
+                LocalTime between = LocalTime.of(0, 0);
 
-                LocalTime res = connections.put(ids.get(0), duration);
+                if (connections.size() != 0) {
+                    view.displayMessage("Insert time between flights (HH:mm): ");
+                    between = Input.readTime(DateTimeFormatter.ofPattern("HH:mm"));
+                }
+
+                SimpleEntry res = connections.put(ids.get(0), new SimpleEntry<>(duration, between));
 
                 if (res != null) {
                     view.displayMessage("Invalid location: already has a connection associated");
