@@ -12,6 +12,9 @@ public class UCalculatorApp {
 
         Schedule schedule = new Schedule(60);
         schedule.fillSlot(21, LocalDate.now(), "atuaprima", Arrays.asList("diogo", "rafa"), 7);
+        schedule.fillSlot(23, LocalDate.now(), "atuaprima2", Arrays.asList("diogo", "rafa"), 2);
+
+
 
         UCalculatorView view = new UCalculatorView();
         UCalculatorModel model = new UCalculatorModel();

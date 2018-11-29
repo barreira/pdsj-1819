@@ -62,26 +62,32 @@ public class Schedule {
         }
 
         LocalDate aux = date;
+        int k = startSlot + slotId - 2;
         for (int i = 0; i < duration; i++) {
-            for (int j = startSlot + slotId - 2; j < endSlot && i < duration; j++, i++) {
+            for (int j = k; j < endSlot && i < duration; j++, i++) {
                 if (schedule.get(j).get(date) != null) {
                     return false;
                 }
             }
+            i--;
+            k = 0;
             aux = aux.plusDays(1);
         }
 
+        k = startSlot + slotId - 2;
         for (int i = 0; i < duration; i++) {
-            for (int j = startSlot + slotId - 2; j < endSlot && i < duration; j++, i++) {
+            for (int j = k; j < endSlot && i < duration; j++, i++) {
                 schedule.get(j).put(date, new SimpleEntry<>(true, new Description(description, people, i == duration - 1)));
             }
+            i--;
+            k = 0;
             date = date.plusDays(1);
         }
 
         for (int i = 0; i < schedule.size(); i++) {
             if (schedule.get(i) != null) {
                 System.out.println("Slot " + (i + 1) + " " + slots.get(i).getKey() + " " + slots.get(i).getValue());
-                schedule.get(i).forEach((k, v) -> System.out.println(k + " " + v.getValue().toString()));
+                schedule.get(i).forEach((x, v) -> System.out.println(x + " " + v.getValue().toString()));
             }
         }
 
