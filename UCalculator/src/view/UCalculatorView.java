@@ -1,6 +1,7 @@
 package view;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
@@ -74,6 +75,10 @@ public final class UCalculatorView {
                         new Option("Timezone Converter -", "1"),
                         new Option("Travel Calculator --", "2"),
                         new Option("Back ---------------", "0")))),
+                entry(19, new Menu("ADD CONNECTION", Arrays.asList(
+                        new Option("Add Connection --------------", "1"),
+                        new Option("Calculate Total Travel Time -", "2"),
+                        new Option("Cancel ----------------------", "0")))),
                 entry(9, new Menu("SCHEDULER MANAGER", Arrays.asList(
                         new Option("Add -----", "1"),
                         new Option("Edit ----", "2"),
@@ -97,6 +102,10 @@ public final class UCalculatorView {
 
     public void displayLocalDate(final LocalDate date, final DateTimeFormatter formatter) {
         System.out.println(date.format(formatter));
+    }
+
+    public void displayLocalDateTime(final LocalDateTime datetime, final DateTimeFormatter formatter) {
+        System.out.print(datetime.format(formatter));
     }
 
     public void displayPeriod(final Period period) {
