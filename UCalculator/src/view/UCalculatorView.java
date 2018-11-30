@@ -1,7 +1,10 @@
 package view;
 
+import model.*;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
@@ -9,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 import static java.util.Map.entry;
+import static java.util.Map.of;
 
 public final class UCalculatorView {
 
@@ -79,12 +83,18 @@ public final class UCalculatorView {
                         new Option("Add Connection --------------", "1"),
                         new Option("Calculate Total Travel Time -", "2"),
                         new Option("Cancel ----------------------", "0")))),
-                entry(9, new Menu("SCHEDULER MANAGER", Arrays.asList(
-                        new Option("Add -----", "1"),
-                        new Option("Edit ----", "2"),
-                        new Option("Consult -", "3"),
-                        new Option("Remove --", "4"),
-                        new Option("Back ----", "0"))))
+                entry(9, new Menu("*** SCHEDULER MANAGER ***", Arrays.asList(
+                        new Option("Add ----------", "1"),
+                        new Option("Consult/Edit -", "2"),
+                        new Option("Remove -------", "3"),
+                        new Option("Back ---------", "0")))),
+                entry(10, new Menu("*** Edit Task ***", Arrays.asList(
+                        new Option("Change Title ----", "1"),
+                        new Option("Change Slot -----", "2"),
+                        new Option("Change Duration -", "3"),
+                        new Option("Change People ---", "4"),
+                        new Option("Commit Changes --", "5"),
+                        new Option("Back ------------", "0"))))
         );
     }
 
@@ -117,22 +127,7 @@ public final class UCalculatorView {
         this.displaySpacing();
         int i = 1;
         for(String element : elements) {
-            // TODO format output strings
             System.out.println(element + " " + i);
-            i++;
-        }
-        System.out.println("Page " + currentPage + " of " + totalPages);
-    }
-
-    public void displayPage(final List<String> elements, final int currentPage, final int totalPages, boolean enumerate) {
-        this.displaySpacing();
-        int i = 1;
-        for(String element : elements) {
-            System.out.print(element);
-            if (enumerate) {
-                System.out.print(" " + i);
-            }
-            System.out.println();
             i++;
         }
         System.out.println("Page " + currentPage + " of " + totalPages);
@@ -144,6 +139,49 @@ public final class UCalculatorView {
         if (menus.containsKey(menu)) {
             this.menus.get(menu).show();
         }
+    }
+
+    public void displaySlots(final LocalDate date, final DateTimeFormatter dateFormatter,
+                             final DateTimeFormatter hourFormatter, final List<Slot> slots) {
+        this.displayLocalDate(date, dateFormatter);
+
+        for (int i = 0; i < slots.size(); i++) {
+            this.displaySlot(slots.get(i), hourFormatter, i);
+        }
+    }
+
+    private void displaySlot(final Slot s, final DateTimeFormatter formatter, final int slotIndex) {
+        System.out.print("Slot " + slotIndex + " -> ");
+        this.displayHour(s.getStartTime(), formatter);
+        System.out.print(" - ");
+        this.displayHour(s.getEndTime(), formatter);
+
+        if (s.getClass().equals(OpenSlot.class)) {
+            System.out.println(": Available");
+        } else if (s.getClass().equals(ClosedSlot.class)) {
+            System.out.println(": Non Available");
+        } else if (s.getClass().equals(BusySlot.class)) {
+            System.out.print(": ");
+            this.displayTask(((BusySlot)s).getTask());
+        }
+    }
+
+    private void displayHour(final LocalTime localTime, final DateTimeFormatter formatter) {
+        System.out.print(localTime.format(formatter));
+    }
+
+    private void displayTask(final Task task) {
+        final StringBuilder sb = new StringBuilder("Title: " + task.getTitle() + " --- With: ");
+        final List<String> people = task.getPeople();
+        String delimiter = "";
+
+        for (String p : people) {
+            sb.append(delimiter);
+            sb.append(p);
+            delimiter = ",";
+        }
+
+        System.out.println(sb.toString());
     }
 
     private void displaySpacing() {

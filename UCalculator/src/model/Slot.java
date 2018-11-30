@@ -20,15 +20,15 @@ public abstract class Slot {
         this.endTime = slot.getEndTime();
     }
 
-    int getId() {
+    private int getId() {
         return id;
     }
 
-    LocalTime getStartTime() {
+    public LocalTime getStartTime() {
         return startTime;
     }
 
-    LocalTime getEndTime() {
+    public LocalTime getEndTime() {
         return endTime;
     }
 

@@ -1,6 +1,7 @@
 package model;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Task {
@@ -19,15 +20,24 @@ public class Task {
         this.people = people;
     }
 
+    Task(final Task task) {
+        this.date = task.getDate();
+        this.title = task.getTitle();
+        this.duration = task.getDuration();
+        this.slotId = task.getSlotId();
+        this.title = task.getTitle();
+        this.people = task.getPeople();
+    }
+
     LocalDate getDate() {
         return date;
     }
 
-    public int getSlotId() {
+    int getSlotId() {
         return slotId;
     }
 
-    public int getDuration() {
+    int getDuration() {
         return duration;
     }
 
@@ -35,15 +45,15 @@ public class Task {
         return title;
     }
 
-    public void setTitle(String title) {
+    void setTitle(String title) {
         this.title = title;
     }
 
     public List<String> getPeople() {
-        return people;
+        return new ArrayList<>(people);
     }
 
-    public void setPeople(List<String> people) {
+    void setPeople(List<String> people) {
         this.people = people;
     }
 
@@ -56,5 +66,10 @@ public class Task {
                 ", title='" + title + '\'' +
                 ", people=" + people +
                 '}';
+    }
+
+    @Override
+    public Task clone() {
+        return new Task(this);
     }
 }

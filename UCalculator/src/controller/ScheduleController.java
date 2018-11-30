@@ -1,14 +1,17 @@
 package controller;
 
+import model.Slot;
 import model.UCalculatorModel;
 import view.UCalculatorView;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.List;
 
-public class ScheduleController {
+class ScheduleController {
     private UCalculatorView view;
     private UCalculatorModel model;
 
@@ -22,8 +25,14 @@ public class ScheduleController {
 
     void startFlow() {
         String option;
+        boolean displayMenu = true;
+
         do {
-            view.displayMenu(9);
+            if (displayMenu) {
+                view.displayMenu(9);
+            }
+
+            displayMenu = true;
             view.displayMessage("Insert option: ");
             option = Input.readString();
 
@@ -32,71 +41,84 @@ public class ScheduleController {
                     this.add();
                     break;
                 case "2":
-                    this.edit();
+                    this.consultEdit();
                     break;
                 case "3":
-                    this.consult();
-                    break;
-                case "4":
                     this.remove();
                     break;
                 case "0":
                     break;
                 default:
+                    displayMenu = false;
                     view.displayMessage("Invalid option!\n");
             }
         } while (!option.equals("0"));
     }
 
     private void add() {
-        view.displayMessage("Insert description: ", true);
-        String description = Input.readString();
-        view.displayMessage("Insert start date (dd/MM/yyyy HH:mm): ");
-        LocalDateTime start = Input.readDateTime(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
-        view.displayMessage("Insert end date (dd/MM/yyyy HH:mm): ");
-
-        LocalDateTime end = Input.readDateTime(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
-        //System.out.println(model.addSlot(description, start, end));
-    }
-
-    private void edit() {
-
-    }
-
-    private void consult() {
-        /*
         view.displayMessage("Insert date (dd/MM/yyyy): ");
-        LocalDate localDate = Input.readDate(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
 
-        Paging paging = new Paging(model.consult(localDate).stream().map(OLDSlot::toString).collect(Collectors.toList()), 3);
-        String option;
+        final LocalDate localDate = Input.readDate(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+        final List<Slot> slots = model.consult(localDate);
+        int slotId;
+        int duration;
 
-        view.displayPage(paging.currentPage(), paging.getCurrentPage(), paging.getTotalPages());
+        view.displaySlots(localDate, DateTimeFormatter.ofPattern("dd/MM/yyyy"),
+                DateTimeFormatter.ofPattern("HH:mm"), slots);
+        view.displayMessage("Select Slot number: ");
 
         do {
-            view.displayMessage("Previous - p\n");
-            view.displayMessage("Next ----- n\n");
-            view.displayMessage("Cancel --- 0\n");
-            view.displayMessage("Insert option: ");
-            option = Input.readString();
+            slotId = Input.readInt();
 
-            switch (option) {
-                case "p":
-                    view.displayPage(paging.nextPage(), paging.getCurrentPage(), paging.getTotalPages());
-                    break;
-                case "n":
-                    view.displayPage(paging.previousPage(), paging.getCurrentPage(), paging.getTotalPages());
-                    break;
-                case "0":
-                    return;
-                default:
-                    view.displayMessage("Invalid option!");
+            if (slotId < 0 || slotId >= slots.size()) {
+                view.displayMessage("Invalid slot! Try again: ");
             }
-        } while (!option.equals("0"));
-        */
+        } while (slotId < 0 || slotId >= slots.size());
+
+        view.displayMessage("Number of slots: ");
+
+        do {
+            duration = Input.readInt();
+
+            if (duration <= 0) {
+                view.displayMessage("Invalid number of slots! Try again: ");
+            }
+        } while (duration <= 0);
+
+        view.displayMessage("Insert Title: ");
+
+        final String title = Input.readString();
+        final List<String> people = new ArrayList<>();
+        String p;
+
+        do {
+            view.displayMessage("Add people (0 to finish): ");
+            p = Input.readString();
+
+            if (!p.equals("0")) {
+                people.add(p);
+            }
+        } while (!p.equals("0"));
+
+        if (model.addTask(localDate, slotId, duration, title, people)) {
+            view.displayMessage("Task added!\n");
+        } else {
+            view.displayMessage("Could not add task...\n");
+        }
+
+        this.stopExecution();
+    }
+
+    private void consultEdit() {
+
     }
 
     private void remove() {
 
+    }
+
+    private void stopExecution() {
+        view.displayMessage("Press enter to continue: ");
+        Input.readString();
     }
 }

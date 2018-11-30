@@ -16,15 +16,13 @@ public class BusySlot extends Slot {
         this.task = busySlot.getTask();
     }
 
-    Task getTask() {
-        return task;
+    public Task getTask() {
+        return task.clone();
     }
 
     @Override
     public String toString() {
-        return "BusySlot{" +
-                "task=" + task +
-                "} " + super.toString();
+        return "BusySlot{" + "task=" + task + "} " + super.toString();
     }
 
     @Override

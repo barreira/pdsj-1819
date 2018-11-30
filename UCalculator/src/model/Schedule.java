@@ -158,7 +158,7 @@ class Schedule {
 
         for (int i = 0; i < duration && success; i++) {
             if ((slots = schedule.get(next)) != null) {
-                for (int j = k; j <= endSlotId && j <= i; j++) {
+                for (int j = k; j <= endSlotId && i < duration; j++, i++) {
                     if (!slots.get(j).getClass().equals(slotClass)) {
                         success = false;
                         break;
