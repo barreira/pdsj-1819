@@ -2,6 +2,7 @@ package controller;
 
 import model.Pair;
 import model.UCalculatorModel;
+import model.config.Config;
 import view.UCalculatorView;
 
 import java.time.DayOfWeek;
@@ -15,16 +16,22 @@ import java.util.Locale;
 import java.util.Stack;
 
 class LocalCalculatorController {
-
     private enum Operator {
         ADDITION, SUBTRACTION
     }
 
+    private final DateTimeFormatter dateTimeFormat;
+    private final DateTimeFormatter dateFormat;
+    private final DateTimeFormatter timeFormat;
     private UCalculatorView view;
     private UCalculatorModel model;
     private Stack<String> state;
 
-    LocalCalculatorController() {
+    public LocalCalculatorController() {
+        final Config config = Config.getInstance();
+        dateTimeFormat = DateTimeFormatter.ofPattern(config.getProperty("DATE_TIME_PATTERN"));
+        dateFormat = DateTimeFormatter.ofPattern(config.getProperty("DATE_PATTERN"));
+        timeFormat = DateTimeFormatter.ofPattern(config.getProperty("TIME_PATTERN"));
         state = new Stack<>();
     }
 
@@ -71,11 +78,11 @@ class LocalCalculatorController {
     }
 
     private void localDateCalculator() {
-        view.displayMessage("Insert date (dd/MM/yyyy): ");
+        view.displayMessage("Insert date (" + Config.getInstance().getProperty("DATE_PATTERN") + "): ");
 
-        final LocalDate localDate = Input.readDate(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+        final LocalDate localDate = Input.readDate(dateFormat);
 
-        state.push(localDate.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
+        state.push(localDate.format(dateFormat));
         model.initLocalDateCalculator(localDate);
         this.localDateOperationMenu();
     }
@@ -107,7 +114,7 @@ class LocalCalculatorController {
                 case "3":
                     state.clear();
                     view.displayMessage("Result: ");
-                    view.displayLocalDate(model.solve(), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+                    view.displayLocalDate(model.solve(), dateFormat);
                     view.displayMessage("Press enter to continue: ");
                     Input.readString();
                     exit = true;
