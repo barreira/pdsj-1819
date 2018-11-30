@@ -3,7 +3,6 @@ package model;
 import java.time.*;
 import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import static java.util.Collections.singletonList;
@@ -12,12 +11,12 @@ public final class UCalculatorModel {
 
     private LocalDateCalculator localDateCalculator;
     private TimeZoneCalculator timeZoneCalculator;
-    // private Schedule schedule;
+    private Schedule schedule;
 
     public UCalculatorModel() {
         localDateCalculator = new LocalDateCalculator();
         timeZoneCalculator = new TimeZoneCalculator();
-        // schedule = new Schedule();
+        schedule = new Schedule();
     }
 
     public void initLocalDateCalculator(LocalDate LocalDate) {
@@ -84,7 +83,8 @@ public final class UCalculatorModel {
         return DateUtils.dateOfWeekNumber(weekNumber, year);
     }
 
-    public List<LocalDate> daysOfWeekInMonth(final int year, final int month, final DayOfWeek dayOfWeek, final int place) {
+    public List<LocalDate> daysOfWeekInMonth(final int year, final int month,
+                                             final DayOfWeek dayOfWeek, final int place) {
         if (place != 6) { // se não existir, retorna lista = {null}
             LocalDate ld = DateUtils.dateOfDayOfWeekInMonth(year, month, dayOfWeek, place);
 
@@ -100,7 +100,7 @@ public final class UCalculatorModel {
         }
     }
 
-    /* ********************************************* TimeZone Calculator **********************************************/
+    /* ********************************************* TimeZone Calculator *********************************************/
 
     public void initTimeZoneIDs() {
         timeZoneCalculator.initTimeZoneIDs();
@@ -118,30 +118,35 @@ public final class UCalculatorModel {
         return DateUtils.getArrivalTime(timezoneId, departureTime, travelTime);
     }
 
-    /* ********************************************* OLDSchedule **********************************************/
+    /* ********************************************* Schedule ********************************************************/
 
-    public boolean addSlot(String description, LocalDateTime begin, LocalDateTime end) {
-        return false;
-        // return schedule.addTask(description, begin, end);
+    public boolean openSlots(final LocalDate date, final int slotId, final int duration) {
+        return schedule.openSlots(date, slotId, duration);
     }
-    /*
-    public void removeSlot(long id) {
-        schedule.remove(id);
+
+    public boolean closeSlots(final LocalDate date, final int slotId, final int duration) {
+        return schedule.closeSlots(date, slotId, duration);
     }
-    public List<Slot> consult(LocalDate date) {
+
+    public boolean addTask(final LocalDate date, final int slotId, final int duration,
+                           final String title, final List<String> people) {
+        return schedule.addTask(date, slotId, duration, title, people);
+    }
+
+    public boolean removeTask(final LocalDate date, final int slotId) {
+        return schedule.removeTask(date, slotId) != null;
+    }
+
+    public List<Slot> consult(final LocalDate date) {
         return schedule.consult(date);
     }
 
-    public List<Slot> consult(long id) {
-        return schedule.consult(id);
+    public boolean edit(final LocalDate date, final int slotId, final LocalDate newDate,
+                        final int newSlotId, final int newDuration) {
+        return schedule.editTask(date, slotId, newDate, newSlotId, newDuration);
     }
 
-    public void edit(long id, String description) {
-        schedule.edit(id, description);
+    public boolean edit(final LocalDate date, final int slotId, final String title, final List<String> people) {
+        return schedule.editTask(date, slotId, title, people);
     }
-
-    public boolean edit(long id, LocalDateTime begin, LocalDateTime end) {
-        return schedule.edit(id, begin, end);
-    }
-    */
 }

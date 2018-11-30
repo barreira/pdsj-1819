@@ -1,13 +1,14 @@
-package model.schedule;
+package model;
 
 import java.time.LocalTime;
 
 public abstract class Slot {
-    private final long id;
+
+    private final int id;
     private final LocalTime startTime;
     private final LocalTime endTime;
 
-    Slot(final long id, final LocalTime startTime, final LocalTime endTime) {
+    Slot(final int id, final LocalTime startTime, final LocalTime endTime) {
         this.id = id;
         this.startTime = startTime;
         this.endTime = endTime;
@@ -19,7 +20,7 @@ public abstract class Slot {
         this.endTime = slot.getEndTime();
     }
 
-    long getId() {
+    int getId() {
         return id;
     }
 

@@ -1,13 +1,14 @@
-package model.schedule;
+package model;
 
 import java.time.LocalTime;
 
 public class ClosedSlot extends Slot {
-    public ClosedSlot(long id, LocalTime startTime, LocalTime endTime) {
+
+    ClosedSlot(int id, LocalTime startTime, LocalTime endTime) {
         super(id, startTime, endTime);
     }
 
-    public ClosedSlot(ClosedSlot closedSlot) {
+    ClosedSlot(ClosedSlot closedSlot) {
         super(closedSlot);
     }
 

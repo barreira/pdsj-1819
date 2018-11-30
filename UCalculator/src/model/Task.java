@@ -1,19 +1,17 @@
-package model.schedule;
+package model;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Objects;
 
 public class Task {
-    private final int id;
+
     private final LocalDate date;
     private final int slotId;
     private final int duration;
     private String title;
     private List<String> people;
 
-    public Task(int id, LocalDate date, int slotId, int duration, String title, List<String> people) {
-        this.id = id;
+    Task(LocalDate date, int slotId, int duration, String title, List<String> people) {
         this.date = date;
         this.slotId = slotId;
         this.duration = duration;
@@ -21,7 +19,7 @@ public class Task {
         this.people = people;
     }
 
-    public LocalDate getDate() {
+    LocalDate getDate() {
         return date;
     }
 
@@ -31,10 +29,6 @@ public class Task {
 
     public int getDuration() {
         return duration;
-    }
-
-    public int getId() {
-        return id;
     }
 
     public String getTitle() {
@@ -56,7 +50,6 @@ public class Task {
     @Override
     public String toString() {
         return "Task{" +
-                "id=" + id +
                 ", date=" + date +
                 ", slotId=" + slotId +
                 ", duration=" + duration +

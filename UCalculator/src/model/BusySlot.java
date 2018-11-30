@@ -1,21 +1,22 @@
-package model.schedule;
+package model;
 
 import java.time.LocalTime;
 
 public class BusySlot extends Slot {
+
     private final Task task;
 
-    public BusySlot(final long id, final LocalTime startTime, final LocalTime endTime, final Task task) {
+    BusySlot(final int id, final LocalTime startTime, final LocalTime endTime, final Task task) {
         super(id, startTime, endTime);
         this.task = task;
     }
 
-    public BusySlot(BusySlot busySlot) {
+    BusySlot(BusySlot busySlot) {
         super(busySlot);
         this.task = busySlot.getTask();
     }
 
-    public Task getTask() {
+    Task getTask() {
         return task;
     }
 

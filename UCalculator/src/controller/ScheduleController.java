@@ -56,7 +56,7 @@ public class ScheduleController {
         view.displayMessage("Insert end date (dd/MM/yyyy HH:mm): ");
 
         LocalDateTime end = Input.readDateTime(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
-        System.out.println(model.addSlot(description, start, end));
+        //System.out.println(model.addSlot(description, start, end));
     }
 
     private void edit() {
