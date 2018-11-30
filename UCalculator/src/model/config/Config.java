@@ -7,29 +7,37 @@ import java.util.Properties;
 
 public class Config {
     private static final String CONFIG_PATH = "UDCalculator.config";
-    private static Properties properties;
+    private static Config config = null;
 
-    public Config() {
-        properties = new Properties();
-        properties.setProperty("DATE_TIME_PATTERN", "dd/MM/yyyy HH:mm");
-        properties.setProperty("DATE_PATTERN", "dd/MM/yyyy");
-        properties.setProperty("DATE_TIME", "HH:mm");
-        properties.setProperty("SLOT_SIZE", "15");
-        properties.setProperty("START_SLOT_TIME", "00:00");
-        properties.setProperty("END_SLOT_TIME", "23:45");
+    private Config() {
+        Properties config = new Properties();
+        config.setProperty("DATE_TIME_PATTERN", "dd/MM/yyyy HH:mm");
+        config.setProperty("DATE_PATTERN", "dd/MM/yyyy");
+        config.setProperty("DATE_TIME", "HH:mm");
+        config.setProperty("SLOT_SIZE", "15");
+        config.setProperty("START_SLOT_TIME", "00:00");
+        config.setProperty("END_SLOT_TIME", "23:45");
 
         try {
-            properties.load(Files.newInputStream(Path.of(CONFIG_PATH)));
+            config.load(Files.newInputStream(Path.of(CONFIG_PATH)));
+            config.forEach((k, v) -> System.out.println(k + " " + v));
         } catch (IOException e0) {
             try {
-                properties.store(Files.newOutputStream(Path.of(CONFIG_PATH)), "Default");
+                config.store(Files.newOutputStream(Path.of(CONFIG_PATH)), "Default");
             } catch (IOException e1) {
                 System.err.println("An error occurred: could not store the config file!");
             }
         }
     }
 
+    public static Config getConfig() {
+        if (config == null) {
+            config = new Config();
+        }
+        return config;
+    }
+
     public String getProperty(final String key) {
-        return properties.getProperty(key);
+        return config.getProperty(key);
     }
 }

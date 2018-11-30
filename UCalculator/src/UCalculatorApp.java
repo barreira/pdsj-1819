@@ -1,10 +1,13 @@
 import controller.UCalculatorController;
 import model.UCalculatorModel;
+import model.config.Config;
 import view.UCalculatorView;
 
 public class UCalculatorApp {
 
     public static void main(String[] args) {
+        Config config = Config.getConfig();
+
         UCalculatorView view = new UCalculatorView();
         UCalculatorModel model = new UCalculatorModel();
         UCalculatorController controller = new UCalculatorController();
