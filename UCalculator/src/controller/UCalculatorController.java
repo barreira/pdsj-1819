@@ -4,9 +4,7 @@ import model.UCalculatorModel;
 import model.config.Config;
 import view.UCalculatorView;
 
-import javax.swing.text.DateFormatter;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
 
 public class UCalculatorController {
     private final DateTimeFormatter dateTimeFormat;
@@ -17,9 +15,10 @@ public class UCalculatorController {
     private UCalculatorModel model;
 
     public UCalculatorController() {
-        dateTimeFormat = DateTimeFormatter.ofPattern(Config.getConfig().getProperty("DATE_TIME_PATTERN"));
-        dateFormat = DateTimeFormatter.ofPattern(Config.getConfig().getProperty("DATE_PATTERN"));
-        timeFormat = DateTimeFormatter.ofPattern(Config.getConfig().getProperty("TIME_PATTERN"));
+        final Config config = Config.getInstance();
+        dateTimeFormat = DateTimeFormatter.ofPattern(config.getProperty("DATE_TIME_PATTERN"));
+        dateFormat = DateTimeFormatter.ofPattern(config.getProperty("DATE_PATTERN"));
+        timeFormat = DateTimeFormatter.ofPattern(config.getProperty("TIME_PATTERN"));
     }
 
     public void setView(final UCalculatorView view) {

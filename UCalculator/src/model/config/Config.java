@@ -38,7 +38,7 @@ public class Config {
         }
     }
 
-    public static Config getConfig() {
+    public static Config getInstance() {
         if (config == null) {
             config = new Config();
         }
@@ -46,10 +46,6 @@ public class Config {
     }
 
     public String getProperty(final String key) {
-        return config.getProperties().getProperty(key);
-    }
-
-    private Properties getProperties() {
-        return properties;
+        return properties.getProperty(key);
     }
 }
