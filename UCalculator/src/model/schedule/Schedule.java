@@ -7,8 +7,8 @@ import java.util.*;
 public class Schedule {
     private static final int DEFAULT_SLOT_SIZE = 30;
     private final int slotSize;
-    private int fromSlotId;
-    private int toSlotId;
+    private int startSlotId;
+    private int endSlotId;
     private int taskId;
     private final Map<LocalDate, List<Slot>> schedule;
 
@@ -20,8 +20,8 @@ public class Schedule {
         }*/
 
         // internal ids
-        this.fromSlotId = 1;
-        this.toSlotId = 1440 / this.slotSize;
+        this.startSlotId = 0;
+        this.endSlotId = 1440 / this.slotSize - 1;
         this.taskId = 1;
         this.schedule = new HashMap<>();
     }
@@ -34,66 +34,69 @@ public class Schedule {
         return slotSize;
     }
 
-    public int getFromSlotId() {
-        return fromSlotId;
+    public int getStartSlotId() {
+        return startSlotId;
     }
 
-    public int getToSlotId() {
-        return toSlotId;
+    public int getEndSlotId() {
+        return endSlotId;
     }
 
     public int setStartSlot(int startSlot) {
-        this.fromSlotId = startSlot < 1 || startSlot > toSlotId ? this.fromSlotId : startSlot;
-        return this.fromSlotId;
+        this.startSlotId = startSlot < 1 || startSlot > endSlotId ? this.startSlotId : startSlot;
+        return this.startSlotId;
     }
 
     public int setEndSlot(int endSlot) {
-        this.toSlotId = endSlot < fromSlotId || endSlot > 1440 / this.slotSize ? this.toSlotId : endSlot;
-        return this.toSlotId;
+        this.endSlotId = endSlot < startSlotId || endSlot > 1440 / this.slotSize ? this.endSlotId : endSlot;
+        return this.endSlotId;
     }
 
     public boolean addTask(final LocalDate date, final int slotId, final int duration, final String title, final List<String> people) {
-        if (duration != 1) {
-            System.err.println("NOT IMPLEMENTED YET: DURATION MUST BE 1");
-            System.exit(1);
-        }
-
+        final int totalSlots = 1440 / this.slotSize;
         boolean success = true;
-        if (slotId < 1 || fromSlotId + slotId - 2 > toSlotId || duration < 1) {
+
+        if (slotId < 0 || startSlotId + slotId > endSlotId || duration < 1) {
             success = false;
         } else {
-            Task task = new Task(taskId++, date, slotId, duration, title, people);
+            Task task = new Task(taskId, date, slotId, duration, title, people);
             List<Slot> slots = schedule.get(date);
+
             if (slots == null) {
                 slots = new ArrayList<>();
 
-                for (int i = fromSlotId - 1; i < toSlotId; i++) {
-                    slots.add(new OpenSlot(i, LocalTime.of(0, 0).plusMinutes(i * this.slotSize), LocalTime.of(0, 0).plusMinutes((i + 1) * this.slotSize)));
+                for (int i = 0; i < totalSlots; i++) {
+                    slots.add(new OpenSlot(i, this.slotTime(i), this.slotTime(i + 1)));
                 }
-                slots.set(slotId - 1, new BusySlot(slotId, this.slotTime(slotId), this.slotTime(slotId + 1), task));
+
+                slots.set(slotId, new BusySlot(slotId, this.slotTime(slotId), this.slotTime(slotId + 1), task));
                 this.schedule.put(date, slots);
-            } else if (slots.get(slotId - 1).getClass().equals(OpenSlot.class)) {
-                slots.set(slotId - 1, new BusySlot(slotId, this.slotTime(slotId), this.slotTime(slotId + 1), task));
+                taskId++;
+            } else if (slots.get(slotId).getClass().equals(OpenSlot.class)) {
+                slots.set(slotId, new BusySlot(slotId, this.slotTime(slotId), this.slotTime(slotId + 1), task));
+                taskId++;
             } else {
                 success = false;
             }
         }
+
         schedule.get(date).forEach(System.out::println);
+
         return success;
     }
 
     /*
     public boolean addTask(final int slotId, final LocalDate date, final String description, final List<String> people, final int duration) {
-        if (slotId < 1 || fromSlotId + slotId - 1 > toSlotId || duration < 1) {
+        if (slotId < 1 || startSlotId + slotId - 1 > endSlotId || duration < 1) {
             return false;
         }
 
         LocalDate aux = date;
 
-        int k = fromSlotId + slotId - 2;
+        int k = startSlotId + slotId - 2;
         for (int i = 0; i < duration; i++) {
 
-            for (int j = k; j < toSlotId && i < duration; j++, i++) {
+            for (int j = k; j < endSlotId && i < duration; j++, i++) {
                 if (schedule.get(j).get(date) != null) {
                     return false;
                 }
@@ -105,10 +108,10 @@ public class Schedule {
         }
 
         aux = date;
-        k = fromSlotId + slotId - 2;
+        k = startSlotId + slotId - 2;
         for (int i = 0; i < duration; i++) {
 
-            for (int j = k; j < toSlotId && i < duration; j++, i++) {
+            for (int j = k; j < endSlotId && i < duration; j++, i++) {
                 schedule.get(j).put(aux, new SimpleEntry<>(true, new Task(taskId, j, aux, description, people, i == duration - 1)));
             }
 
@@ -139,7 +142,7 @@ public class Schedule {
     public Task removeTask(final LocalDate date, final int slotId) {
         Task task = null;
 
-        // TODO verify if slotId must is higher than fromSlotId less or equal than toSlotId
+        // TODO verify if slotId must is higher than startSlotId less or equal than endSlotId
         List<Slot> slots = schedule.get(date);
         Slot slot;
         if (slots != null && (slot = slots.get(slotId - 1)).getClass().equals(BusySlot.class)) {
@@ -149,7 +152,8 @@ public class Schedule {
         return task;
     }
 
-    public boolean editTask(final LocalDate date, final int slotId, final LocalDate newDate, final int newSlotId, final int newDuration) {
+    public boolean editTask(final LocalDate date, final int slotId, final LocalDate newDate,
+                            final int newSlotId, final int newDuration) {
         if (newDuration != 1) {
             System.err.println("NOT IMPLEMENTED YET: DURATION MUST BE 1");
             System.exit(1);
@@ -173,7 +177,7 @@ public class Schedule {
     public List<Task> remove(final LocalDate date, final int slotId) {
         final List<Task> removed = new ArrayList<>();
 
-        SimpleEntry<Boolean, Task> task = schedule.get(fromSlotId + slotId - 2).get(date);
+        SimpleEntry<Boolean, Task> task = schedule.get(startSlotId + slotId - 2).get(date);
 
         if (task == null || !task.getKey()) {
             return removed;
@@ -183,10 +187,10 @@ public class Schedule {
         boolean exit = false;
         LocalDate aux = task_slot_date.get(taskId).getValue();
 
-        int j = task_slot_date.get(taskId).getKey() + fromSlotId - 2;
+        int j = task_slot_date.get(taskId).getKey() + startSlotId - 2;
 
         while (!exit) {
-            for (int i = j; i < toSlotId && !exit;  i++) {
+            for (int i = j; i < endSlotId && !exit;  i++) {
                 SimpleEntry<Boolean, Task> it = schedule.get(i).get(aux);
                 if (it == null || taskId != it.getValue().getId()) {
                     exit = true;
@@ -195,7 +199,7 @@ public class Schedule {
                 }
             }
             aux = aux.plusDays(1);
-            j = fromSlotId - 1;
+            j = startSlotId - 1;
         }
         task_slot_date.remove(taskId);
         removed.forEach(System.out::println);
@@ -214,7 +218,7 @@ public class Schedule {
     }
 
     private LocalTime slotTime(final int slotId) {
-       return LocalTime.of(0, 0).plusMinutes(slotId * this.slotSize);
+        return LocalTime.of(0, 0).plusMinutes(slotId * this.slotSize);
     }
 }
 

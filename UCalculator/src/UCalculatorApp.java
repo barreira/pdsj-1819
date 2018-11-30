@@ -11,15 +11,17 @@ public class UCalculatorApp {
     public static void main(String[] args) {
 
         Schedule schedule = new Schedule(60);
-        schedule.addTask(LocalDate.now(), 21, 1, "atuaprima", Arrays.asList("diogo", "rafa"));
-        schedule.editTask(LocalDate.now(), 21, LocalDate.now().plusDays(2), 1, 1);
+        schedule.addTask(LocalDate.now(), 20, 1, "atuaprima", Arrays.asList("diogo", "rafa"));
+        System.out.println(schedule.consult(LocalDate.now()));
 
-        System.out.println("#".repeat(20));
-        System.out.println("DATE " + LocalDate.now());
-        schedule.consult(LocalDate.now()).forEach(System.out::println);
-        System.out.println("#".repeat(20));
-        System.out.println("DATE " + LocalDate.now().plusDays(2));
-        schedule.consult(LocalDate.now().plusDays(2)).forEach(System.out::println);
+//        schedule.editTask(LocalDate.now(), 21, LocalDate.now().plusDays(2), 1, 1);
+//
+//        System.out.println("#".repeat(20));
+//        System.out.println("DATE " + LocalDate.now());
+//        schedule.consult(LocalDate.now()).forEach(System.out::println);
+//        System.out.println("#".repeat(20));
+//        System.out.println("DATE " + LocalDate.now().plusDays(2));
+//        schedule.consult(LocalDate.now().plusDays(2)).forEach(System.out::println);
 
 
         UCalculatorView view = new UCalculatorView();
