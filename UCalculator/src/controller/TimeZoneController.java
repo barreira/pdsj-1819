@@ -72,12 +72,9 @@ class TimeZoneController {
                 do {
                     if (displayPage) {
                         this.managePaging(paging, pagingType);
-                        view.displayMessage("Previous - p\n");
-                        view.displayMessage("Next ----- n\n");
-                        view.displayMessage("Cancel --- 0\n");
-                        view.displayMessage("Insert option: ");
                     }
 
+                    view.displayMessage("Insert option: ");
                     displayPage = true;
                     option = Input.readString();
 
@@ -96,8 +93,7 @@ class TimeZoneController {
                                 LocalDateTime result = model.getTimeZone(s, LocalDateTime.now());
                                 view.displayMessage("Current timezone at " + s + " is " +
                                         result.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")) + ".\n");
-                                view.displayMessage("Press enter to continue: ");
-                                Input.readString();
+                                this.stopExecution();
                                 break;
                             }
                         }
@@ -118,8 +114,7 @@ class TimeZoneController {
                         "Current timezone at " + ids.get(0) + " is " +
                                 model.getTimeZone(ids.get(0), LocalDateTime.now())
                                         .format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")) + ".\n");
-                view.displayMessage("Press enter to continue: ");
-                Input.readString();
+                this.stopExecution();
             }
         }
     }
@@ -149,6 +144,7 @@ class TimeZoneController {
                 case "2":
                     if (connections.size() == 0) {
                         view.displayMessage("You must insert at least one connection!\n");
+                        this.stopExecution();
                     }
 
                     break;
@@ -176,6 +172,10 @@ class TimeZoneController {
 
             start = end;
         }
+
+        if (connections.size() > 0) {
+            this.stopExecution();
+        }
     }
 
     private void addConnection(Map<String, SimpleEntry<LocalTime, LocalTime>> connections) {
@@ -188,14 +188,16 @@ class TimeZoneController {
             if (ids.size() > 1) {
                 Paging paging = new Paging(ids, 5);
                 int pagingType = 2;
+                boolean displayPage = true;
                 String option;
 
                 do {
-                    this.managePaging(paging, pagingType);
-                    view.displayMessage("Previous - p\n");
-                    view.displayMessage("Next ----- n\n");
-                    view.displayMessage("Cancel --- 0\n");
+                    if (displayPage) {
+                        this.managePaging(paging, pagingType);
+                    }
+
                     view.displayMessage("Insert option: ");
+                    displayPage = true;
                     option = Input.readString();
                     String s;
 
@@ -222,12 +224,18 @@ class TimeZoneController {
 
                                 if (res != null) { // já há entry com key igual
                                     view.displayMessage("Invalid location: already has a connection associated");
+                                    this.stopExecution();
                                 }
+
                                 break;
                             }
                         }
                     } catch (NumberFormatException e) {
                         pagingType = this.getPagingType(option);
+
+                        if (pagingType == 2) {
+                            displayPage = false;
+                        }
                     }
                 } while (!option.equals("0"));
             } else if (ids.size() == 0){
@@ -246,6 +254,7 @@ class TimeZoneController {
 
                 if (res != null) {
                     view.displayMessage("Invalid location: already has a connection associated");
+                    this.stopExecution();
                 }
             }
         }
@@ -259,6 +268,10 @@ class TimeZoneController {
         } else {
             view.displayPage(paging.currentPage(), paging.getCurrentPage(), paging.getTotalPages());
         }
+
+        view.displayMessage("Previous - p\n");
+        view.displayMessage("Next ----- n\n");
+        view.displayMessage("Cancel --- 0\n");
     }
 
     private int getPagingType(final String option) {
@@ -278,5 +291,10 @@ class TimeZoneController {
         }
 
         return pagingType;
+    }
+
+    private void stopExecution() {
+        view.displayMessage("Press enter to continue: ");
+        Input.readString();
     }
 }

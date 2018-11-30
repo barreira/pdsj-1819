@@ -3,16 +3,17 @@ package model;
 import java.time.*;
 import java.time.temporal.*;
 import java.util.function.BiFunction;
+import java.util.AbstractMap.SimpleEntry;
 
 import static java.time.DayOfWeek.*;
 
 final class DateUtils {
 
-    static final BiFunction<LocalDate, Pair<Integer, TemporalUnit>, LocalDate> datePlusDuration =
-            (x, y) -> x.isSupported(y.getSecond()) ? x.plus(y.getFirst(), y.getSecond()) : x;
+    static final BiFunction<LocalDate, SimpleEntry<Integer, TemporalUnit>, LocalDate> datePlusDuration =
+            (x, y) -> x.isSupported(y.getValue()) ? x.plus(y.getKey(), y.getValue()) : x;
 
-    static final BiFunction<LocalDate, Pair<Integer, TemporalUnit>, LocalDate> dateMinusDuration =
-            (x, y) -> x.isSupported(y.getSecond()) ? x.minus(y.getFirst(), y.getSecond()) : x;
+    static final BiFunction<LocalDate, SimpleEntry<Integer, TemporalUnit>, LocalDate> dateMinusDuration =
+            (x, y) -> x.isSupported(y.getValue()) ? x.minus(y.getKey(), y.getValue()) : x;
 
     static final BiFunction<LocalDate, Integer, LocalDate> datePlusWorkingDays = (x, y) -> {
         int count = 0;
@@ -85,11 +86,11 @@ final class DateUtils {
         return localDate.get(IsoFields.WEEK_OF_WEEK_BASED_YEAR);
     }
 
-    static Pair<LocalDate, LocalDate> dateOfWeekNumber(int weekNumber, int y) {
+    static SimpleEntry<LocalDate, LocalDate> dateOfWeekNumber(int weekNumber, int y) {
         final LocalDate start = Year.of(y).atDay(1).with(TemporalAdjusters.nextOrSame(DayOfWeek.MONDAY))
                 .plusWeeks(weekNumber - 1);
 
-        return new Pair<>(start, start.with(TemporalAdjusters.next(DayOfWeek.SUNDAY)));
+        return new SimpleEntry<>(start, start.with(TemporalAdjusters.next(DayOfWeek.SUNDAY)));
     }
 
     static LocalDate dateOfDayOfWeekInMonth(int year, int month, DayOfWeek dayOfWeek, int place) {

@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.temporal.TemporalUnit;
 import java.util.Stack;
 import java.util.function.BiFunction;
+import java.util.AbstractMap.SimpleEntry;
 
 class LocalDateCalculator {
 
@@ -18,9 +19,9 @@ class LocalDateCalculator {
         stack.push(LocalDate);
     }
 
-    void push(BiFunction<LocalDate, Pair<Integer, TemporalUnit>, LocalDate> biFunction, int duration,
+    void push(BiFunction<LocalDate, SimpleEntry<Integer, TemporalUnit>, LocalDate> biFunction, int duration,
               TemporalUnit temporalUnit) {
-        stack.push(biFunction.apply(stack.peek(), new Pair<>(duration, temporalUnit)));
+        stack.push(biFunction.apply(stack.peek(), new SimpleEntry<>(duration, temporalUnit)));
     }
 
     void push(BiFunction<LocalDate, Integer, LocalDate> biFunction, int argument) {

@@ -4,6 +4,7 @@ import java.time.*;
 import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.List;
+import java.util.AbstractMap.SimpleEntry;
 
 import static java.util.Collections.singletonList;
 
@@ -83,7 +84,7 @@ public final class UCalculatorModel {
         return DateUtils.weekNumberOfLocalDate(localDate);
     }
 
-    public Pair<LocalDate, LocalDate> dateOfWeekNumber(final int weekNumber, final int year) {
+    public SimpleEntry<LocalDate, LocalDate> dateOfWeekNumber(final int weekNumber, final int year) {
         return DateUtils.dateOfWeekNumber(weekNumber, year);
     }
 

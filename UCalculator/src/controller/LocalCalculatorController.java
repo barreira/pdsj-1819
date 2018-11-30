@@ -1,6 +1,5 @@
 package controller;
 
-import model.Pair;
 import model.UCalculatorModel;
 import model.config.Config;
 import view.UCalculatorView;
@@ -11,9 +10,11 @@ import java.time.Month;
 import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
 import java.time.temporal.ChronoUnit;
+import java.util.AbstractMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Stack;
+import java.util.AbstractMap.SimpleEntry;
 
 class LocalCalculatorController {
     private enum Operator {
@@ -343,10 +344,9 @@ class LocalCalculatorController {
         int weekNumber = Input.readInt();
         view.displayMessage("Insert Year: ");
         int year = Input.readInt();
-
-        Pair<LocalDate, LocalDate> res = model.dateOfWeekNumber(weekNumber, year);
-        LocalDate start = res.getFirst();
-        LocalDate end = res.getSecond();
+        SimpleEntry<LocalDate, LocalDate> res = model.dateOfWeekNumber(weekNumber, year);
+        LocalDate start = res.getKey();
+        LocalDate end = res.getValue();
 
         view.displayMessage("Week number " + weekNumber + " of " + year + " starts at " + start.toString() +
                 " and ends at " + end.toString() + ".\n");

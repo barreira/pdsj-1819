@@ -12,16 +12,15 @@ class TimeZoneCalculator {
     private Set<String> zoneIds;
 
     TimeZoneCalculator() {
-        // TODO: verificar se natural orden � necess�rio
         zoneIds = new TreeSet<>(Comparator.naturalOrder());
     }
 
     void initTimeZoneIDs() {
         zoneIds = ZoneId.getAvailableZoneIds();
-        // zoneIds.forEach(System.out::println);
     }
 
     List<String> getMatchedZoneIds(final String id) {
-        return zoneIds.stream().filter(s -> s.toLowerCase().replace("_", " ").contains(id.toLowerCase())).collect(Collectors.toList());
+        return zoneIds.stream().filter(s -> s.toLowerCase().replace("_", " ")
+                .contains(id.toLowerCase())).collect(Collectors.toList());
     }
 }
