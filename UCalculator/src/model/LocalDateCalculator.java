@@ -1,6 +1,5 @@
 package model;
 
-import java.time.Duration;
 import java.time.LocalDate;
 import java.time.temporal.TemporalUnit;
 import java.util.Stack;
@@ -28,8 +27,8 @@ class LocalDateCalculator {
         stack.push(biFunction.apply(stack.peek(), argument));
     }
 
-    LocalDate pop() {
-        return stack.pop();
+    void pop() {
+        stack.pop();
     }
 
     LocalDate peek() {

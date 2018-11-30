@@ -108,7 +108,7 @@ class LocalCalculatorController {
                     state.clear();
                     view.displayMessage("Result: ");
                     view.displayLocalDate(model.solve(), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
-                    view.displayMessage("Any key to continue: ");
+                    view.displayMessage("Press enter to continue: ");
                     Input.readString();
                     exit = true;
                     break;
@@ -230,41 +230,46 @@ class LocalCalculatorController {
     }
 
     private void intervalCalculator() {
-        view.displayMessage("Insert first date: ");
+        view.displayMessage("Insert first date (dd/MM/yyyy): ");
         final LocalDate first = Input.readDate(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
-        view.displayMessage("Insert second date: ");
+        view.displayMessage("Insert second date (dd/MM/yyyy): ");
         final LocalDate second = Input.readDate(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
         String option;
         boolean exit = false;
+        boolean displayMenu = true;
 
         do {
-            view.displayMenu(4);
+            if (displayMenu) {
+                view.displayMenu(4);
+            }
+
+            displayMenu = true;
             view.displayMessage("Insert option: ");
             option = Input.readString();
 
             switch (option) {
                 case "1":
-                    view.displayMessage(model.intervalInUnit(first, second, ChronoUnit.DAYS) + " days");
+                    view.displayMessage(model.intervalInUnit(first, second, ChronoUnit.DAYS) + " days\n");
                     exit = true;
                     break;
                 case "2":
-                    view.displayMessage(model.intervalInWorkingDays(first, second) + " working days");
+                    view.displayMessage(model.intervalInWorkingDays(first, second) + " working days\n");
                     exit = true;
                     break;
                 case "3":
-                    view.displayMessage(model.intervalInUnit(first, second, ChronoUnit.WEEKS) + " weeks");
+                    view.displayMessage(model.intervalInUnit(first, second, ChronoUnit.WEEKS) + " weeks\n");
                     exit = true;
                     break;
                 case "4":
-                    view.displayMessage(model.intervalInFortnights(first, second) + " fortnights");
+                    view.displayMessage(model.intervalInFortnights(first, second) + " fortnights\n");
                     exit = true;
                     break;
                 case "5":
-                    view.displayMessage(model.intervalInUnit(first, second, ChronoUnit.MONTHS) + " months");
+                    view.displayMessage(model.intervalInUnit(first, second, ChronoUnit.MONTHS) + " months\n");
                     exit = true;
                     break;
                 case "6":
-                    view.displayMessage(model.intervalInUnit(first, second, ChronoUnit.YEARS) + " years");
+                    view.displayMessage(model.intervalInUnit(first, second, ChronoUnit.YEARS) + " years\n");
                     exit = true;
                     break;
                 case "7":
@@ -274,16 +279,28 @@ class LocalCalculatorController {
                 case "0":
                     break;
                 default:
-                    view.displayMessage("Invalid option!");
+                    displayMenu = false;
+                    view.displayMessage("Invalid option!\n");
+            }
+
+            if (!option.equals("0") && exit) {
+                view.displayMessage("Press enter to continue: ");
+                Input.readString();
             }
         } while (!option.equals("0") && !exit);
     }
 
     private void weeksCalculator() {
         String option;
+        boolean displayMenu = true;
 
         do {
-            view.displayMenu(5);
+            if (displayMenu) {
+                view.displayMenu(5);
+            }
+
+            displayMenu = true;
+            view.displayMessage("Insert option: ");
             option = Input.readString();
 
             switch (option) {
@@ -298,6 +315,7 @@ class LocalCalculatorController {
                 case "0":
                     break;
                 default:
+                    displayMenu = false;
                     view.displayMessage("Invalid option!\n");
             }
         } while (!option.equals("0"));
@@ -306,9 +324,11 @@ class LocalCalculatorController {
     private void weekNumberOfLocalDate() {
         LocalDate localDate;
 
-        view.displayMessage("Insert Date: ");
+        view.displayMessage("Insert Date (dd/MM/yyyy): ");
         localDate = Input.readDate(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
         view.displayMessage("Week: " + model.getWeekNumber(localDate) + "\n");
+        view.displayMessage("Press enter to continue: ");
+        Input.readString();
     }
 
     private void localDateOfWeekNumber() {
@@ -323,18 +343,22 @@ class LocalCalculatorController {
 
         view.displayMessage("Week number " + weekNumber + " of " + year + " starts at " + start.toString() +
                 " and ends at " + end.toString() + ".\n");
+        view.displayMessage("Press enter to continue: ");
+        Input.readString();
     }
 
     private void daysOfWeekInMonth() {
         view.displayMessage("Insert Month: ");
-        int month = Input.readInt();
+        final int month = Input.readInt();
         view.displayMessage("Insert Year: ");
-        int year = Input.readInt();
+        final int year = Input.readInt();
+        final DayOfWeek dayOfWeek = dayOfWeekMenu();
 
-        DayOfWeek dayOfWeek = dayOfWeekMenu();
-        if (dayOfWeek == null) return;
+        if (dayOfWeek == null) {
+            return;
+        }
 
-        int place = dayOfWeekPlaceMenu();
+        final int place = dayOfWeekPlaceMenu();
 
         if (place >= 1 && place <= 5) {
             List<LocalDate> localDates = model.daysOfWeekInMonth(year, month, dayOfWeek, place);
@@ -347,24 +371,37 @@ class LocalCalculatorController {
                                     year + " only has " + (place - 1) + " " +
                                     dayOfWeek.getDisplayName(TextStyle.FULL, Locale.getDefault()) + "s");
             }
-        }
-        else if (place == 6) {
-            List<LocalDate> localDates = model.daysOfWeekInMonth(year, month, dayOfWeek, place);
 
-            for (LocalDate ld : localDates) {
-                if (ld != null) {
-                    view.displayLocalDate(ld, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+            view.displayMessage("Press enter to continue: ");
+            Input.readString();
+        } else if (place == 6) {
+            final List<LocalDate> localDates = model.daysOfWeekInMonth(year, month, dayOfWeek, place);
+
+            if (localDates != null) {
+                for (final LocalDate date : localDates) {
+                    if (date != null) {
+                        view.displayLocalDate(date, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+                    }
                 }
             }
+
+            view.displayMessage("Press enter to continue: ");
+            Input.readString();
         }
     }
 
     private DayOfWeek dayOfWeekMenu() {
         DayOfWeek dayOfWeek = null;
         boolean exit = false;
+        boolean displayMenu = true;
 
         while (!exit) {
-            view.displayMenu(6);
+            if (displayMenu) {
+                view.displayMenu(6);
+            }
+
+            displayMenu = true;
+            view.displayMessage("Insert option: ");
             int option = Input.readInt();
 
             if (option >= 1 && option <= 7) {
@@ -375,6 +412,7 @@ class LocalCalculatorController {
                 exit = true;
             }
             else {
+                displayMenu = false;
                 view.displayMessage("Invalid option!\n");
             }
         }
@@ -385,9 +423,15 @@ class LocalCalculatorController {
     private int dayOfWeekPlaceMenu() {
         int ret = -1;
         boolean exit = false;
+        boolean displayMenu = true;
 
         while (!exit) {
-            view.displayMenu(7);
+            if (displayMenu) {
+                view.displayMenu(7);
+            }
+
+            displayMenu = true;
+            view.displayMessage("Insert option: ");
             int place = Input.readInt();
 
             if (place >= 0 && place <= 6) {
@@ -395,6 +439,7 @@ class LocalCalculatorController {
                 exit = true;
             }
             else {
+                displayMenu = false;
                 view.displayMessage("Invalid option!\n");
             }
         }

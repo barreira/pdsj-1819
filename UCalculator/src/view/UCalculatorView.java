@@ -54,7 +54,7 @@ public final class UCalculatorView {
                         new Option("Date of Week number -------", "2"),
                         new Option("Days of the Week in Month -", "3"),
                         new Option("Back ----------------------", "0")))),
-                entry(6, new Menu("\t*** SELECT DAY OF THE WEEK ***", Arrays.asList(
+                entry(6, new Menu("*** SELECT DAY OF THE WEEK ***", Arrays.asList(
                         new Option("Monday ----", "1"),
                         new Option("Tuesday ---", "2"),
                         new Option("Wednesday -", "3"),
@@ -63,7 +63,7 @@ public final class UCalculatorView {
                         new Option("Saturday --", "6"),
                         new Option("Sunday ----", "7"),
                         new Option("Cancel ----", "0")))),
-                entry(7, new Menu("SELECT PLACE", Arrays.asList(
+                entry(7, new Menu("*** SELECT PLACE ***", Arrays.asList(
                         new Option("First --", "1"),
                         new Option("Second -", "2"),
                         new Option("Third --", "3"),
@@ -71,11 +71,11 @@ public final class UCalculatorView {
                         new Option("Fifth --", "5"),
                         new Option("All ----", "6"),
                         new Option("Cancel -", "0")))),
-                entry(8, new Menu("Timezone Calculator", Arrays.asList(
+                entry(8, new Menu("*** Timezone Calculator ***", Arrays.asList(
                         new Option("Timezone Converter -", "1"),
                         new Option("Travel Calculator --", "2"),
                         new Option("Back ---------------", "0")))),
-                entry(19, new Menu("ADD CONNECTION", Arrays.asList(
+                entry(19, new Menu("\t*** ADD CONNECTION ***", Arrays.asList(
                         new Option("Add Connection --------------", "1"),
                         new Option("Calculate Total Travel Time -", "2"),
                         new Option("Cancel ----------------------", "0")))),

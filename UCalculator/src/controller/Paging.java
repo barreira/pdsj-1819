@@ -1,3 +1,8 @@
+package controller;
+
+import java.util.List;
+import java.util.ArrayList;
+
 /**
  * Classe auxiliar para a exibição de resultados por página.
  *
@@ -5,13 +10,8 @@
  * @author Rafael Braga - A61799
  * @version 2018.11.25
  */
+class Paging {
 
-package controller;
-
-import java.util.List;
-import java.util.ArrayList;
-
-public class Paging {
     private final List<String> elements; // list of elements to display
     private int currentPage; // index of current page
     private final int pageSize; // number of elements per page
@@ -22,14 +22,6 @@ public class Paging {
         this.currentPage = 0;
         this.pageSize = pageSize;
         this.totalPages = (int) Math.ceil((double) elements.size() / pageSize);
-    }
-
-    List<String> getElements() {
-        return elements;
-    }
-
-    int getPageSize() {
-        return pageSize;
     }
 
     int getTotalPages() {
@@ -94,23 +86,5 @@ public class Paging {
         }
 
         return page;
-    }
-
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        
-        if (o == null || this.getClass() != o.getClass()) {
-            return false;
-        }
-        
-        Paging p = (Paging) o;
-        return totalPages == p.getTotalPages() && pageSize == p.getPageSize() && elements.equals(p.getElements());
-    }
-
-    public String toString() {
-        return "(ps = " + pageSize + ", tp = " + totalPages + ", cp = " + currentPage + "e =\n" +
-                String.join("\n", elements) + ")";
     }
 }

@@ -29,7 +29,6 @@ import java.util.Scanner;
  */
 final class Input {
 
-
     static LocalDate readDate(DateTimeFormatter formatter) {
         final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
         boolean ok = false;
@@ -40,7 +39,7 @@ final class Input {
                 localDate = LocalDate.parse(bufferedReader.readLine(), formatter);
                 ok = true;
             } catch (IOException | DateTimeParseException e) {
-                System.out.println("Insert new value: ");
+                System.out.print("Insert new value: ");
             }
         }
 
@@ -57,7 +56,7 @@ final class Input {
                 localDateTime = LocalDateTime.parse(bufferedReader.readLine(), formatter);
                 ok = true;
             } catch (IOException | DateTimeParseException e) {
-                System.out.println("Insert new value: ");
+                System.out.print("Insert new value: ");
             }
         }
 
@@ -74,7 +73,7 @@ final class Input {
                 localTime = LocalTime.parse(bufferedReader.readLine(), formatter);
                 ok = true;
             } catch (IOException | DateTimeParseException e) {
-                System.out.println("Insert new value: ");
+                System.out.print("Insert new value: ");
             }
         }
 
@@ -91,7 +90,7 @@ final class Input {
                 i = input.nextInt();
                 ok = true;
             } catch (InputMismatchException e) {
-                System.out.println("Insert new value: ");
+                System.out.print("Insert new value: ");
                 input.next();
             }
         }
@@ -109,7 +108,7 @@ final class Input {
                 str = bufferedReader.readLine();
                 ok = true;
             } catch (IOException e) {
-                System.out.println("Insert new value: ");
+                System.out.print("Insert new value: ");
             }
         }
 

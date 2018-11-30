@@ -2,7 +2,6 @@ package model;
 
 import java.time.*;
 import java.time.temporal.*;
-import java.time.zone.ZoneRulesException;
 import java.util.function.BiFunction;
 
 import static java.time.DayOfWeek.*;
@@ -105,7 +104,7 @@ final class DateUtils {
         return isDateInMonth(localDate, month) ? localDate : null;
     }
 
-    static Boolean isDateInMonth(LocalDate localDate, int month) {
+    private static Boolean isDateInMonth(LocalDate localDate, int month) {
         return (localDate.getMonth().getValue() == month);
     }
 
@@ -122,9 +121,5 @@ final class DateUtils {
     static LocalDateTime getArrivalTime(String timezoneId, LocalDateTime departureTime, LocalTime travelTime) {
         return DateUtils.convertToTimezone(timezoneId, departureTime).plusHours(travelTime.getHour())
                 .plusMinutes(travelTime.getMinute());
-    }
-
-    static boolean intersects(LocalDateTime start1, LocalDateTime end1, LocalDateTime start2, LocalDateTime end2) {
-        return end1.isAfter(start2) && start1.isBefore(end2);
     }
 }

@@ -1,7 +1,6 @@
 package controller;
 
 import model.UCalculatorModel;
-import model.config.Config;
 import view.UCalculatorView;
 
 import java.time.LocalDateTime;
@@ -14,18 +13,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 class TimeZoneController {
-    private final DateTimeFormatter dateTimeFormat;
-    private final DateTimeFormatter dateFormat;
-    private final DateTimeFormatter timeFormat;
+
     private UCalculatorView view;
     private UCalculatorModel model;
-
-    public TimeZoneController() {
-        final Config config = Config.getInstance();
-        dateTimeFormat = DateTimeFormatter.ofPattern(config.getProperty("DATE_TIME_PATTERN"));
-        dateFormat = DateTimeFormatter.ofPattern(config.getProperty("DATE_PATTERN"));
-        timeFormat = DateTimeFormatter.ofPattern(config.getProperty("TIME_PATTERN"));
-    }
 
     void setView(UCalculatorView view) {
         this.view = view;
@@ -39,8 +29,14 @@ class TimeZoneController {
         model.initTimeZoneIDs();
 
         String option;
+        boolean displayMenu = true;
+
         do {
-            view.displayMenu(8);
+            if (displayMenu) {
+                view.displayMenu(8);
+            }
+
+            displayMenu = true;
             view.displayMessage("Insert option: ");
             option = Input.readString();
 
@@ -54,6 +50,7 @@ class TimeZoneController {
                 case "0":
                     break;
                 default:
+                    displayMenu = false;
                     view.displayMessage("Invalid option!\n");
             }
         } while (!option.equals("0"));
@@ -68,18 +65,11 @@ class TimeZoneController {
 
             if(ids.size() > 1) {
                 Paging paging = new Paging(ids, 5);
-                int flag = 2;
+                int pagingType = 2;
                 String option;
 
                 do {
-                    if (flag == 0) {
-                        view.displayPage(paging.nextPage(), paging.getCurrentPage(), paging.getTotalPages());
-                    } else if (flag == 1){
-                        view.displayPage(paging.previousPage(), paging.getCurrentPage(), paging.getTotalPages());
-                    } else {
-                        view.displayPage(paging.currentPage(), paging.getCurrentPage(), paging.getTotalPages());
-                    }
-
+                    this.managePaging(paging, pagingType);
                     view.displayMessage("Previous - p\n");
                     view.displayMessage("Next ----- n\n");
                     view.displayMessage("Cancel --- 0\n");
@@ -96,61 +86,63 @@ class TimeZoneController {
                             }
                         } else {
                             LocalDateTime result = model.getTimeZone(s, LocalDateTime.now());
-                            view.displayMessage("Current timezone at " + s + " is " + result.format(dateTimeFormat) + ".\n");
+                            view.displayMessage("Current timezone at " + s + " is " +
+                                    result.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")) + ".\n");
+                            view.displayMessage("Press enter to continue: ");
+                            Input.readString();
                             break;
                         }
                     } catch (NumberFormatException e) {
-                        switch (option) {
-                            case "n":
-                                flag = 0;
-                                break;
-                            case "p":
-                                flag = 1;
-                                break;
-                            default:
-                                flag = 2;
-                                view.displayMessage("Invalid option!\n");
-                                break;
-                        }
+                        pagingType = this.getPagingType(option);
                     }
                 } while (!option.equals("0"));
             } else if (ids.size() == 0){
                 view.displayMessage("Location not found!\n");
+                view.displayMessage("Press enter to continue: ");
+                Input.readString();
             } else {
                 view.displayMessage(
                         "Current timezone at " + ids.get(0) + " is " +
                                 model.getTimeZone(ids.get(0), LocalDateTime.now())
-                                        .format(dateTimeFormat) + ".\n");
-
+                                        .format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")) + ".\n");
+                view.displayMessage("Press enter to continue: ");
+                Input.readString();
             }
         }
     }
 
     private void travelCalculator() {
-        Map<String, SimpleEntry<LocalTime, LocalTime>> connections = new LinkedHashMap<>(); // <ConnLocation, <DuracaoVoo, TempoEntreVoos>>
+        Map<String, SimpleEntry<LocalTime, LocalTime>> connections = new LinkedHashMap<>();
         LocalDateTime end, endLocal;
         String option;
+        boolean displayMenu = true;
 
         view.displayMessage("Insert departure datetime (dd/MM/yyyy HH:mm): ");
-        LocalDateTime start = Input.readDateTime(dateTimeFormat);
+        LocalDateTime start = Input.readDateTime(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
 
         do {
-            view.displayMenu(19);
+            if (displayMenu) {
+                view.displayMenu(19);
+            }
+
+            displayMenu = true;
             view.displayMessage("Insert option: ");
             option = Input.readString();
 
             switch (option) {
                 case "1":
-                    addConnection(connections);
+                    this.addConnection(connections);
                     break;
                 case "2":
                     if (connections.size() == 0) {
                         view.displayMessage("You must insert at least one connection!\n");
                     }
+
                     break;
                 case "0":
                     return;
                 default:
+                    displayMenu = false;
                     view.displayMessage("Invalid option!\n");
             }
         } while (!option.equals("2"));
@@ -164,9 +156,9 @@ class TimeZoneController {
             endLocal = model.getArrivalTime(c.getKey(), start, duration);
 
             view.displayMessage("Arrival at " + c.getKey() + " at ");
-            view.displayLocalDateTime(end, dateTimeFormat);
+            view.displayLocalDateTime(end, DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
             view.displayMessage(" (");
-            view.displayLocalDateTime(endLocal, dateTimeFormat);
+            view.displayLocalDateTime(endLocal, DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
             view.displayMessage(" local)\n");
 
             start = end;
@@ -182,18 +174,11 @@ class TimeZoneController {
 
             if (ids.size() > 1) {
                 Paging paging = new Paging(ids, 5);
-                int flag = 2;
+                int pagingType = 2;
                 String option;
 
                 do {
-                    if (flag == 0) {
-                        view.displayPage(paging.nextPage(), paging.getCurrentPage(), paging.getTotalPages());
-                    } else if (flag == 1){
-                        view.displayPage(paging.previousPage(), paging.getCurrentPage(), paging.getTotalPages());
-                    } else {
-                        view.displayPage(paging.currentPage(), paging.getCurrentPage(), paging.getTotalPages());
-                    }
-
+                    this.managePaging(paging, pagingType);
                     view.displayMessage("Previous - p\n");
                     view.displayMessage("Next ----- n\n");
                     view.displayMessage("Cancel --- 0\n");
@@ -212,12 +197,12 @@ class TimeZoneController {
                                 }
                             } else {
                                 view.displayMessage("Insert flight duration (HH:mm): ");
-                                LocalTime duration = Input.readTime(timeFormat);
+                                LocalTime duration = Input.readTime(DateTimeFormatter.ofPattern("HH:mm"));
                                 LocalTime between = LocalTime.of(0, 0);
 
                                 if (connections.size() != 0) {
                                     view.displayMessage("Insert time between flights (HH:mm): ");
-                                    between = Input.readTime(timeFormat);
+                                    between = Input.readTime(DateTimeFormatter.ofPattern("HH:mm"));
                                 }
 
                                 SimpleEntry res = connections.put(s, new SimpleEntry<>(duration, between));
@@ -229,30 +214,19 @@ class TimeZoneController {
                             }
                         }
                     } catch (NumberFormatException e) {
-                        switch (option) {
-                            case "n":
-                                flag = 0;
-                                break;
-                            case "p":
-                                flag = 1;
-                                break;
-                            default:
-                                flag = 2;
-                                view.displayMessage("Invalid option!\n");
-                                break;
-                        }
+                        pagingType = this.getPagingType(option);
                     }
                 } while (!option.equals("0"));
             } else if (ids.size() == 0){
                 view.displayMessage("Location not found!\n");
             } else {
                 view.displayMessage("Insert flight duration (HH:mm): ");
-                LocalTime duration = Input.readTime(timeFormat);
+                LocalTime duration = Input.readTime(DateTimeFormatter.ofPattern("HH:mm"));
                 LocalTime between = LocalTime.of(0, 0);
 
                 if (connections.size() != 0) {
                     view.displayMessage("Insert time between flights (HH:mm): ");
-                    between = Input.readTime(timeFormat);
+                    between = Input.readTime(DateTimeFormatter.ofPattern("HH:mm"));
                 }
 
                 SimpleEntry res = connections.put(ids.get(0), new SimpleEntry<>(duration, between));
@@ -262,5 +236,34 @@ class TimeZoneController {
                 }
             }
         }
+    }
+    
+    private void managePaging(final Paging paging, final int pagingType) {
+        if (pagingType == 0) {
+            view.displayPage(paging.nextPage(), paging.getCurrentPage(), paging.getTotalPages());
+        } else if (pagingType == 1){
+            view.displayPage(paging.previousPage(), paging.getCurrentPage(), paging.getTotalPages());
+        } else {
+            view.displayPage(paging.currentPage(), paging.getCurrentPage(), paging.getTotalPages());
+        }
+    }
+
+    private int getPagingType(final String option) {
+        int pagingType;
+
+        switch (option) {
+            case "n":
+                pagingType = 0;
+                break;
+            case "p":
+                pagingType = 1;
+                break;
+            default:
+                pagingType = 2;
+                view.displayMessage("Invalid option!\n");
+                break;
+        }
+
+        return pagingType;
     }
 }
