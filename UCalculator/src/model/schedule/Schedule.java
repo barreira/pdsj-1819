@@ -56,31 +56,56 @@ public class Schedule {
         final int totalSlots = 1440 / this.slotSize;
         boolean success = true;
 
-        if (slotId < 0 || startSlotId + slotId > endSlotId || duration < 1) {
+        if (slotId < 0 || slotId < startSlotId || slotId > endSlotId || duration < 1) {
             success = false;
         } else {
-            Task task = new Task(taskId, date, slotId, duration, title, people);
-            List<Slot> slots = schedule.get(date);
+            LocalDate next = date;
+            int k = slotId;
+            List<Slot> slots;
 
-            if (slots == null) {
-                slots = new ArrayList<>();
-
-                for (int i = 0; i < totalSlots; i++) {
-                    slots.add(new OpenSlot(i, this.slotTime(i), this.slotTime(i + 1)));
+            for (int i = 0; i < duration && success; i++) {
+                if ((slots = schedule.get(next)) != null) {
+                    for (int j = k; j <= endSlotId && j <= i; j++) {
+                        if (!slots.get(j).getClass().equals(OpenSlot.class)) {
+                            success = false;
+                            break;
+                        }
+                    }
+                } else {
+                    i += endSlotId - startSlotId;
                 }
 
-                slots.set(slotId, new BusySlot(slotId, this.slotTime(slotId), this.slotTime(slotId + 1), task));
-                this.schedule.put(date, slots);
-                taskId++;
-            } else if (slots.get(slotId).getClass().equals(OpenSlot.class)) {
-                slots.set(slotId, new BusySlot(slotId, this.slotTime(slotId), this.slotTime(slotId + 1), task));
-                taskId++;
-            } else {
-                success = false;
+                next = next.plusDays(1);
+                k = startSlotId;
+            }
+
+            if (success) {
+                final Task task = new Task(taskId++, date, slotId, duration, title, people);
+                k = slotId;
+                next = date;
+
+                for (int i = 0; i < duration; i++) {
+                    if ((slots = schedule.get(next)) == null) {
+                        slots = new ArrayList<>();
+
+                        for (int j = 0; j < totalSlots; j++) {
+                            slots.add(new OpenSlot(j, this.slotTime(j), this.slotTime(j + 1)));
+                        }
+
+                        this.schedule.put(next, slots);
+                    }
+
+                    for (int j = k; j <= endSlotId && i < duration; j++, i++) {
+                        slots.set(j, new BusySlot(j, this.slotTime(j),
+                                this.slotTime(j + 1), task));
+                    }
+
+                    next = next.plusDays(1);
+                    k = startSlotId;
+                    i--;
+                }
             }
         }
-
-        schedule.get(date).forEach(System.out::println);
 
         return success;
     }

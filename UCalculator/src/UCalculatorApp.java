@@ -11,8 +11,12 @@ public class UCalculatorApp {
     public static void main(String[] args) {
 
         Schedule schedule = new Schedule(60);
-        schedule.addTask(LocalDate.now(), 20, 1, "atuaprima", Arrays.asList("diogo", "rafa"));
-        System.out.println(schedule.consult(LocalDate.now()));
+        schedule.addTask(LocalDate.now(), 20, 10, "atuaprima", Arrays.asList("diogo", "rafa"));
+        //schedule.consult(LocalDate.now().plusDays(1)).forEach(System.out::println);
+
+        System.out.println(schedule.addTask(LocalDate.now(), 21, 2, "agga", Arrays.asList("ghahggha", "aghghagha")));
+
+        schedule.consult(LocalDate.now()).forEach(System.out::println);
 
 //        schedule.editTask(LocalDate.now(), 21, LocalDate.now().plusDays(2), 1, 1);
 //
