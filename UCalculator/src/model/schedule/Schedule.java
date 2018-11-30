@@ -20,6 +20,7 @@ public class Schedule {
         this.schedule = new HashMap<>();
     }
 
+
     Schedule() {
         this(DEFAULT_SLOT_SIZE);
     }
