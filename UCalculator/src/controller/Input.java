@@ -29,6 +29,7 @@ import java.util.Scanner;
  */
 final class Input {
 
+
     static LocalDate readDate(DateTimeFormatter formatter) {
         final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
         boolean ok = false;
