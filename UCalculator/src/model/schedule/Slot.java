@@ -13,6 +13,12 @@ public abstract class Slot {
         this.endTime = endTime;
     }
 
+    Slot(Slot slot) {
+        this.id = slot.getId();
+        this.startTime = slot.getStartTime();
+        this.endTime = slot.getEndTime();
+    }
+
     long getId() {
         return id;
     }
@@ -33,4 +39,6 @@ public abstract class Slot {
                 ", endTime=" + endTime +
                 '}';
     }
+
+    public abstract Slot clone();
 }

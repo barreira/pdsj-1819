@@ -7,8 +7,17 @@ public class ClosedSlot extends Slot {
         super(id, startTime, endTime);
     }
 
+    public ClosedSlot(ClosedSlot closedSlot) {
+        super(closedSlot);
+    }
+
     @Override
     public String toString() {
         return "ClosedSlot{} " + super.toString();
+    }
+
+    @Override
+    public ClosedSlot clone() {
+        return new ClosedSlot(this);
     }
 }

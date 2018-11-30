@@ -10,6 +10,11 @@ public class BusySlot extends Slot {
         this.task = task;
     }
 
+    public BusySlot(BusySlot busySlot) {
+        super(busySlot);
+        this.task = busySlot.getTask();
+    }
+
     public Task getTask() {
         return task;
     }
@@ -19,5 +24,10 @@ public class BusySlot extends Slot {
         return "BusySlot{" +
                 "task=" + task +
                 "} " + super.toString();
+    }
+
+    @Override
+    public BusySlot clone() {
+        return new BusySlot(this);
     }
 }

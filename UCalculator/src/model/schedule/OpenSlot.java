@@ -7,8 +7,17 @@ public class OpenSlot extends Slot{
         super(id, startTime, endTime);
     }
 
+    public OpenSlot(OpenSlot openSlot) {
+        super(openSlot);
+    }
+
     @Override
     public String toString() {
         return "OpenSlot{} " + super.toString();
+    }
+
+    @Override
+    public OpenSlot clone() {
+        return new OpenSlot(this);
     }
 }
