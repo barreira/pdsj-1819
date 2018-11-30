@@ -16,23 +16,23 @@ public final class UCalculatorView {
 
     public UCalculatorView() {
         menus = Map.ofEntries(
-                entry(0, new Menu("MAIN MENU", Arrays.asList(
+                entry(0, new Menu("\t\t*** MAIN MENU ***", Arrays.asList(
                         new Option("Local Date Time Calculator ----", "1"),
                         new Option("Timezone Date Time Calculator -", "2"),
-                        new Option("Meeting OLDSchedule --------------", "3"),
+                        new Option("Schedule ----------------------", "3"),
                         new Option("End Session -------------------", "0")))),
-                entry(1, new Menu("LOCAL DATE TIME CALCULATOR", Arrays.asList(
+                entry(1, new Menu("*** LOCAL DATE TIME CALCULATOR ***", Arrays.asList(
                         new Option("Date Calculator -----", "1"),
                         new Option("Interval Calculator -", "2"),
                         new Option("Weeks Calculator ----", "3"),
                         new Option("Back ----------------", "0")))),
-                entry(2, new Menu("SELECT OPERATION", Arrays.asList(
+                entry(2, new Menu("*** SELECT OPERATION ***", Arrays.asList(
                         new Option("Add ------", "1"),
                         new Option("Subtract -", "2"),
                         new Option("Solve ----", "3"),
                         new Option("Back -----", "4"),
                         new Option("Cancel ---", "0")))),
-                entry(3, new Menu("SELECT DURATION UNITS", Arrays.asList(
+                entry(3, new Menu("*** SELECT DURATION UNITS ***", Arrays.asList(
                         new Option("Days ---------", "1"),
                         new Option("Working Days -", "2"),
                         new Option("Weeks --------", "3"),
@@ -40,7 +40,7 @@ public final class UCalculatorView {
                         new Option("Months -------", "5"),
                         new Option("Years --------", "6"),
                         new Option("Back ---------", "0")))),
-                entry(4, new Menu("SELECT RESULT UNITS", Arrays.asList(
+                entry(4, new Menu("*** SELECT RESULT UNITS ***", Arrays.asList(
                         new Option("Days ---------", "1"),
                         new Option("Working Days -", "2"),
                         new Option("Weeks --------", "3"),
@@ -49,12 +49,12 @@ public final class UCalculatorView {
                         new Option("Years --------", "6"),
                         new Option("Period -------", "7"),
                         new Option("Cancel -------", "0")))),
-                entry(5, new Menu("Weeks Calculator", Arrays.asList(
+                entry(5, new Menu("\t*** Weeks Calculator ***", Arrays.asList(
                         new Option("Week number of Date -------", "1"),
                         new Option("Date of Week number -------", "2"),
                         new Option("Days of the Week in Month -", "3"),
                         new Option("Back ----------------------", "0")))),
-                entry(6, new Menu("SELECT DAY OF THE WEEK", Arrays.asList(
+                entry(6, new Menu("\t*** SELECT DAY OF THE WEEK ***", Arrays.asList(
                         new Option("Monday ----", "1"),
                         new Option("Tuesday ---", "2"),
                         new Option("Wednesday -", "3"),
@@ -97,7 +97,7 @@ public final class UCalculatorView {
             this.displaySpacing();
         }
 
-        System.out.println("[31m" + message);
+        System.out.println(message);
     }
 
     public void displayLocalDate(final LocalDate date, final DateTimeFormatter formatter) {

@@ -40,10 +40,16 @@ class LocalCalculatorController {
         model.clear();
         state.clear();
         String option;
+        boolean displayMenu = true;
+
         do {
-            view.displayMenu(1);
+            if (displayMenu) {
+                view.displayMenu(1);
+            }
+
             view.displayMessage("Insert option: ");
             option = Input.readString();
+            displayMenu = true;
 
             switch (option) {
                 case "1":
@@ -59,13 +65,16 @@ class LocalCalculatorController {
                     break;
                 default:
                     view.displayMessage("Invalid option!\n");
+                    displayMenu = false;
             }
         } while (!option.equals("0"));
     }
 
     private void localDateCalculator() {
-        view.displayMessage("Insert date: ");
-        LocalDate localDate = Input.readDate(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+        view.displayMessage("Insert date (dd/MM/yyyy): ");
+
+        final LocalDate localDate = Input.readDate(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+
         state.push(localDate.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")));
         model.initLocalDateCalculator(localDate);
         this.localDateOperationMenu();
@@ -73,11 +82,16 @@ class LocalCalculatorController {
 
     private void localDateOperationMenu() {
         boolean exit = false;
+        boolean displayMenu = true;
         String option;
 
         do {
-            view.displayMenu(2);
-            view.displayMessage(this.stateToString());
+            if (displayMenu) {
+                view.displayMenu(2);
+                view.displayMessage(this.stateToString());
+            }
+
+            displayMenu = true;
             view.displayMessage("Insert option: ");
             option = Input.readString();
 
@@ -91,8 +105,11 @@ class LocalCalculatorController {
                     this.durationMenu(Operator.SUBTRACTION);
                     break;
                 case "3":
+                    state.clear();
                     view.displayMessage("Result: ");
                     view.displayLocalDate(model.solve(), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+                    view.displayMessage("Any key to continue: ");
+                    Input.readString();
                     exit = true;
                     break;
                 case "4":
@@ -101,6 +118,7 @@ class LocalCalculatorController {
 
                     if (state.empty()) {
                         this.localDateCalculator();
+                        exit = true;
                     } else {
                         if (state.peek().equals("+")) {
                             this.durationMenu(Operator.ADDITION);
@@ -109,11 +127,13 @@ class LocalCalculatorController {
                         }
                     }
 
-                    exit = true;
                     break;
                 case "0":
+                    model.clear();
+                    state.clear();
                     break;
                 default:
+                    displayMenu = false;
                     view.displayMessage("Invalid option!\n");
             }
         } while (!option.equals("0") && !exit);
@@ -124,11 +144,16 @@ class LocalCalculatorController {
 
         final int duration = Input.readInt();
         boolean exit = false;
+        boolean displayMenu = true;
         String option;
 
         do {
-            view.displayMenu(3);
-            view.displayMessage(this.stateToString());
+            if (displayMenu) {
+                view.displayMenu(3);
+                view.displayMessage(this.stateToString());
+            }
+
+            displayMenu = true;
             view.displayMessage("Insert option: ");
             option = Input.readString();
 
@@ -198,6 +223,7 @@ class LocalCalculatorController {
                     exit = true;
                     break;
                 default:
+                    displayMenu = false;
                     view.displayMessage("Invalid option!\n");
             }
         } while (!option.equals("0") && !exit);

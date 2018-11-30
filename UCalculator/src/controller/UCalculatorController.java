@@ -18,8 +18,14 @@ public class UCalculatorController {
 
     public void startFlow() {
         String option;
+        boolean displayMenu = true;
+
         do {
-            view.displayMenu(0);
+            if (displayMenu) {
+                view.displayMenu(0);
+            }
+
+            displayMenu = true;
             view.displayMessage("Insert option: ");
             option = Input.readString();
 
@@ -50,6 +56,7 @@ public class UCalculatorController {
                     break;
                 default:
                     view.displayMessage("Invalid option!\n");
+                    displayMenu = false;
             }
         } while (!option.equals("0"));
     }

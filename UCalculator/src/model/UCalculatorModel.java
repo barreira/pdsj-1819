@@ -52,7 +52,11 @@ public final class UCalculatorModel {
     }
 
     public LocalDate solve() {
-        return localDateCalculator.peek();
+        final LocalDate localDate = localDateCalculator.peek();
+
+        localDateCalculator.clear();
+
+        return localDate;
     }
 
     public void clear() {

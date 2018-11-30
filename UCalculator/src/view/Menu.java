@@ -2,7 +2,7 @@ package view;
 
 import java.util.List;
 
-public class Menu {
+class Menu {
 
     private final String description;
     private final List<Option> options;
@@ -12,7 +12,7 @@ public class Menu {
         this.options = options;
     }
 
-    public void show() {
+    void show() {
         System.out.println(description);
         options.forEach(System.out::println);
     }
