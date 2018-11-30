@@ -66,34 +66,47 @@ class TimeZoneController {
             if(ids.size() > 1) {
                 Paging paging = new Paging(ids, 5);
                 int pagingType = 2;
+                boolean displayPage = true;
                 String option;
 
                 do {
-                    this.managePaging(paging, pagingType);
-                    view.displayMessage("Previous - p\n");
-                    view.displayMessage("Next ----- n\n");
-                    view.displayMessage("Cancel --- 0\n");
-                    view.displayMessage("Insert option: ");
+                    if (displayPage) {
+                        this.managePaging(paging, pagingType);
+                        view.displayMessage("Previous - p\n");
+                        view.displayMessage("Next ----- n\n");
+                        view.displayMessage("Cancel --- 0\n");
+                        view.displayMessage("Insert option: ");
+                    }
+
+                    displayPage = true;
                     option = Input.readString();
 
                     try {
                         int op = Integer.parseInt(option);
                         String s = paging.getElement(op - 1);
 
-                        if (s.equals("")) {
-                            if (op != 0) {
-                                view.displayMessage("Invalid option!\n");
+                        if (s != null) {
+                            if (s.equals("")) {
+                                if (op != 0) {
+                                    view.displayMessage("Invalid option!\n");
+                                    view.displayMessage("Insert option: ");
+                                    displayPage = false;
+                                }
+                            } else {
+                                LocalDateTime result = model.getTimeZone(s, LocalDateTime.now());
+                                view.displayMessage("Current timezone at " + s + " is " +
+                                        result.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")) + ".\n");
+                                view.displayMessage("Press enter to continue: ");
+                                Input.readString();
+                                break;
                             }
-                        } else {
-                            LocalDateTime result = model.getTimeZone(s, LocalDateTime.now());
-                            view.displayMessage("Current timezone at " + s + " is " +
-                                    result.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")) + ".\n");
-                            view.displayMessage("Press enter to continue: ");
-                            Input.readString();
-                            break;
                         }
                     } catch (NumberFormatException e) {
                         pagingType = this.getPagingType(option);
+
+                        if (pagingType == 2) {
+                            displayPage = false;
+                        }
                     }
                 } while (!option.equals("0"));
             } else if (ids.size() == 0){

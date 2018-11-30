@@ -113,7 +113,7 @@ final class DateUtils {
             final ZoneId zoneId = ZoneId.of(timezoneID);
             final ZonedDateTime zonedDateTime = ZonedDateTime.of(localDateTime, zoneId);
             return localDateTime.plusSeconds(zonedDateTime.getOffset().getTotalSeconds());
-        } catch (DateTimeException e) {
+        } catch (NullPointerException | DateTimeException e) {
             return localDateTime;
         }
     }
