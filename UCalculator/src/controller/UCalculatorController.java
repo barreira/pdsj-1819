@@ -7,19 +7,8 @@ import view.UCalculatorView;
 import java.time.format.DateTimeFormatter;
 
 public class UCalculatorController {
-    private final DateTimeFormatter dateTimeFormat;
-    private final DateTimeFormatter dateFormat;
-    private final DateTimeFormatter timeFormat;
-
     private UCalculatorView view;
     private UCalculatorModel model;
-
-    public UCalculatorController() {
-        final Config config = Config.getInstance();
-        dateTimeFormat = DateTimeFormatter.ofPattern(config.getProperty("DATE_TIME_PATTERN"));
-        dateFormat = DateTimeFormatter.ofPattern(config.getProperty("DATE_PATTERN"));
-        timeFormat = DateTimeFormatter.ofPattern(config.getProperty("TIME_PATTERN"));
-    }
 
     public void setView(final UCalculatorView view) {
         this.view = view;

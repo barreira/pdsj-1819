@@ -1,6 +1,7 @@
 package controller;
 
 import model.UCalculatorModel;
+import model.config.Config;
 import view.UCalculatorView;
 
 import java.time.LocalDateTime;
@@ -13,9 +14,18 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 class TimeZoneController {
-
+    private final DateTimeFormatter dateTimeFormat;
+    private final DateTimeFormatter dateFormat;
+    private final DateTimeFormatter timeFormat;
     private UCalculatorView view;
     private UCalculatorModel model;
+
+    public TimeZoneController() {
+        final Config config = Config.getInstance();
+        dateTimeFormat = DateTimeFormatter.ofPattern(config.getProperty("DATE_TIME_PATTERN"));
+        dateFormat = DateTimeFormatter.ofPattern(config.getProperty("DATE_PATTERN"));
+        timeFormat = DateTimeFormatter.ofPattern(config.getProperty("TIME_PATTERN"));
+    }
 
     void setView(UCalculatorView view) {
         this.view = view;
@@ -86,7 +96,7 @@ class TimeZoneController {
                             }
                         } else {
                             LocalDateTime result = model.getTimeZone(s, LocalDateTime.now());
-                            view.displayMessage("Current timezone at " + s + " is " + result.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")) + ".\n");
+                            view.displayMessage("Current timezone at " + s + " is " + result.format(dateTimeFormat) + ".\n");
                             break;
                         }
                     } catch (NumberFormatException e) {
@@ -110,7 +120,7 @@ class TimeZoneController {
                 view.displayMessage(
                         "Current timezone at " + ids.get(0) + " is " +
                                 model.getTimeZone(ids.get(0), LocalDateTime.now())
-                                        .format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")) + ".\n");
+                                        .format(dateTimeFormat) + ".\n");
 
             }
         }
@@ -122,7 +132,7 @@ class TimeZoneController {
         String option;
 
         view.displayMessage("Insert departure datetime (dd/MM/yyyy HH:mm): ");
-        LocalDateTime start = Input.readDateTime(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
+        LocalDateTime start = Input.readDateTime(dateTimeFormat);
 
         do {
             view.displayMenu(19);
@@ -154,9 +164,9 @@ class TimeZoneController {
             endLocal = model.getArrivalTime(c.getKey(), start, duration);
 
             view.displayMessage("Arrival at " + c.getKey() + " at ");
-            view.displayLocalDateTime(end, DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
+            view.displayLocalDateTime(end, dateTimeFormat);
             view.displayMessage(" (");
-            view.displayLocalDateTime(endLocal, DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
+            view.displayLocalDateTime(endLocal, dateTimeFormat);
             view.displayMessage(" local)\n");
 
             start = end;
@@ -202,12 +212,12 @@ class TimeZoneController {
                                 }
                             } else {
                                 view.displayMessage("Insert flight duration (HH:mm): ");
-                                LocalTime duration = Input.readTime(DateTimeFormatter.ofPattern("HH:mm"));
+                                LocalTime duration = Input.readTime(timeFormat);
                                 LocalTime between = LocalTime.of(0, 0);
 
                                 if (connections.size() != 0) {
                                     view.displayMessage("Insert time between flights (HH:mm): ");
-                                    between = Input.readTime(DateTimeFormatter.ofPattern("HH:mm"));
+                                    between = Input.readTime(timeFormat);
                                 }
 
                                 SimpleEntry res = connections.put(s, new SimpleEntry<>(duration, between));
@@ -237,12 +247,12 @@ class TimeZoneController {
                 view.displayMessage("Location not found!\n");
             } else {
                 view.displayMessage("Insert flight duration (HH:mm): ");
-                LocalTime duration = Input.readTime(DateTimeFormatter.ofPattern("HH:mm"));
+                LocalTime duration = Input.readTime(timeFormat);
                 LocalTime between = LocalTime.of(0, 0);
 
                 if (connections.size() != 0) {
                     view.displayMessage("Insert time between flights (HH:mm): ");
-                    between = Input.readTime(DateTimeFormatter.ofPattern("HH:mm"));
+                    between = Input.readTime(timeFormat);
                 }
 
                 SimpleEntry res = connections.put(ids.get(0), new SimpleEntry<>(duration, between));
