@@ -16,7 +16,7 @@ public class UCalculatorController {
     private UCalculatorView view;
     private UCalculatorModel model;
 
-    UCalculatorController() {
+    public UCalculatorController() {
         dateTimeFormat = DateTimeFormatter.ofPattern(Config.getConfig().getProperty("DATE_TIME_PATTERN"));
         dateFormat = DateTimeFormatter.ofPattern(Config.getConfig().getProperty("DATE_PATTERN"));
         timeFormat = DateTimeFormatter.ofPattern(Config.getConfig().getProperty("TIME_PATTERN"));
