@@ -13,7 +13,7 @@ public class Config {
         Properties config = new Properties();
         config.setProperty("DATE_TIME_PATTERN", "dd/MM/yyyy HH:mm");
         config.setProperty("DATE_PATTERN", "dd/MM/yyyy");
-        config.setProperty("DATE_TIME", "HH:mm");
+        config.setProperty("TIME_PATTERN", "HH:mm");
         config.setProperty("SLOT_SIZE", "15");
         config.setProperty("START_SLOT_TIME", "00:00");
         config.setProperty("END_SLOT_TIME", "23:45");
@@ -26,6 +26,13 @@ public class Config {
                 config.store(Files.newOutputStream(Path.of(CONFIG_PATH)), "Default");
             } catch (IOException e1) {
                 System.err.println("An error occurred: could not store the config file!");
+            }
+        } finally {
+            // TODO complete verifications
+            try {
+                Integer.valueOf(config.getProperty("SLOT_SIZE"));
+            } catch (NumberFormatException e) {
+                config.setProperty("SLOT_SIZE", "15");
             }
         }
     }
