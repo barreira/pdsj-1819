@@ -2,6 +2,7 @@ package model;
 
 import java.time.LocalDate;
 import java.time.temporal.TemporalUnit;
+import java.util.EmptyStackException;
 import java.util.Stack;
 import java.util.function.BiFunction;
 import java.util.AbstractMap.SimpleEntry;
@@ -28,10 +29,12 @@ class LocalDateCalculator {
     /**
      * Coloca na stack a LocalDate recebida.
      *
-     * @param LocalDate LocalDate a colocar na stack
+     * @param localDate LocalDate a colocar na stack
      */
-    void push(LocalDate LocalDate) {
-        stack.push(LocalDate);
+    void push(LocalDate localDate) {
+        if (localDate != null) {
+            stack.push(localDate);
+        }
     }
 
     /**
@@ -45,7 +48,9 @@ class LocalDateCalculator {
      */
     void push(BiFunction<LocalDate, SimpleEntry<Integer, TemporalUnit>, LocalDate> biFunction, int duration,
               TemporalUnit temporalUnit) {
-        stack.push(biFunction.apply(stack.peek(), new SimpleEntry<>(duration, temporalUnit)));
+        if (!stack.empty()) {
+            stack.push(biFunction.apply(stack.peek(), new SimpleEntry<>(duration, temporalUnit)));
+        }
     }
 
     /**
@@ -56,23 +61,35 @@ class LocalDateCalculator {
      * @param argument   Argumento a ser passado à BiFunction recebida
      */
     void push(BiFunction<LocalDate, Integer, LocalDate> biFunction, int argument) {
-        stack.push(biFunction.apply(stack.peek(), argument));
+        if (!stack.empty()) {
+            stack.push(biFunction.apply(stack.peek(), argument));
+        }
     }
 
     /**
      * Retira o elemento do topo da stack.
      */
     void pop() {
-        stack.pop();
+        if (!stack.empty()) {
+            stack.pop();
+        }
     }
 
     /**
      * Devolve a LocalDate do topo da stack sem a remover da mesma.
      *
-     * @return LocalDate LocalDate do topo da stack
+     * @return LocalDate LocalDate do topo da stack ou null caso a stack esteja vazia.
      */
     LocalDate peek() {
-        return stack.peek();
+        LocalDate localDate;
+
+        try {
+            localDate = stack.peek();
+        } catch (EmptyStackException e) {
+            localDate = null;
+        }
+
+        return localDate;
     }
 
     /**

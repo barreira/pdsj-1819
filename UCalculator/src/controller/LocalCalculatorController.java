@@ -6,27 +6,27 @@ import view.UCalculatorView;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.time.Month;
 import java.time.format.DateTimeFormatter;
-import java.time.format.TextStyle;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
-import java.util.Locale;
 import java.util.Stack;
 import java.util.AbstractMap.SimpleEntry;
 
 class LocalCalculatorController {
+
     private enum Operator {
         ADDITION, SUBTRACTION
     }
 
     private final String datePattern;
+    private final DateTimeFormatter dateTimeFormatter;
     private final Stack<String> state;
     private UCalculatorView view;
     private UCalculatorModel model;
 
     LocalCalculatorController() {
         datePattern = Config.getInstance().getProperty("DATE_PATTERN");
+        dateTimeFormatter = DateTimeFormatter.ofPattern(datePattern);
         state = new Stack<>();
     }
 
@@ -75,9 +75,9 @@ class LocalCalculatorController {
     private void localDateCalculator() {
         view.displayMessage("Insert date (" + datePattern + "): ");
 
-        final LocalDate localDate = Input.readDate(DateTimeFormatter.ofPattern(datePattern));
+        final LocalDate localDate = Input.readDate(dateTimeFormatter);
 
-        state.push(localDate.format(DateTimeFormatter.ofPattern(datePattern)));
+        state.push(localDate.format(dateTimeFormatter));
         model.initLocalDateCalculator(localDate);
         this.localDateOperationMenu();
     }
@@ -107,11 +107,20 @@ class LocalCalculatorController {
                     this.durationMenu(Operator.SUBTRACTION);
                     break;
                 case "3":
+                    final LocalDate result = model.solve();
+
                     state.clear();
                     view.displayMessage("Result: ");
-                    view.displayLocalDate(model.solve(), DateTimeFormatter.ofPattern(datePattern));
-                    view.displayMessage("Press ENTER to continue... ");
-                    Input.readString();
+
+                    if (result != null) {
+                        view.displayLocalDate(result, dateTimeFormatter);
+                    } else {
+                        // Este caso nunca vai ocorrer devido ao fluxo implementado
+                        view.displayMessage("Something went wrong...\n");
+                    }
+
+                    model.clear();
+                    this.stopExecution();
                     exit = true;
                     break;
                 case "4":
@@ -233,9 +242,12 @@ class LocalCalculatorController {
 
     private void intervalCalculator() {
         view.displayMessage("Insert first date (" + datePattern + "): ");
-        final LocalDate first = Input.readDate(DateTimeFormatter.ofPattern(datePattern));
+
+        final LocalDate first = Input.readDate(dateTimeFormatter);
+
         view.displayMessage("Insert second date (" + datePattern + "): ");
-        final LocalDate second = Input.readDate(DateTimeFormatter.ofPattern(datePattern));
+
+        final LocalDate second = Input.readDate(dateTimeFormatter);
         String option;
         boolean exit = false;
         boolean displayMenu = true;
@@ -286,8 +298,7 @@ class LocalCalculatorController {
             }
 
             if (!option.equals("0") && exit) {
-                view.displayMessage("Press ENTER to continue... ");
-                Input.readString();
+                this.stopExecution();
             }
         } while (!option.equals("0") && !exit);
     }
@@ -327,31 +338,34 @@ class LocalCalculatorController {
         LocalDate localDate;
 
         view.displayMessage("Insert Date (" + datePattern + "): ");
-        localDate = Input.readDate(DateTimeFormatter.ofPattern(datePattern));
+        localDate = Input.readDate(dateTimeFormatter);
         view.displayMessage("Week: " + model.getWeekNumber(localDate) + "\n");
-        view.displayMessage("Press ENTER to continue... ");
-        Input.readString();
+        this.stopExecution();
     }
 
     private void localDateOfWeekNumber() {
         view.displayMessage("Insert Week Number: ");
-        int weekNumber = Input.readInt();
+        final int weekNumber = Input.readInt();
+
         view.displayMessage("Insert Year: ");
-        int year = Input.readInt();
-        SimpleEntry<LocalDate, LocalDate> res = model.dateOfWeekNumber(weekNumber, year);
-        LocalDate start = res.getKey();
-        LocalDate end = res.getValue();
+
+        final int year = Input.readInt();
+        final SimpleEntry<LocalDate, LocalDate> res = model.dateOfWeekNumber(weekNumber, year);
+        final LocalDate start = res.getKey();
+        final LocalDate end = res.getValue();
 
         view.displayMessage("Week number " + weekNumber + " of " + year + " starts at " + start.toString() +
                 " and ends at " + end.toString() + ".\n");
-        view.displayMessage("Press ENTER to continue... ");
-        Input.readString();
+        this.stopExecution();
     }
 
     private void daysOfWeekInMonth() {
         view.displayMessage("Insert Month: ");
+
         final int month = Input.readInt();
+
         view.displayMessage("Insert Year: ");
+
         final int year = Input.readInt();
         final DayOfWeek dayOfWeek = dayOfWeekMenu();
 
@@ -362,32 +376,21 @@ class LocalCalculatorController {
         final int place = dayOfWeekPlaceMenu();
 
         if (place >= 1 && place <= 5) {
-            List<LocalDate> localDates = model.daysOfWeekInMonth(year, month, dayOfWeek, place);
+            final LocalDate localDate = model.dayOfWeekInMonth(year, month, dayOfWeek, place);
 
-            if (localDates != null) {
-                view.displayLocalDate(localDates.get(0), DateTimeFormatter.ofPattern(datePattern));
-            }
-            else {
-                view.displayMessage(Month.of(month).getDisplayName(TextStyle.FULL, Locale.getDefault()) + " of " +
-                                    year + " only has " + (place - 1) + " " +
-                                    dayOfWeek.getDisplayName(TextStyle.FULL, Locale.getDefault()) + "s");
+            if (localDate != null) {
+                view.displayLocalDate(localDate, dateTimeFormatter);
+            } else {
+                view.displayMessage("This month only has " + (place - 1) + " " + dayOfWeek + "S\n");
             }
 
-            view.displayMessage("Press ENTER to continue... ");
-            Input.readString();
+            this.stopExecution();
         } else if (place == 6) {
-            final List<LocalDate> localDates = model.daysOfWeekInMonth(year, month, dayOfWeek, place);
+            final List<LocalDate> localDates = model.getAllDaysOfWeekInMonth(year, month, dayOfWeek);
 
-            if (localDates != null) {
-                for (final LocalDate date : localDates) {
-                    if (date != null) {
-                        view.displayLocalDate(date, DateTimeFormatter.ofPattern(datePattern));
-                    }
-                }
-            }
+            localDates.forEach(l -> view.displayLocalDate(l, dateTimeFormatter));
 
-            view.displayMessage("Press ENTER to continue... ");
-            Input.readString();
+            this.stopExecution();
         }
     }
 
@@ -456,5 +459,10 @@ class LocalCalculatorController {
         s.append("\n");
 
         return s.toString();
+    }
+
+    private void stopExecution() {
+        view.displayMessage("Press enter to continue: ");
+        Input.readString();
     }
 }

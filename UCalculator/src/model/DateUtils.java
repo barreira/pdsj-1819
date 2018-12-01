@@ -2,6 +2,8 @@ package model;
 
 import java.time.*;
 import java.time.temporal.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.BiFunction;
 import java.util.AbstractMap.SimpleEntry;
 
@@ -62,6 +64,10 @@ final class DateUtils {
         return x;
     };
 
+    /**
+     * BiFunction que calcula o resultado (LocalDate) da adição de um número de fortnights (períodos de duas semanas)
+     * a uma LocalDate recebida.
+     */
     static final BiFunction<LocalDate, Integer, LocalDate> datePlusFortnights =
             (x, y) -> x.plusDays(y * 14);
 
@@ -80,12 +86,12 @@ final class DateUtils {
     /**
      * Calcula o intervalo temporal entre duas LocalDates recebidas em ChronoUnit específica.
      *
-     * @param first      Primeira data
-     * @param second     Segunda data
-     * @param chronoUnit Unidade do resultado a devolver
+     * @param first      Primeira data.
+     * @param second     Segunda data.
+     * @param chronoUnit Unidade do resultado a devolver.
      *
-     * @return long Invervalo temporal entre as duas datas, na ChronoUnit recebida
-     *         -1   Caso ocorra uma exceção
+     * @return long Invervalo temporal entre as duas datas, na ChronoUnit recebida.
+     *         -1   Caso ocorra uma exceção.
      */
     static long intervalInUnit(LocalDate first, LocalDate second, ChronoUnit chronoUnit) {
         try {
@@ -98,11 +104,11 @@ final class DateUtils {
     /**
      * Calcula o número de fortnights (períodos de duas semanas) entre duas LocalDates recebidas.
      *
-     * @param first  Primeira data
-     * @param second Segunda data
+     * @param first  Primeira data.
+     * @param second Segunda data.
      *
-     * @return long Número de fortnights (períodos de duas semanas) entre as duas datas recebidas
-     *         -1   Caso ocorra uma exceção
+     * @return long Número de fortnights (períodos de duas semanas) entre as duas datas recebidas.
+     *         -1   Caso ocorra uma exceção.
      */
     static long intervalInFortnights(LocalDate first, LocalDate second) {
         try {
@@ -115,11 +121,11 @@ final class DateUtils {
     /**
      * Calcula o número de dias úteis (working days) entre duas LocalDates recebidas.
      *
-     * @param first  Primeira data
-     * @param second Segunda data
+     * @param first  Primeira data.
+     * @param second Segunda data.
      *
-     * @return long Número de dias úteis entre as duas datas recebidas
-     *         -1   Caso ocorra uma exceção
+     * @return long Número de dias úteis entre as duas datas recebidas.
+     *         -1   Caso ocorra uma exceção.
      */
     static long intervalInWorkingDays(LocalDate first, LocalDate second) {
         if (first.getDayOfWeek() == SATURDAY || first.getDayOfWeek() == SUNDAY) {
@@ -144,22 +150,22 @@ final class DateUtils {
     /**
      * Dada uma LocalDate, calcula o número da semana no ano correspondente.
      *
-     * @param localDate LocalDate
+     * @param localDate LocalDate.
      *
-     * @return int Número da semana do ano correspondente à data recebida
+     * @return int Número da semana do ano correspondente à data recebida.
      */
     static int weekNumberOfLocalDate(LocalDate localDate) {
-        return localDate.get(IsoFields.WEEK_OF_WEEK_BASED_YEAR);
+        return localDate != null ? localDate.get(IsoFields.WEEK_OF_WEEK_BASED_YEAR) : -1;
     }
 
     /**
      * Dado o número da semana no ano (ambos recebidos como parâmetro), devolve uma SimpleEntry com duas LocalDates
      * correspondentes à data de início e data de fim dessa semana.
      *
-     * @param weekNumber Número da semana
-     * @param year       Ano
+     * @param weekNumber Número da semana.
+     * @param year       Ano.
      *
-     * @return SimpleEntry<LocalDate, LocalDate> Data de início e data de fim da semana no ano
+     * @return SimpleEntry<LocalDate, LocalDate> Data de início e data de fim da semana no ano.
      */
     static SimpleEntry<LocalDate, LocalDate> dateOfWeekNumber(int weekNumber, int year) {
         final LocalDate start = Year.of(year).atDay(1).with(TemporalAdjusters.nextOrSame(DayOfWeek.MONDAY))
@@ -172,25 +178,63 @@ final class DateUtils {
      * Dado um ano, um mês e um dia da semana, devolve a LocalDate referente à data em que aquele dia da semana ocorre
      * pela primeira, segunda, terceira, quarta ou quinta vez (recebido como parâmetro) no mês.
      *
-     * @param year      Ano
-     * @param month     Código do mês (1 a 12)
-     * @param dayOfWeek Dia da semana
+     * @param year      Ano.
+     * @param month     Código do mês (1 a 12).
+     * @param dayOfWeek Dia da semana.
      * @param place     Número da ocorrência do dia da semana do mês a obter (primeira, segunda, terceira, quarta ou
-     *                  quinta)
-     * @return LocalDate LocalDate correspondente à ocorrência do dia da semana no mês
-     *         null      Caso o dia da semana não ocorra na posição recebida no mês
+     *                  quinta).
+     * @return LocalDate LocalDate correspondente à ocorrência do dia da semana no mês.
+     *         null      Caso o dia da semana não ocorra na posição recebida no mês.
      */
-    static LocalDate dateOfDayOfWeekInMonth(int year, int month, DayOfWeek dayOfWeek, int place) {
-        LocalDate localDate = YearMonth.of(year, month).atDay(1)
-                                                       .with(TemporalAdjusters.nextOrSame(dayOfWeek));
-        place--;
+    static LocalDate dateOfDayOfWeekInMonth(final int year, final int month, final DayOfWeek dayOfWeek, int place) {
+        try {
+            LocalDate localDate = YearMonth.of(year, month).atDay(1)
+                    .with(TemporalAdjusters.nextOrSame(dayOfWeek));
 
-        for (int i = 0; i < place; i++) {
-            localDate = localDate.plusWeeks(1);
+            for (int i = 0; i < place - 1; i++) {
+                localDate = localDate.with(TemporalAdjusters.next(dayOfWeek));
+            }
+
+            return isDateInMonth(localDate, month) ? localDate : null;
+        } catch (Exception e) {
+            return null;
         }
-
-        return isDateInMonth(localDate, month) ? localDate : null;
     }
+
+    /**
+     * Dado um ano, um mês e um dia da semana, devolve uma lista com todas as datas referente à data em que aquele
+     * dia da semana ocorre no mês.
+     *
+     * @param year      Ano.
+     * @param month     Código do mês (1 a 12).
+     * @param dayOfWeek Dia da semana.
+     * @return Lista com todas as datas ou lista vazia caso os parâmetros recebidos sejam inválidos.
+     */
+    static List<LocalDate> getAllDaysOfWeekInMonth(final int year, final int month, final DayOfWeek dayOfWeek) {
+        final List<LocalDate> list = new ArrayList<>();
+
+        try {
+            LocalDate localDate =
+                    YearMonth.of(year, month).atDay(1).with(TemporalAdjusters.nextOrSame(dayOfWeek));
+
+            list.add(localDate);
+
+            while (true) {
+                localDate = localDate.with(TemporalAdjusters.next(dayOfWeek));
+
+                if (!DateUtils.isDateInMonth(localDate, month)) {
+                    break;
+                }
+
+                list.add(localDate);
+            }
+
+            return list;
+        } catch (Exception e) {
+            return list;
+        }
+    }
+
 
     /**
      * Dada uma LocalDate e um mês, indica se a data pertence a esse mês.
