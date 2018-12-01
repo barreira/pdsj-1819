@@ -3,6 +3,7 @@ package model.config;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.format.DateTimeFormatter;
 import java.util.Properties;
 
 public class Config {
@@ -12,12 +13,12 @@ public class Config {
 
     private Config() {
         properties = new Properties();
-        properties.setProperty("DATE_TIME_PATTERN", "dd/MM/yyyy HH:mm");
-        properties.setProperty("DATE_PATTERN", "dd/MM/yyyy");
+        properties.setProperty("DATE_TIME_PATTERN", "dd-MM-yyyy HH:mm");
+        properties.setProperty("DATE_PATTERN", "dd-MM-yyyy");
         properties.setProperty("TIME_PATTERN", "HH:mm");
-        properties.setProperty("SLOT_SIZE", "15");
+        properties.setProperty("SLOT_SIZE", "60");
         properties.setProperty("START_SLOT_TIME", "00:00");
-        properties.setProperty("END_SLOT_TIME", "23:45");
+        properties.setProperty("END_SLOT_TIME", "00:00");
 
         try {
             properties.load(Files.newInputStream(Path.of(CONFIG_PATH)));
@@ -26,10 +27,16 @@ public class Config {
             try {
                 properties.store(Files.newOutputStream(Path.of(CONFIG_PATH)), "Default");
             } catch (IOException e1) {
-                System.err.println("An error occurred: could not store the config file!");
+                System.err.println("Error: could not store the config file! Using defaults.");
             }
         } finally {
             // TODO complete verifications
+            try {
+                DateTimeFormatter.ofPattern(properties.getProperty("DATE_TIME_FORMATTER"));
+            } catch (IllegalArgumentException e) {
+                properties.setProperty("DATE_TIME_FORMATTER", "dd-MM-yyyy HH:mm");
+            }
+
             try {
                 Integer.valueOf(properties.getProperty("SLOT_SIZE"));
             } catch (NumberFormatException e) {
