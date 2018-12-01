@@ -5,8 +5,6 @@ import model.UCalculatorModel;
 import view.UCalculatorView;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -56,15 +54,15 @@ class ScheduleController {
     }
 
     private void add() {
-        view.displayMessage("Insert date (dd/MM/yyyy): ");
+        view.displayMessage("Insert date (" + model.getDatePattern() + "): ");
 
-        final LocalDate localDate = Input.readDate(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+        final LocalDate localDate = Input.readDate(DateTimeFormatter.ofPattern(model.getDatePattern()));
         final List<Slot> slots = model.consult(localDate);
         int slotId;
         int duration;
 
-        view.displaySlots(localDate, DateTimeFormatter.ofPattern("dd/MM/yyyy"),
-                DateTimeFormatter.ofPattern("HH:mm"), slots);
+        view.displaySlots(localDate, DateTimeFormatter.ofPattern(model.getDatePattern()),
+                DateTimeFormatter.ofPattern(model.getTimePattern()), slots);
         view.displayMessage("Select Slot number: ");
 
         do {
@@ -118,7 +116,7 @@ class ScheduleController {
     }
 
     private void stopExecution() {
-        view.displayMessage("Press enter to continue: ");
+        view.displayMessage("Press ENTER to continue... ");
         Input.readString();
     }
 }

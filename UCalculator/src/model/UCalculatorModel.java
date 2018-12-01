@@ -14,7 +14,7 @@ import java.util.AbstractMap.SimpleEntry;
  * @author Rafael Braga
  */
 public final class UCalculatorModel {
-
+    private Config config;
     private LocalDateCalculator localDateCalculator;
     private TimeZoneCalculator timeZoneCalculator;
     private Schedule schedule;
@@ -26,6 +26,7 @@ public final class UCalculatorModel {
      *  - Agenda.
      */
     public UCalculatorModel() {
+        config = Config.getInstance();
         localDateCalculator = new LocalDateCalculator();
         timeZoneCalculator = new TimeZoneCalculator();
         schedule = new Schedule();
@@ -360,5 +361,29 @@ public final class UCalculatorModel {
      */
     public boolean edit(final LocalDate date, final int slotId, final String title, final List<String> people) {
         return schedule.editTask(date, slotId, title, people);
+    }
+
+    public String getDateTimePattern() {
+        return config.getProperty("DATE_TIME_PATTERN");
+    }
+
+    public String getDatePattern() {
+        return config.getProperty("DATE_PATTERN");
+    }
+
+    public String getTimePattern() {
+        return config.getProperty("TIME_PATTERN");
+    }
+
+    public int getSlotSize() {
+        return Integer.valueOf(config.getProperty("SLOT_SIZE"));
+    }
+
+    public LocalTime getStartSlotTime() {
+        return LocalTime.parse(config.getProperty("START_SLOT_TIME"));
+    }
+
+    public LocalTime getEndSlotTime() {
+        return LocalTime.parse(config.getProperty("END_SLOT_TIME"));
     }
 }

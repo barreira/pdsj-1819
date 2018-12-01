@@ -1,6 +1,5 @@
 package controller;
 
-import model.Config;
 import model.UCalculatorModel;
 import view.UCalculatorView;
 
@@ -14,19 +13,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 class TimeZoneController {
-    private final String dateTimePattern;
-    private final String datePattern;
-    private final String timePattern;
     private UCalculatorView view;
     private UCalculatorModel model;
-
-    public TimeZoneController() {
-        final Config config = Config.getInstance();
-        dateTimePattern = config.getProperty("DATE_TIME_PATTERN");
-        datePattern = config.getProperty("DATE_PATTERN");
-        timePattern = config.getProperty("TIME_PATTERN");
-    }
-
+    
     void setView(UCalculatorView view) {
         this.view = view;
     }
@@ -102,7 +91,7 @@ class TimeZoneController {
                             } else {
                                 LocalDateTime result = model.getTimeZone(s, LocalDateTime.now());
                                 view.displayMessage("Current timezone at " + s + " is " +
-                                        result.format(DateTimeFormatter.ofPattern(dateTimePattern)) + ".\n");
+                                        result.format(DateTimeFormatter.ofPattern(model.getDateTimePattern())) + ".\n");
                                 this.stopExecution();
                                 break;
                             }
@@ -123,7 +112,7 @@ class TimeZoneController {
                 view.displayMessage(
                         "Current timezone at " + ids.get(0) + " is " +
                                 model.getTimeZone(ids.get(0), LocalDateTime.now())
-                                        .format(DateTimeFormatter.ofPattern(dateTimePattern)) + ".\n");
+                                        .format(DateTimeFormatter.ofPattern(model.getDateTimePattern())) + ".\n");
                 this.stopExecution();
             }
         }
@@ -135,8 +124,8 @@ class TimeZoneController {
         String option;
         boolean displayMenu = true;
 
-        view.displayMessage("Insert departure datetime (" + dateTimePattern + "): ");
-        LocalDateTime start = Input.readDateTime(DateTimeFormatter.ofPattern(dateTimePattern));
+        view.displayMessage("Insert departure datetime (" + model.getDateTimePattern() + "): ");
+        LocalDateTime start = Input.readDateTime(DateTimeFormatter.ofPattern(model.getDateTimePattern()));
 
         do {
             if (displayMenu) {
@@ -175,9 +164,9 @@ class TimeZoneController {
             endLocal = model.getArrivalTime(c.getKey(), start, duration);
 
             view.displayMessage("Arrival at " + c.getKey() + " at ");
-            view.displayLocalDateTime(end, DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
+            view.displayLocalDateTime(end, DateTimeFormatter.ofPattern(model.getDateTimePattern()));
             view.displayMessage(" (");
-            view.displayLocalDateTime(endLocal, DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
+            view.displayLocalDateTime(endLocal, DateTimeFormatter.ofPattern(model.getDateTimePattern()));
             view.displayMessage(" local)\n");
 
             start = end;
@@ -221,13 +210,13 @@ class TimeZoneController {
                                     view.displayMessage("Invalid option!\n");
                                 }
                             } else {
-                                view.displayMessage("Insert flight duration (HH:mm): ");
-                                LocalTime duration = Input.readTime(DateTimeFormatter.ofPattern("HH:mm"));
+                                view.displayMessage("Insert flight duration (" + model.getTimePattern() + "): ");
+                                LocalTime duration = Input.readTime(DateTimeFormatter.ofPattern("" + model.getTimePattern() + ""));
                                 LocalTime between = LocalTime.of(0, 0);
 
                                 if (connections.size() != 0) {
-                                    view.displayMessage("Insert time between flights (HH:mm): ");
-                                    between = Input.readTime(DateTimeFormatter.ofPattern("HH:mm"));
+                                    view.displayMessage("Insert time between flights (" + model.getTimePattern() + "): ");
+                                    between = Input.readTime(DateTimeFormatter.ofPattern(model.getTimePattern()));
                                 }
 
                                 SimpleEntry res = connections.put(s, new SimpleEntry<>(duration, between));
@@ -251,13 +240,13 @@ class TimeZoneController {
             } else if (ids.size() == 0){
                 view.displayMessage("Location not found!\n");
             } else {
-                view.displayMessage("Insert flight duration (HH:mm): ");
-                LocalTime duration = Input.readTime(DateTimeFormatter.ofPattern("HH:mm"));
+                view.displayMessage("Insert flight duration (" + model.getTimePattern() + "): ");
+                LocalTime duration = Input.readTime(DateTimeFormatter.ofPattern(model.getTimePattern()));
                 LocalTime between = LocalTime.of(0, 0);
 
                 if (connections.size() != 0) {
-                    view.displayMessage("Insert time between flights (HH:mm): ");
-                    between = Input.readTime(DateTimeFormatter.ofPattern("HH:mm"));
+                    view.displayMessage("Insert time between flights (" + model.getTimePattern() + "): ");
+                    between = Input.readTime(DateTimeFormatter.ofPattern(model.getTimePattern()));
                 }
 
                 SimpleEntry res = connections.put(ids.get(0), new SimpleEntry<>(duration, between));
@@ -304,7 +293,7 @@ class TimeZoneController {
     }
 
     private void stopExecution() {
-        view.displayMessage("Press enter to continue: ");
+        view.displayMessage("Press ENTER to continue... ");
         Input.readString();
     }
 }

@@ -13,20 +13,15 @@ import java.util.Stack;
 import java.util.AbstractMap.SimpleEntry;
 
 class LocalCalculatorController {
-
     private enum Operator {
         ADDITION, SUBTRACTION
     }
 
-    private final String datePattern;
-    private final DateTimeFormatter dateTimeFormatter;
     private final Stack<String> state;
     private UCalculatorView view;
     private UCalculatorModel model;
 
     LocalCalculatorController() {
-        datePattern = Config.getInstance().getProperty("DATE_PATTERN");
-        dateTimeFormatter = DateTimeFormatter.ofPattern(datePattern);
         state = new Stack<>();
     }
 
@@ -73,11 +68,11 @@ class LocalCalculatorController {
     }
 
     private void localDateCalculator() {
-        view.displayMessage("Insert date (" + datePattern + "): ");
+        view.displayMessage("Insert date (" + model.getDatePattern() + "): ");
 
-        final LocalDate localDate = Input.readDate(dateTimeFormatter);
+        final LocalDate localDate = Input.readDate(DateTimeFormatter.ofPattern(model.getDatePattern()));
 
-        state.push(localDate.format(dateTimeFormatter));
+        state.push(localDate.format(DateTimeFormatter.ofPattern(model.getDatePattern())));
         model.initLocalDateCalculator(localDate);
         this.localDateOperationMenu();
     }
@@ -113,7 +108,7 @@ class LocalCalculatorController {
                     view.displayMessage("Result: ");
 
                     if (result != null) {
-                        view.displayLocalDate(result, dateTimeFormatter);
+                        view.displayLocalDate(result, DateTimeFormatter.ofPattern(model.getDatePattern()));
                     } else {
                         // Este caso nunca vai ocorrer devido ao fluxo implementado
                         view.displayMessage("Something went wrong...\n");
@@ -241,13 +236,13 @@ class LocalCalculatorController {
     }
 
     private void intervalCalculator() {
-        view.displayMessage("Insert first date (" + datePattern + "): ");
+        view.displayMessage("Insert first date (" + model.getDatePattern() + "): ");
 
-        final LocalDate first = Input.readDate(dateTimeFormatter);
+        final LocalDate first = Input.readDate(DateTimeFormatter.ofPattern(model.getDatePattern()));
 
-        view.displayMessage("Insert second date (" + datePattern + "): ");
+        view.displayMessage("Insert second date (" + model.getDatePattern() + "): ");
 
-        final LocalDate second = Input.readDate(dateTimeFormatter);
+        final LocalDate second = Input.readDate(DateTimeFormatter.ofPattern(model.getDatePattern()));
         String option;
         boolean exit = false;
         boolean displayMenu = true;
@@ -337,8 +332,8 @@ class LocalCalculatorController {
     private void weekNumberOfLocalDate() {
         LocalDate localDate;
 
-        view.displayMessage("Insert Date (" + datePattern + "): ");
-        localDate = Input.readDate(dateTimeFormatter);
+        view.displayMessage("Insert Date (" + model.getDatePattern() + "): ");
+        localDate = Input.readDate(DateTimeFormatter.ofPattern(model.getDatePattern()));
         view.displayMessage("Week: " + model.getWeekNumber(localDate) + "\n");
         this.stopExecution();
     }
@@ -379,7 +374,7 @@ class LocalCalculatorController {
             final LocalDate localDate = model.dayOfWeekInMonth(year, month, dayOfWeek, place);
 
             if (localDate != null) {
-                view.displayLocalDate(localDate, dateTimeFormatter);
+                view.displayLocalDate(localDate, DateTimeFormatter.ofPattern(model.getDatePattern()));
             } else {
                 view.displayMessage("This month only has " + (place - 1) + " " + dayOfWeek + "S\n");
             }
@@ -388,7 +383,7 @@ class LocalCalculatorController {
         } else if (place == 6) {
             final List<LocalDate> localDates = model.getAllDaysOfWeekInMonth(year, month, dayOfWeek);
 
-            localDates.forEach(l -> view.displayLocalDate(l, dateTimeFormatter));
+            localDates.forEach(l -> view.displayLocalDate(l, DateTimeFormatter.ofPattern(model.getDatePattern())));
 
             this.stopExecution();
         }
@@ -462,7 +457,7 @@ class LocalCalculatorController {
     }
 
     private void stopExecution() {
-        view.displayMessage("Press enter to continue: ");
+        view.displayMessage("Press ENTER to continue... ");
         Input.readString();
     }
 }
