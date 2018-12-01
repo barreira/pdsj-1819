@@ -29,7 +29,7 @@ public final class UCalculatorModel {
         config = Config.getInstance();
         localDateCalculator = new LocalDateCalculator();
         timeZoneCalculator = new TimeZoneCalculator();
-        schedule = new Schedule();
+        schedule = new Schedule(Integer.parseInt(config.getProperty("SLOT_SIZE")));
     }
 
     /**
@@ -373,17 +373,5 @@ public final class UCalculatorModel {
 
     public String getTimePattern() {
         return config.getProperty("TIME_PATTERN");
-    }
-
-    public int getSlotSize() {
-        return Integer.valueOf(config.getProperty("SLOT_SIZE"));
-    }
-
-    public LocalTime getStartSlotTime() {
-        return LocalTime.parse(config.getProperty("START_SLOT_TIME"));
-    }
-
-    public LocalTime getEndSlotTime() {
-        return LocalTime.parse(config.getProperty("END_SLOT_TIME"));
     }
 }

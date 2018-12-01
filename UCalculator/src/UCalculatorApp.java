@@ -6,8 +6,6 @@ import view.UCalculatorView;
 public class UCalculatorApp {
 
     public static void main(String[] args) {
-        Config config = Config.getInstance();
-
         UCalculatorView view = new UCalculatorView();
         UCalculatorModel model = new UCalculatorModel();
         UCalculatorController controller = new UCalculatorController();
