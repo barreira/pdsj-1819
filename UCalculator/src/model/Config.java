@@ -3,9 +3,9 @@ package model;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.time.DateTimeException;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.Properties;
 
 public class Config {
@@ -109,7 +109,7 @@ public class Config {
         boolean isValid;
         try {
             isValid = LocalTime.parse(startSlotTime, DateTimeFormatter.ofPattern("HH:mm")).isBefore(LocalTime.parse(endSlotTime, DateTimeFormatter.ofPattern("HH:mm")));
-        } catch (DateTimeException e) {
+        } catch (DateTimeParseException e) {
             isValid = false;
         }
         return isValid;
