@@ -31,7 +31,8 @@ class LocalCalculatorController {
     public LocalCalculatorController() {
         final Config config = Config.getInstance();
         dateTimeFormat = DateTimeFormatter.ofPattern(config.getProperty("DATE_TIME_PATTERN"));
-        dateFormat = DateTimeFormatter.ofPattern(config.getProperty("DATE_PATTERN"));
+        dateFormat = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        //dateFormat = DateTimeFormatter.ofPattern(config.getProperty("DATE_PATTERN"));
         timeFormat = DateTimeFormatter.ofPattern(config.getProperty("TIME_PATTERN"));
         state = new Stack<>();
     }
