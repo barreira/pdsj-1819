@@ -3,23 +3,18 @@ package model;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.DateTimeException;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.AbstractMap.SimpleEntry;
 import java.util.Properties;
 
 public class Config {
-    private static final SimpleEntry<String, String> dateTimePattern =
-            new SimpleEntry<>("DATE_TIME_PATTERN", "dd-MM-yyyy HH:mm");
-    private static final SimpleEntry<String, String> datePattern =
-            new SimpleEntry<>("DATE_PATTERN", "dd-MM-yyyy");
-    private static final SimpleEntry<String, String> timePattern =
-            new SimpleEntry<>("TIME_PATTERN", "HH:mm");
-    private static final SimpleEntry<String, String> slotSize =
-            new SimpleEntry<>("SLOT_SIZE", "60");
-    private static final SimpleEntry<String, String> startSlotTime =
-            new SimpleEntry<>("START_SLOT_TIME", "00:00");
-    private static final SimpleEntry<String, String> endSlotTime =
-            new SimpleEntry<>("END_SLOT_TIME", "24:00");
+    private static final String dateTimePattern = "dd-MM-yyyy HH:mm";
+    private static final String datePattern = "dd-MM-yyyy";
+    private static final String timePattern = "HH:mm";
+    private static final String slotSize = "60";
+    private static final String startSlotTime = "00:00";
+    private static final String endSlotTime = "24:00";
 
     private static final String CONFIG_PATH = "UDCalculator.config";
     private static Config config = null;
@@ -28,51 +23,96 @@ public class Config {
 
     private Config() {
         properties = new Properties();
-        properties.setProperty(dateTimePattern.getKey(), dateTimePattern.getValue());
-        properties.setProperty(datePattern.getKey(), datePattern.getValue());
-        properties.setProperty(timePattern.getKey(), timePattern.getValue());
-        properties.setProperty(slotSize.getKey(), slotSize.getValue());
-        properties.setProperty(startSlotTime.getKey(), startSlotTime.getValue());
-        properties.setProperty(endSlotTime.getKey(), endSlotTime.getValue());
+        properties.setProperty("DATE_TIME_PATTERN", dateTimePattern);
+        properties.setProperty("DATE_PATTERN", datePattern);
+        properties.setProperty("TIME_PATTERN", timePattern);
+        properties.setProperty("SLOT_SIZE", slotSize);
+        properties.setProperty("START_SLOT_TIME", startSlotTime);
+        properties.setProperty("END_SLOT_TIME", endSlotTime);
 
         try {
             properties.load(Files.newInputStream(Path.of(CONFIG_PATH)));
-        } catch (IOException e0) {
-            try {
-                properties.store(Files.newOutputStream(Path.of(CONFIG_PATH)), "Default");
-            } catch (IOException e1) {
-                System.err.println("Error: could not store the config file! Using defaults.");
-            }
-        } finally {
-            properties.forEach((k, v) -> System.out.println(k + " " + v));
-            try {
-                DateTimeFormatter.ofPattern(properties.getProperty(dateTimePattern.getKey()));
-            } catch (IllegalArgumentException e) {
-                properties.setProperty(dateTimePattern.getKey(), dateTimePattern.getValue());
+
+            if (!isValidDateTimePattern(properties.getProperty("DATE_TIME_PATTERN"))) {
+                properties.setProperty("DATE_TIME_PATTERN", dateTimePattern);
             }
 
-            try {
-                DateTimeFormatter.ofPattern(properties.getProperty(datePattern.getKey()));
-            } catch (IllegalArgumentException e) {
-                properties.setProperty(datePattern.getKey(), datePattern.getValue());
+            if (!isValidDatePattern(properties.getProperty("DATE_PATTERN"))) {
+                properties.setProperty("DATE_PATTERN", datePattern);
             }
 
-            try {
-                DateTimeFormatter.ofPattern(properties.getProperty(timePattern.getKey()));
-            } catch (IllegalArgumentException e) {
-                properties.setProperty(timePattern.getKey(), timePattern.getValue());
+            if (!isValidTimePattern(properties.getProperty("TIME_PATTERN"))) {
+                properties.setProperty("TIME_PATTERN", timePattern);
             }
 
-            try {
-                if (Integer.valueOf(properties.getProperty(slotSize.getKey())) < 1) {
-                    properties.setProperty(slotSize.getKey(), slotSize.getValue());
-                }
-            } catch (NumberFormatException e) {
-                properties.setProperty(slotSize.getKey(), slotSize.getValue());
+            if(!isValidSlotSize(properties.getProperty("SLOT_SIZE"))) {
+                properties.setProperty("SLOT_SIZE", slotSize);
             }
 
-            // TODO missing slottime
+            if (!isValidSlotsTime(properties.getProperty("START_SLOT_TIME"), properties.getProperty("END_SLOT_TIME"))) {
+                properties.setProperty("START_SLOT_TIME", startSlotTime);
+                properties.setProperty("END_SLOT_TIME", endSlotTime);
+            }
+        } catch (IOException e) {
+            try {
+                properties.store(Files.newOutputStream(Path.of(CONFIG_PATH)), "Defaults");
+            } catch (IOException ignored) {
+            }
         }
+    }
+
+    private boolean isValidDateTimePattern(String pattern) {
+        boolean isValid;
+        try {
+            DateTimeFormatter.ofPattern(pattern);
+            isValid = pattern.contains("d") && pattern.contains("M") && pattern.contains("y") && pattern.contains("H") && pattern.contains("m");
+        } catch (IllegalArgumentException e) {
+            isValid = false;
+        }
+        return isValid;
+    }
+
+    private boolean isValidDatePattern(String pattern) {
+        boolean isValid;
+        try {
+            DateTimeFormatter.ofPattern(pattern);
+            isValid = pattern.contains("d") && pattern.contains("M") && pattern.contains("y") && !pattern.contains("H") && !pattern.contains("m");
+        } catch (IllegalArgumentException e) {
+            isValid =  false;
+        }
+        return isValid;
+    }
+
+    private boolean isValidTimePattern(String pattern) {
+        boolean isValid;
+        try {
+            DateTimeFormatter.ofPattern(pattern);
+            isValid = !pattern.contains("d") && !pattern.contains("M") && !pattern.contains("y") && pattern.contains("H") && pattern.contains("m");
+        } catch (IllegalArgumentException e) {
+            isValid =  false;
+        }
+        return isValid;
+    }
+
+    private boolean isValidSlotSize(String pattern) {
+        boolean isValid;
+        try {
+            int slotSize = Integer.valueOf(pattern);
+            isValid = slotSize > 0 && slotSize < 1441;
+        } catch (NumberFormatException e) {
+            isValid = false;
+        }
+        return isValid;
+    }
+
+    private boolean isValidSlotsTime(String startSlotTime, String endSlotTime) {
+        boolean isValid;
+        try {
+            isValid = LocalTime.parse(startSlotTime, DateTimeFormatter.ofPattern("HH:mm")).isBefore(LocalTime.parse(endSlotTime, DateTimeFormatter.ofPattern("HH:mm")));
+        } catch (DateTimeException e) {
+            isValid = false;
+        }
+        return isValid;
     }
 
     public static Config getInstance() {
