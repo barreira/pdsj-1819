@@ -1,6 +1,6 @@
 import controller.UCalculatorController;
 import model.UCalculatorModel;
-import model.config.Config;
+import model.Config;
 import view.UCalculatorView;
 
 public class UCalculatorApp {

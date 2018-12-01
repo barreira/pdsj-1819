@@ -1,7 +1,7 @@
 package controller;
 
 import model.UCalculatorModel;
-import model.config.Config;
+import model.Config;
 import view.UCalculatorView;
 
 import java.time.DayOfWeek;
@@ -10,7 +10,6 @@ import java.time.Month;
 import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
 import java.time.temporal.ChronoUnit;
-import java.util.AbstractMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Stack;
@@ -21,18 +20,13 @@ class LocalCalculatorController {
         ADDITION, SUBTRACTION
     }
 
-    private final String dateTimePattern;
     private final String datePattern;
-    private final String timePattern;
+    private final Stack<String> state;
     private UCalculatorView view;
     private UCalculatorModel model;
-    private Stack<String> state;
 
-    public LocalCalculatorController() {
-        final Config config = Config.getInstance();
-        dateTimePattern = config.getProperty("DATE_TIME_PATTERN");
-        datePattern = config.getProperty("DATE_PATTERN");
-        timePattern = config.getProperty("TIME_PATTERN");
+    LocalCalculatorController() {
+        datePattern = Config.getInstance().getProperty("DATE_PATTERN");
         state = new Stack<>();
     }
 

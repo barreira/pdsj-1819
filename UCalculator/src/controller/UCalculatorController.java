@@ -1,10 +1,7 @@
 package controller;
 
 import model.UCalculatorModel;
-import model.config.Config;
 import view.UCalculatorView;
-
-import java.time.format.DateTimeFormatter;
 
 public class UCalculatorController {
     private UCalculatorView view;

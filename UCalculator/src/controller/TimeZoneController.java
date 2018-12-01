@@ -1,5 +1,6 @@
 package controller;
 
+import model.Config;
 import model.UCalculatorModel;
 import view.UCalculatorView;
 
@@ -13,9 +14,18 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 class TimeZoneController {
-
+    private final String dateTimePattern;
+    private final String datePattern;
+    private final String timePattern;
     private UCalculatorView view;
     private UCalculatorModel model;
+
+    public TimeZoneController() {
+        final Config config = Config.getInstance();
+        dateTimePattern = config.getProperty("DATE_TIME_PATTERN");
+        datePattern = config.getProperty("DATE_PATTERN");
+        timePattern = config.getProperty("TIME_PATTERN");
+    }
 
     void setView(UCalculatorView view) {
         this.view = view;
@@ -92,7 +102,7 @@ class TimeZoneController {
                             } else {
                                 LocalDateTime result = model.getTimeZone(s, LocalDateTime.now());
                                 view.displayMessage("Current timezone at " + s + " is " +
-                                        result.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")) + ".\n");
+                                        result.format(DateTimeFormatter.ofPattern(dateTimePattern)) + ".\n");
                                 this.stopExecution();
                                 break;
                             }
@@ -113,7 +123,7 @@ class TimeZoneController {
                 view.displayMessage(
                         "Current timezone at " + ids.get(0) + " is " +
                                 model.getTimeZone(ids.get(0), LocalDateTime.now())
-                                        .format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")) + ".\n");
+                                        .format(DateTimeFormatter.ofPattern(dateTimePattern)) + ".\n");
                 this.stopExecution();
             }
         }
@@ -125,8 +135,8 @@ class TimeZoneController {
         String option;
         boolean displayMenu = true;
 
-        view.displayMessage("Insert departure datetime (dd/MM/yyyy HH:mm): ");
-        LocalDateTime start = Input.readDateTime(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
+        view.displayMessage("Insert departure datetime (" + dateTimePattern + "): ");
+        LocalDateTime start = Input.readDateTime(DateTimeFormatter.ofPattern(dateTimePattern));
 
         do {
             if (displayMenu) {
