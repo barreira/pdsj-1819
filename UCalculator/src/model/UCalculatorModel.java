@@ -2,11 +2,8 @@ package model;
 
 import java.time.*;
 import java.time.temporal.ChronoUnit;
-import java.util.Arrays;
 import java.util.List;
 import java.util.AbstractMap.SimpleEntry;
-
-import static java.util.Collections.singletonList;
 
 /**
  * Classe que contém todos os métodos de acesso às funcionalidades de uma calculadora de datas, uma conversora
@@ -108,9 +105,9 @@ public final class UCalculatorModel {
     }
 
     /**
-     * Efetua todas as operações fornecidas à calculadora de datas.
+     * Efetua todas as operações fornecidas à calculadora de datas. A calculadora não é limpa com esta operação.
      *
-     * @return Data calculada através da calculadora de datas.
+     * @return Data calculada através da calculadora de datas. Devolve null caso não haja nada para calcular.
      */
     public LocalDate solve() {
         final LocalDate localDate = localDateCalculator.peek();
@@ -196,29 +193,34 @@ public final class UCalculatorModel {
     }
 
     /**
-     * Para um determinado ano, determinado mês e uma
+     * Para um determinado ano, determinado mês e um determinado dia da semana, devolve a sua data de acordo com a sua
+     * posição nesse mês.
      *
-     * @param year
-     * @param month
-     * @param dayOfWeek
-     * @param place
-     * @return Uma lista que contém todas datas de um determinado dia semana num determinado mês.
+     * Exemplo: Calcular a data da 2ª Terça-feira do mês de janeiro do ano de 2017.
+     *
+     * @param year      Ano pretendido.
+     * @param month     Mês pretendido.
+     * @param dayOfWeek Dia da semana pretendido.
+     * @param place     Número da semana do mês pretendido.
+     * @return Data do dia da semana ou null caso os parâmetros sejam inválidos.
      */
-    public List<LocalDate> daysOfWeekInMonth(final int year, final int month,
-                                             final DayOfWeek dayOfWeek, final int place) {
-        if (place != 6) { // se não existir, retorna lista = {null}
-            LocalDate ld = DateUtils.dateOfDayOfWeekInMonth(year, month, dayOfWeek, place);
+    public LocalDate dayOfWeekInMonth(final int year, final int month, final DayOfWeek dayOfWeek, final int place) {
+        return DateUtils.dateOfDayOfWeekInMonth(year, month, dayOfWeek, place);
+    }
 
-            return (ld == null) ? null
-                                : singletonList(DateUtils.dateOfDayOfWeekInMonth(year, month, dayOfWeek, place));
-        }
-        else { // se não existir 5.ª ocorrência, retorna lista = {1.ª, 2.ª, 3.ª, 4.ª, null}
-            return Arrays.asList(DateUtils.dateOfDayOfWeekInMonth(year, month, dayOfWeek, 1),
-                                 DateUtils.dateOfDayOfWeekInMonth(year, month, dayOfWeek, 2),
-                                 DateUtils.dateOfDayOfWeekInMonth(year, month, dayOfWeek, 3),
-                                 DateUtils.dateOfDayOfWeekInMonth(year, month, dayOfWeek, 4),
-                                 DateUtils.dateOfDayOfWeekInMonth(year, month, dayOfWeek, 5));
-        }
+    /**
+     * Para um determinado ano, determinado mês e um determinado dia da semana, devolve uma lista com todas as datas
+     * desses dias da semana.
+     *
+     * Exemplo: Calcular todas as datas de todas as Segundas-feira do mês de Dezembro do ano de 2016.
+     *
+     * @param year      Ano pretendido.
+     * @param month     Mês pretendido.
+     * @param dayOfWeek Dia da semana pretendido.
+     * @return Lista com todos as datas ou uma lista vazia caso não seja possível calcular tais datas.
+     */
+    public List<LocalDate> getAllDaysOfWeekInMonth(final int year, final int month, final DayOfWeek dayOfWeek) {
+        return DateUtils.getAllDaysOfWeekInMonth(year, month, dayOfWeek);
     }
 
     /* ********************************************* TimeZone Calculator *********************************************/
