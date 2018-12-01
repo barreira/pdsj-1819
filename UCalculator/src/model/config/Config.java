@@ -17,9 +17,9 @@ public class Config {
     private static final SimpleEntry<String, String> slotSize =
             new SimpleEntry<>("SLOT_SIZE", "60");
     private static final SimpleEntry<String, String> startSlotTime =
-            new SimpleEntry<>("START_SLOT_TIME", "0000");
+            new SimpleEntry<>("START_SLOT_TIME", "00:00");
     private static final SimpleEntry<String, String> endSlotTime =
-            new SimpleEntry<>("END_SLOT_TIME", "0000");
+            new SimpleEntry<>("END_SLOT_TIME", "24:00");
 
     private static final String CONFIG_PATH = "UDCalculator.config";
     private static Config config = null;
@@ -70,6 +70,8 @@ public class Config {
             } catch (NumberFormatException e) {
                 properties.setProperty(slotSize.getKey(), slotSize.getValue());
             }
+
+            // TODO missing slottime
         }
     }
 

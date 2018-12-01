@@ -21,19 +21,18 @@ class LocalCalculatorController {
         ADDITION, SUBTRACTION
     }
 
-    private final DateTimeFormatter dateTimeFormat;
-    private final DateTimeFormatter dateFormat;
-    private final DateTimeFormatter timeFormat;
+    private final String dateTimePattern;
+    private final String datePattern;
+    private final String timePattern;
     private UCalculatorView view;
     private UCalculatorModel model;
     private Stack<String> state;
 
     public LocalCalculatorController() {
         final Config config = Config.getInstance();
-        dateTimeFormat = DateTimeFormatter.ofPattern(config.getProperty("DATE_TIME_PATTERN"));
-        dateFormat = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-        //dateFormat = DateTimeFormatter.ofPattern(config.getProperty("DATE_PATTERN"));
-        timeFormat = DateTimeFormatter.ofPattern(config.getProperty("TIME_PATTERN"));
+        dateTimePattern = config.getProperty("DATE_TIME_PATTERN");
+        datePattern = config.getProperty("DATE_PATTERN");
+        timePattern = config.getProperty("TIME_PATTERN");
         state = new Stack<>();
     }
 
@@ -80,11 +79,11 @@ class LocalCalculatorController {
     }
 
     private void localDateCalculator() {
-        view.displayMessage("Insert date (" + Config.getInstance().getProperty("DATE_PATTERN") + "): ");
+        view.displayMessage("Insert date (" + datePattern + "): ");
 
-        final LocalDate localDate = Input.readDate(dateFormat);
+        final LocalDate localDate = Input.readDate(DateTimeFormatter.ofPattern(datePattern));
 
-        state.push(localDate.format(dateFormat));
+        state.push(localDate.format(DateTimeFormatter.ofPattern(datePattern)));
         model.initLocalDateCalculator(localDate);
         this.localDateOperationMenu();
     }
@@ -116,8 +115,8 @@ class LocalCalculatorController {
                 case "3":
                     state.clear();
                     view.displayMessage("Result: ");
-                    view.displayLocalDate(model.solve(), dateFormat);
-                    view.displayMessage("Press enter to continue: ");
+                    view.displayLocalDate(model.solve(), DateTimeFormatter.ofPattern(datePattern));
+                    view.displayMessage("Press ENTER to continue... ");
                     Input.readString();
                     exit = true;
                     break;
@@ -239,10 +238,10 @@ class LocalCalculatorController {
     }
 
     private void intervalCalculator() {
-        view.displayMessage("Insert first date (dd/MM/yyyy): ");
-        final LocalDate first = Input.readDate(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
-        view.displayMessage("Insert second date (dd/MM/yyyy): ");
-        final LocalDate second = Input.readDate(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+        view.displayMessage("Insert first date (" + datePattern + "): ");
+        final LocalDate first = Input.readDate(DateTimeFormatter.ofPattern(datePattern));
+        view.displayMessage("Insert second date (" + datePattern + "): ");
+        final LocalDate second = Input.readDate(DateTimeFormatter.ofPattern(datePattern));
         String option;
         boolean exit = false;
         boolean displayMenu = true;
@@ -293,7 +292,7 @@ class LocalCalculatorController {
             }
 
             if (!option.equals("0") && exit) {
-                view.displayMessage("Press enter to continue: ");
+                view.displayMessage("Press ENTER to continue... ");
                 Input.readString();
             }
         } while (!option.equals("0") && !exit);
@@ -333,10 +332,10 @@ class LocalCalculatorController {
     private void weekNumberOfLocalDate() {
         LocalDate localDate;
 
-        view.displayMessage("Insert Date (dd/MM/yyyy): ");
-        localDate = Input.readDate(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+        view.displayMessage("Insert Date (" + datePattern + "): ");
+        localDate = Input.readDate(DateTimeFormatter.ofPattern(datePattern));
         view.displayMessage("Week: " + model.getWeekNumber(localDate) + "\n");
-        view.displayMessage("Press enter to continue: ");
+        view.displayMessage("Press ENTER to continue... ");
         Input.readString();
     }
 
@@ -351,7 +350,7 @@ class LocalCalculatorController {
 
         view.displayMessage("Week number " + weekNumber + " of " + year + " starts at " + start.toString() +
                 " and ends at " + end.toString() + ".\n");
-        view.displayMessage("Press enter to continue: ");
+        view.displayMessage("Press ENTER to continue... ");
         Input.readString();
     }
 
@@ -372,7 +371,7 @@ class LocalCalculatorController {
             List<LocalDate> localDates = model.daysOfWeekInMonth(year, month, dayOfWeek, place);
 
             if (localDates != null) {
-                view.displayLocalDate(localDates.get(0), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+                view.displayLocalDate(localDates.get(0), DateTimeFormatter.ofPattern(datePattern));
             }
             else {
                 view.displayMessage(Month.of(month).getDisplayName(TextStyle.FULL, Locale.getDefault()) + " of " +
@@ -380,7 +379,7 @@ class LocalCalculatorController {
                                     dayOfWeek.getDisplayName(TextStyle.FULL, Locale.getDefault()) + "s");
             }
 
-            view.displayMessage("Press enter to continue: ");
+            view.displayMessage("Press ENTER to continue... ");
             Input.readString();
         } else if (place == 6) {
             final List<LocalDate> localDates = model.daysOfWeekInMonth(year, month, dayOfWeek, place);
@@ -388,12 +387,12 @@ class LocalCalculatorController {
             if (localDates != null) {
                 for (final LocalDate date : localDates) {
                     if (date != null) {
-                        view.displayLocalDate(date, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+                        view.displayLocalDate(date, DateTimeFormatter.ofPattern(datePattern));
                     }
                 }
             }
 
-            view.displayMessage("Press enter to continue: ");
+            view.displayMessage("Press ENTER to continue... ");
             Input.readString();
         }
     }
