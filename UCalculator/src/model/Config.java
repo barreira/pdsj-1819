@@ -16,10 +16,14 @@ class Config {
     private static final String startSlotTime = "08:00";
     private static final String endSlotTime = "18:00";
     private static final String CONFIG_PATH = "UDCalculator.config";
-    private static Config config = null;
+    private static volatile Config config = null;
     private final Properties properties;
 
     private Config() {
+        if (config != null){
+            throw new RuntimeException("Singleton: use getInstance() method to retrieve the instance of this class.");
+        }
+
         properties = new Properties();
         properties.setProperty("DATE_TIME_PATTERN", dateTimePattern);
         properties.setProperty("DATE_PATTERN", datePattern);
@@ -114,13 +118,37 @@ class Config {
     }
 
     static Config getInstance() {
+        // Avoid overhead of method synchronized
         if (config == null) {
-            config = new Config();
+            synchronized (Config.class) {
+                config = new Config();
+
+            }
         }
         return config;
     }
 
-    String getProperty(final String key) {
-        return properties.getProperty(key);
+    String getDateTimePattern() {
+        return properties.getProperty("DATE_TIME_PATTERN");
+    }
+
+    String getDatePattern() {
+        return properties.getProperty("DATE_PATTERN");
+    }
+
+    String getTimePattern() {
+        return properties.getProperty("TIME_PATTERN");
+    }
+
+    Integer getSlotSize() {
+        return Integer.parseInt(properties.getProperty("SLOT_SIZE"));
+    }
+
+    LocalTime getStartSlotTime() {
+        return LocalTime.parse(properties.getProperty("START_SLOT_TIME"), DateTimeFormatter.ofPattern("HH:mm"));
+    }
+
+    LocalTime getEndSlotTime() {
+        return LocalTime.parse(properties.getProperty("END_SLOT_TIME"), DateTimeFormatter.ofPattern("HH:mm"));
     }
 }

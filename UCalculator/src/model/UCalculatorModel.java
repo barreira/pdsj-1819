@@ -395,32 +395,28 @@ public final class UCalculatorModel {
     }
 
     public String getDateTimePattern() {
-        return config.getProperty("DATE_TIME_PATTERN");
+        return config.getDateTimePattern();
     }
 
     public String getDatePattern() {
-        return config.getProperty("DATE_PATTERN");
+        return config.getDatePattern();
     }
 
     public String getTimePattern() {
-        return config.getProperty("TIME_PATTERN");
+        return config.getTimePattern();
     }
 
     private Schedule readSchedule() {
         Schedule schedule;
         try (ObjectInputStream ois = new ObjectInputStream(Files.newInputStream(Path.of("schedule")))) {
             schedule = (Schedule) ois.readObject();
-            if (schedule.getSlotSize() != Integer.parseInt(config.getProperty("SLOT_SIZE"))) {
-                schedule = new Schedule(Integer.parseInt(config.getProperty("SLOT_SIZE")));
+            if (schedule.getSlotSize() != config.getSlotSize()) {
+                schedule = new Schedule(config.getSlotSize());
             }
-            schedule.setStartSlot(LocalTime.parse(config.getProperty("START_SLOT_TIME"), DateTimeFormatter.ofPattern("HH:mm")));
-            schedule.setEndSlot(LocalTime.parse(config.getProperty("END_SLOT_TIME"), DateTimeFormatter.ofPattern("HH:mm")));
+            schedule.setStartSlot(config.getStartSlotTime());
+            schedule.setEndSlot(config.getEndSlotTime());
         } catch (IOException | ClassNotFoundException e) {
-            schedule = new Schedule(
-                    Integer.parseInt(config.getProperty("SLOT_SIZE")),
-                    LocalTime.parse(config.getProperty("START_SLOT_TIME"), DateTimeFormatter.ofPattern("HH:mm")),
-                    LocalTime.parse(config.getProperty("END_SLOT_TIME"), DateTimeFormatter.ofPattern("HH:mm"))
-            );
+            schedule = new Schedule(config.getSlotSize(), config.getStartSlotTime(), config.getEndSlotTime());
             System.out.println("DEBUG " + schedule.getSlotSize() + " " + schedule.getStartSlotId() + " " + schedule.getEndSlotId());
         }
         return schedule;
