@@ -94,11 +94,7 @@ class ScheduleController {
         final int slotId = this.getSlotId(entry.getValue());
         final int duration = this.getDuration();
 
-        if (model.openSlots(entry.getKey(), slotId, duration)) {
-            view.displayMessage("Slots opened!\n");
-        } else {
-            view.displayMessage("Could not open slots...\n");
-        }
+        view.displayMessage(model.openSlots(entry.getKey(), slotId, duration) + " Slots opened!\n");
 
         this.stopExecution();
     }

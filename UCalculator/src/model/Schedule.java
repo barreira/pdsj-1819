@@ -51,27 +51,21 @@ class Schedule {
         return this.endSlotId;
     }
 
-    boolean openSlots(final LocalDate date, final int slotId, final int duration) {
-        boolean success;
+    int openSlots(final LocalDate date, final int slotId, final int duration) {
+        int slotsOpened = 0;
 
-        if (slotId < startSlotId || slotId > endSlotId || duration < 1) {
-            success = false;
-        } else {
-            success = this.testSlots(date, slotId, duration, ClosedSlot.class);
-
+        if (slotId >= startSlotId && slotId <= endSlotId && duration >= 1) {
             int k = slotId;
             LocalDate next = date;
             List<Slot> slots;
 
             for (int i = 0; i < duration; i++) {
                 if ((slots = schedule.get(next)) != null) {
-                    for (int j = k; j <= endSlotId && j <= i; j++) {
-                        if (slots.get(j).getClass().equals(BusySlot.class)) {
-                            success = false;
-                            break;
-                        } else if (slots.get(j).getClass().equals(ClosedSlot.class)) {
-                            slots.set(j, new OpenSlot(j, this.slotTime(j), this.slotTime(j + 1)));
-                        }
+                    for (int j = k; j <= endSlotId && i < duration; j++, i++) {
+                       if (slots.get(j).getClass().equals(ClosedSlot.class)) {
+                           slots.set(j, new OpenSlot(j, this.slotTime(j), this.slotTime(j + 1)));
+                           slotsOpened++;
+                       }
                     }
 
                     next = next.plusDays(1);
@@ -82,7 +76,7 @@ class Schedule {
             }
         }
 
-        return success;
+        return slotsOpened;
     }
 
     boolean closeSlots(final LocalDate date, final int slotId, final int duration) {

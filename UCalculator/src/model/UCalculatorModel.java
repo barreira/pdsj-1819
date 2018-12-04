@@ -284,9 +284,9 @@ public final class UCalculatorModel {
      * @param date     Data pretendida.
      * @param slotId   Id do slot inicial que pretende disponibilizar.
      * @param duration Quantidade de slots a partir do slot inicial que pretende disponibilizar.
-     * @return True caso a operação seja efetuada com sucesso e false caso contrário.
+     * @return Devolve o conjunto de slots tornados disponíveis.
      */
-    public boolean openSlots(final LocalDate date, final int slotId, final int duration) {
+    public int openSlots(final LocalDate date, final int slotId, final int duration) {
         return schedule.openSlots(date, slotId, duration);
     }
 
