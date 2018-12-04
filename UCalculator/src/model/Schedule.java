@@ -293,8 +293,9 @@ public class Schedule implements Serializable {
     int setEndSlot(LocalTime time) {
         List<LocalTime> endSlots =
                 IntStream.range(0, 1440 / slotSize)
-                        .mapToObj(i -> LocalTime.of(0, 0).plusMinutes(i * slotSize))
+                        .mapToObj(i -> LocalTime.of(0, 0).plusMinutes((i + 1) * slotSize))
                         .collect(Collectors.toList());
+
         System.out.println(endSlots);
         return endSlotId = IntStream
                 .range(1, endSlots.size())
