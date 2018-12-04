@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.Map;
 
 import static java.util.Map.entry;
-import static java.util.Map.of;
 
 public final class UCalculatorView {
 
@@ -85,8 +84,10 @@ public final class UCalculatorView {
                         new Option("Cancel ----------------------", "0")))),
                 entry(9, new Menu("*** SCHEDULER MANAGER ***", Arrays.asList(
                         new Option("Add ----------", "1"),
-                        new Option("Consult/Edit -", "2"),
-                        new Option("Remove -------", "3"),
+                        new Option("Open Slots ---", "2"),
+                        new Option("Close Slots --", "3"),
+                        new Option("Consult/Edit -", "4"),
+                        new Option("Remove -------", "5"),
                         new Option("Back ---------", "0")))),
                 entry(10, new Menu("*** Edit Task ***", Arrays.asList(
                         new Option("Change Title ----", "1"),
@@ -100,14 +101,6 @@ public final class UCalculatorView {
 
     public void displayMessage(final String message) {
         System.out.print(message);
-    }
-
-    public void displayMessage(final String message, final boolean withSpacing) {
-        if (withSpacing) {
-            this.displaySpacing();
-        }
-
-        System.out.println(message);
     }
 
     public void displayLocalDate(final LocalDate date, final DateTimeFormatter formatter) {
@@ -125,11 +118,14 @@ public final class UCalculatorView {
 
     public void displayPage(final List<String> elements, final int currentPage, final int totalPages) {
         this.displaySpacing();
+
         int i = 1;
+
         for(String element : elements) {
             System.out.println(element + " " + i);
             i++;
         }
+
         System.out.println("Page " + currentPage + " of " + totalPages);
     }
 

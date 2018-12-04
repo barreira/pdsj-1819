@@ -1,7 +1,6 @@
 package controller;
 
 import model.UCalculatorModel;
-import model.Config;
 import view.UCalculatorView;
 
 import java.time.DayOfWeek;

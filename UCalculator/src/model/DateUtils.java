@@ -38,13 +38,17 @@ final class DateUtils {
      */
     static final BiFunction<LocalDate, Integer, LocalDate> datePlusWorkingDays = (x, y) -> {
         int count = 0;
+
         while(count < y) {
-            DayOfWeek dow = x.getDayOfWeek();
+            final DayOfWeek dow = x.getDayOfWeek();
+
             if(!(dow.equals(SATURDAY) || dow.equals(SUNDAY))){
                 count++;
             }
+
             x = x.plusDays(1);
         }
+
         return x;
     };
 
@@ -54,13 +58,17 @@ final class DateUtils {
      */
     static final BiFunction<LocalDate, Integer, LocalDate> dateMinusWorkingDays = (x, y) -> {
         int count = 0;
+
         while(count < y) {
-            DayOfWeek dow = x.getDayOfWeek();
+            final DayOfWeek dow = x.getDayOfWeek();
+
             if(!(dow.equals(SATURDAY) || dow.equals(SUNDAY))){
                 count++;
             }
+
             x = x.minusDays(1);
         }
+
         return x;
     };
 
@@ -93,7 +101,7 @@ final class DateUtils {
      * @return long Invervalo temporal entre as duas datas, na ChronoUnit recebida.
      *         -1   Caso ocorra uma exceção.
      */
-    static long intervalInUnit(LocalDate first, LocalDate second, ChronoUnit chronoUnit) {
+    static long intervalInUnit(final LocalDate first, final LocalDate second, final ChronoUnit chronoUnit) {
         try {
             return first.until(second, chronoUnit);
         } catch (Exception e) {
@@ -110,7 +118,7 @@ final class DateUtils {
      * @return long Número de fortnights (períodos de duas semanas) entre as duas datas recebidas.
      *         -1   Caso ocorra uma exceção.
      */
-    static long intervalInFortnights(LocalDate first, LocalDate second) {
+    static long intervalInFortnights(final LocalDate first, final LocalDate second) {
         try {
             return first.until(second, ChronoUnit.WEEKS) / 2;
         } catch (Exception e) {
@@ -154,7 +162,7 @@ final class DateUtils {
      *
      * @return int Número da semana do ano correspondente à data recebida.
      */
-    static int weekNumberOfLocalDate(LocalDate localDate) {
+    static int weekNumberOfLocalDate(final LocalDate localDate) {
         return localDate != null ? localDate.get(IsoFields.WEEK_OF_WEEK_BASED_YEAR) : -1;
     }
 
@@ -167,7 +175,7 @@ final class DateUtils {
      *
      * @return SimpleEntry<LocalDate, LocalDate> Data de início e data de fim da semana no ano.
      */
-    static SimpleEntry<LocalDate, LocalDate> dateOfWeekNumber(int weekNumber, int year) {
+    static SimpleEntry<LocalDate, LocalDate> dateOfWeekNumber(final int weekNumber, final int year) {
         final LocalDate start = Year.of(year).atDay(1).with(TemporalAdjusters.nextOrSame(DayOfWeek.MONDAY))
                                                              .plusWeeks(weekNumber - 1);
 

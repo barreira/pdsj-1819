@@ -117,7 +117,7 @@ class Schedule {
     }
 
     boolean addTask(final LocalDate date, final int slotId, final int duration, 
-                           final String title, final List<String> people) {
+                    final String title, final List<String> people) {
         boolean success;
 
         if (slotId < startSlotId || slotId > endSlotId || duration < 1) {
