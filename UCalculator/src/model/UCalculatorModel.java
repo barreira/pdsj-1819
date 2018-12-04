@@ -416,6 +416,7 @@ public final class UCalculatorModel {
                     LocalTime.parse(config.getProperty("START_SLOT_TIME"), DateTimeFormatter.ofPattern("HH:mm")),
                     LocalTime.parse(config.getProperty("END_SLOT_TIME"), DateTimeFormatter.ofPattern("HH:mm"))
             );
+            System.out.println(schedule.getStartSlotId() + " " + schedule.getEndSlotId());
         }
         return schedule;
     }

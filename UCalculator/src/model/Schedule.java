@@ -298,7 +298,7 @@ public class Schedule implements Serializable {
         System.out.println(endSlots);
         return endSlotId = IntStream
                 .range(1, endSlots.size())
-                .filter(i -> time.isBefore(endSlots.get(i)))
+                .filter(i -> time.isBefore(endSlots.get(i)) || time.equals(endSlots.get(i)))
                 .findFirst()
                 .orElse(this.endSlotId);
     }
