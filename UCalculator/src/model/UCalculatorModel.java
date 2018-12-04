@@ -1,5 +1,11 @@
 package model;
 
+import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.*;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
@@ -30,6 +36,7 @@ public final class UCalculatorModel {
         localDateCalculator = new LocalDateCalculator();
         timeZoneCalculator = new TimeZoneCalculator();
         schedule = new Schedule(Integer.parseInt(config.getProperty("SLOT_SIZE")));
+        // = readSchedule();
     }
 
     /**
@@ -310,7 +317,13 @@ public final class UCalculatorModel {
      */
     public boolean addTask(final LocalDate date, final int slotId, final int duration,
                            final String title, final List<String> people) {
-        return schedule.addTask(date, slotId, duration, title, people);
+        boolean taskAdded = true;
+        if (schedule.addTask(date, slotId, duration, title, people)) {
+            // this.writeSchedule();
+        } else {
+            taskAdded = false;
+        }
+        return taskAdded;
     }
 
     /**
@@ -321,7 +334,13 @@ public final class UCalculatorModel {
      * @return True caso a tarefa seja removida com sucesso ou false caso esta não exista.
      */
     public boolean removeTask(final LocalDate date, final int slotId) {
-        return schedule.removeTask(date, slotId) != null;
+        boolean taskRemoved = true;
+        if (schedule.removeTask(date, slotId) != null) {
+            // this.writeSchedule();
+        } else {
+            taskRemoved = false;
+        }
+        return taskRemoved;
     }
 
     /**
@@ -345,9 +364,15 @@ public final class UCalculatorModel {
      * @param newDuration Nova duração da tarefa a editar.
      * @return True caso seja possível editar essa tarefa ou false caso contrário.
      */
-    public boolean edit(final LocalDate date, final int slotId, final LocalDate newDate,
+    public boolean editTask(final LocalDate date, final int slotId, final LocalDate newDate,
                         final int newSlotId, final int newDuration) {
-        return schedule.editTask(date, slotId, newDate, newSlotId, newDuration);
+        boolean taskEdited = true;
+        if (schedule.editTask(date, slotId, newDate, newSlotId, newDuration)) {
+            // this.writeSchedule();
+        } else {
+            taskEdited = false;
+        }
+        return taskEdited;
     }
 
     /**
@@ -359,8 +384,14 @@ public final class UCalculatorModel {
      * @param people Nova lista de pessoas.
      * @return True caso seja possível editar essa tarefa ou false caso contrário.
      */
-    public boolean edit(final LocalDate date, final int slotId, final String title, final List<String> people) {
-        return schedule.editTask(date, slotId, title, people);
+    public boolean editTask(final LocalDate date, final int slotId, final String title, final List<String> people) {
+        boolean taskEdited = true;
+        if(schedule.editTask(date, slotId, title, people)) {
+            // this.writeSchedule();
+        } else {
+            taskEdited = false;
+        }
+        return taskEdited;
     }
 
     public String getDateTimePattern() {
@@ -373,5 +404,27 @@ public final class UCalculatorModel {
 
     public String getTimePattern() {
         return config.getProperty("TIME_PATTERN");
+    }
+
+    private Schedule readSchedule() {
+        Schedule schedule;
+        try (ObjectInputStream ois = new ObjectInputStream(Files.newInputStream(Path.of("schedule")))) {
+            schedule = (Schedule) ois.readObject();
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+            schedule = new Schedule();
+        }
+        return schedule;
+    }
+
+    private boolean writeSchedule() {
+        boolean success = true;
+        try (ObjectOutputStream ous = new ObjectOutputStream(Files.newOutputStream(Path.of("schedule")))) {
+            ous.writeObject(schedule);
+        } catch (IOException e) {
+            e.printStackTrace();
+            success = false;
+        }
+        return success;
     }
 }
