@@ -410,13 +410,18 @@ public final class UCalculatorModel {
         Schedule schedule;
         try (ObjectInputStream ois = new ObjectInputStream(Files.newInputStream(Path.of("schedule")))) {
             schedule = (Schedule) ois.readObject();
+            if (schedule.getSlotSize() != Integer.parseInt(config.getProperty("SLOT_SIZE"))) {
+                schedule = new Schedule(Integer.parseInt(config.getProperty("SLOT_SIZE")));
+            }
+            schedule.setStartSlot(LocalTime.parse(config.getProperty("START_SLOT_TIME"), DateTimeFormatter.ofPattern("HH:mm")));
+            schedule.setEndSlot(LocalTime.parse(config.getProperty("END_SLOT_TIME"), DateTimeFormatter.ofPattern("HH:mm")));
         } catch (IOException | ClassNotFoundException e) {
             schedule = new Schedule(
                     Integer.parseInt(config.getProperty("SLOT_SIZE")),
                     LocalTime.parse(config.getProperty("START_SLOT_TIME"), DateTimeFormatter.ofPattern("HH:mm")),
                     LocalTime.parse(config.getProperty("END_SLOT_TIME"), DateTimeFormatter.ofPattern("HH:mm"))
             );
-            System.out.println(schedule.getStartSlotId() + " " + schedule.getEndSlotId());
+            System.out.println("DEBUG " + schedule.getSlotSize() + " " + schedule.getStartSlotId() + " " + schedule.getEndSlotId());
         }
         return schedule;
     }
