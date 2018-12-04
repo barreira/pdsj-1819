@@ -194,14 +194,19 @@ public final class UCalculatorView {
     }
 
     private void displayTask(final Task task) {
-        final StringBuilder sb = new StringBuilder("Title: " + task.getTitle() + " --- With: ");
         final List<String> people = task.getPeople();
-        String delimiter = "";
+        final StringBuilder sb = new StringBuilder("Title: " + task.getTitle());
 
-        for (String p : people) {
-            sb.append(delimiter);
-            sb.append(p);
-            delimiter = ",";
+        if (people.size() > 0) {
+            sb.append(" -> With: ");
+
+            String delimiter = "";
+
+            for (String p : people) {
+                sb.append(delimiter);
+                sb.append(p);
+                delimiter = ",";
+            }
         }
 
         System.out.println(sb.toString());
