@@ -4,8 +4,10 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
-class Schedule implements Serializable {
+public class Schedule implements Serializable {
 
     private static final int DEFAULT_SLOT_SIZE = 30;
     private static final int MINUTES_OF_DAY = 1440;
@@ -15,7 +17,7 @@ class Schedule implements Serializable {
     private int endSlotId;
     private final Map<LocalDate, List<Slot>> schedule;
 
-    Schedule(final int slotSize) {
+    public Schedule(final int slotSize) {
         this.slotSize = MINUTES_OF_DAY % slotSize == 0 ? slotSize : DEFAULT_SLOT_SIZE;
         this.startSlotId = 0;
         this.endSlotId = MINUTES_OF_DAY / this.slotSize - 1;
@@ -267,6 +269,33 @@ class Schedule implements Serializable {
         }
 
         return result;
+    }
+
+    public int setStartSlot(LocalTime time) {
+        List<LocalTime> startSlots =
+                IntStream.range(0, 1440 / slotSize)
+                .mapToObj(i -> LocalTime.of(0, 0).plusMinutes(i * slotSize))
+                .collect(Collectors.toList());
+
+        return startSlotId = IntStream
+                .range(1, startSlots.size())
+                .filter(i -> time.isBefore(startSlots.get(i)))
+                .map(i -> i - 1)
+                .findFirst()
+                .orElse(this.startSlotId);
+    }
+
+    public int setEndSlot(LocalTime time) {
+        List<LocalTime> endSlots =
+                IntStream.range(0, 1440 / slotSize)
+                        .mapToObj(i -> LocalTime.of(0, 0).plusMinutes(i * slotSize))
+                        .collect(Collectors.toList());
+        System.out.println(endSlots);
+        return endSlotId = IntStream
+                .range(1, endSlots.size())
+                .filter(i -> time.isBefore(endSlots.get(i)))
+                .findFirst()
+                .orElse(this.endSlotId);
     }
 
     private boolean addTask(Task task) {

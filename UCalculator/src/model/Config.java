@@ -14,7 +14,7 @@ public class Config {
     private static final String timePattern = "HH:mm";
     private static final String slotSize = "60";
     private static final String startSlotTime = "00:00";
-    private static final String endSlotTime = "24:00";
+    private static final String endSlotTime = "23:59";
     private static final String CONFIG_PATH = "UDCalculator.config";
     private static Config config = null;
     private final Properties properties;
