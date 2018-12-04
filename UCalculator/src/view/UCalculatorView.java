@@ -106,6 +106,10 @@ public final class UCalculatorView {
         );
     }
 
+    public void displaySpacing() {
+        System.out.println("\n".repeat(10));
+    }
+
     public void displayMessage(final String message) {
         System.out.print(message);
     }
@@ -156,7 +160,7 @@ public final class UCalculatorView {
     }
 
     public void displaySchedulePageOptions() {
-        System.out.println("n -> Next day\np <- Previous day\n0 - Exit");
+        System.out.println("n -> Next day\np -> Previous day\n0 - Exit");
     }
 
     private void displaySlot(final Slot s, final DateTimeFormatter formatter, final int slotIndex) {
@@ -201,9 +205,5 @@ public final class UCalculatorView {
         }
 
         System.out.println(sb.toString());
-    }
-
-    private void displaySpacing() {
-        System.out.println("\n".repeat(10));
     }
 }
