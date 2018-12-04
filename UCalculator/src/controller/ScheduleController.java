@@ -108,8 +108,18 @@ class ScheduleController {
     }
 
     private void consult() {
-        this.getSlotsOfDay();
-        this.stopExecution();
+        LocalDate localDate = this.getSlotsOfDay().getKey();
+        String option;
+        boolean displayMenu = true;
+
+        do {
+            if (displayMenu) {
+                view.displaySchedulePageOptions();
+            }
+
+            option = Input.readString();
+            displayMenu = true;
+        } while (!option.equals("0"));
     }
 
     private void edit() {
