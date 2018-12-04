@@ -1,10 +1,11 @@
 package model;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Task {
+public class Task implements Serializable {
 
     private final LocalDate date;
     private final int slotId;
@@ -72,4 +73,12 @@ public class Task {
     public Task clone() {
         return new Task(this);
     }
+
+    // Serialize
+    private Task() {
+        date = null;
+        slotId = 0;
+        duration = 0;
+    }
+
 }

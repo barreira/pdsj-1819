@@ -1,8 +1,9 @@
 package model;
 
+import java.io.Serializable;
 import java.time.LocalTime;
 
-public class OpenSlot extends Slot{
+public class OpenSlot extends Slot implements Serializable {
 
     OpenSlot(int id, LocalTime startTime, LocalTime endTime) {
         super(id, startTime, endTime);

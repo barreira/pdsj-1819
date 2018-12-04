@@ -1,8 +1,9 @@
 package model;
 
+import java.io.Serializable;
 import java.time.LocalTime;
 
-public class BusySlot extends Slot {
+public class BusySlot extends Slot implements Serializable {
 
     private final Task task;
 

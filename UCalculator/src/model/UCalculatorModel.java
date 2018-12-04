@@ -35,8 +35,7 @@ public final class UCalculatorModel {
         config = Config.getInstance();
         localDateCalculator = new LocalDateCalculator();
         timeZoneCalculator = new TimeZoneCalculator();
-        schedule = new Schedule(Integer.parseInt(config.getProperty("SLOT_SIZE")));
-        // = readSchedule();
+        schedule = readSchedule(); //new Schedule(Integer.parseInt(config.getProperty("SLOT_SIZE")));
     }
 
     /**
@@ -319,7 +318,7 @@ public final class UCalculatorModel {
                            final String title, final List<String> people) {
         boolean taskAdded = true;
         if (schedule.addTask(date, slotId, duration, title, people)) {
-            // this.writeSchedule();
+            this.writeSchedule();
         } else {
             taskAdded = false;
         }
@@ -336,7 +335,7 @@ public final class UCalculatorModel {
     public boolean removeTask(final LocalDate date, final int slotId) {
         boolean taskRemoved = true;
         if (schedule.removeTask(date, slotId) != null) {
-            // this.writeSchedule();
+            this.writeSchedule();
         } else {
             taskRemoved = false;
         }
@@ -368,7 +367,7 @@ public final class UCalculatorModel {
                         final int newSlotId, final int newDuration) {
         boolean taskEdited = true;
         if (schedule.editTask(date, slotId, newDate, newSlotId, newDuration)) {
-            // this.writeSchedule();
+            this.writeSchedule();
         } else {
             taskEdited = false;
         }
@@ -387,7 +386,7 @@ public final class UCalculatorModel {
     public boolean editTask(final LocalDate date, final int slotId, final String title, final List<String> people) {
         boolean taskEdited = true;
         if(schedule.editTask(date, slotId, title, people)) {
-            // this.writeSchedule();
+            this.writeSchedule();
         } else {
             taskEdited = false;
         }
@@ -411,7 +410,6 @@ public final class UCalculatorModel {
         try (ObjectInputStream ois = new ObjectInputStream(Files.newInputStream(Path.of("schedule")))) {
             schedule = (Schedule) ois.readObject();
         } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
             schedule = new Schedule();
         }
         return schedule;
@@ -422,7 +420,6 @@ public final class UCalculatorModel {
         try (ObjectOutputStream ous = new ObjectOutputStream(Files.newOutputStream(Path.of("schedule")))) {
             ous.writeObject(schedule);
         } catch (IOException e) {
-            e.printStackTrace();
             success = false;
         }
         return success;

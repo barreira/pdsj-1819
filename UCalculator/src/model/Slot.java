@@ -1,8 +1,9 @@
 package model;
 
+import java.io.Serializable;
 import java.time.LocalTime;
 
-public abstract class Slot {
+public abstract class Slot implements Serializable {
 
     private final int id;
     private final LocalTime startTime;
@@ -42,4 +43,11 @@ public abstract class Slot {
     }
 
     public abstract Slot clone();
+
+    // Serialize
+    private Slot() {
+        id = 0;
+        startTime = null;
+        endTime = null;
+    }
 }

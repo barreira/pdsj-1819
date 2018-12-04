@@ -1,10 +1,11 @@
 package model;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.*;
 
-class Schedule {
+class Schedule implements Serializable {
 
     private static final int DEFAULT_SLOT_SIZE = 30;
     private static final int MINUTES_OF_DAY = 1440;
