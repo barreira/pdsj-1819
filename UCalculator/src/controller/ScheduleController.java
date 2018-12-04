@@ -118,7 +118,16 @@ class ScheduleController {
     }
 
     private void remove() {
+        final SimpleEntry<LocalDate, List<Slot>> entry = this.getSlotsOfDay();
+        final int slotId = this.getSlotId(entry.getValue());
 
+        if (model.removeTask(entry.getKey(), slotId)) {
+            view.displayMessage("Task removed!\n");
+        } else {
+            view.displayMessage("Could not remove task...\n");
+        }
+
+        this.stopExecution();
     }
 
     private SimpleEntry<LocalDate, List<Slot>> getSlotsOfDay() {

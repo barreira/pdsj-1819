@@ -85,7 +85,7 @@ class Schedule {
         if (slotId < startSlotId || slotId > endSlotId || duration < 1) {
             success = false;
         } else {
-            success = this.testSlots(date, slotId, duration, OpenSlot.class);
+            success = this.testSlots(date, slotId, duration);
 
             if (success) {
                 int k = slotId;
@@ -117,7 +117,7 @@ class Schedule {
         if (slotId < startSlotId || slotId > endSlotId || duration < 1) {
             success = false;
         } else {
-            success = this.testSlots(date, slotId, duration, OpenSlot.class);
+            success = this.testSlots(date, slotId, duration);
 
             if (success) {
                 final Task task = new Task(date, slotId, duration, title, people);
@@ -143,8 +143,7 @@ class Schedule {
         return success;
     }
 
-    private boolean testSlots(final LocalDate date, final int slotId, final int duration,
-                              Class<? extends Slot> slotClass) {
+    private boolean testSlots(final LocalDate date, final int slotId, final int duration) {
         boolean success = true;
         LocalDate next = date;
         int k = slotId;
@@ -153,7 +152,7 @@ class Schedule {
         for (int i = 0; i < duration && success; i++) {
             if ((slots = schedule.get(next)) != null) {
                 for (int j = k; j <= endSlotId && i < duration; j++, i++) {
-                    if (!slots.get(j).getClass().equals(slotClass)) {
+                    if (!slots.get(j).getClass().equals(OpenSlot.class)) {
                         success = false;
                         break;
                     }
