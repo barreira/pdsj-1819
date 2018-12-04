@@ -3,6 +3,14 @@ package model;
 import java.io.Serializable;
 import java.time.LocalTime;
 
+/**
+ * Classe abstrata que representa um slot.
+ * Um slot é representado por um id, uma hora de início e uma hora de fim.
+ *
+ * @author Diogo Silva
+ * @author João Barreira
+ * @author Rafael Braga
+ */
 public abstract class Slot implements Serializable {
 
     private final int id;

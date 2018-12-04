@@ -108,17 +108,40 @@ class ScheduleController {
     }
 
     private void consult() {
-        LocalDate localDate = this.getSlotsOfDay().getKey();
+        view.displayMessage("Insert date (" + model.getDatePattern() + "): ");
+        LocalDate localDate = Input.readDate(DateTimeFormatter.ofPattern(model.getDatePattern()));
         String option;
         boolean displayMenu = true;
 
         do {
             if (displayMenu) {
+                final List<Slot> slots = model.consult(localDate);
+
+                view.displaySlots(localDate, DateTimeFormatter.ofPattern(model.getDatePattern()),
+                        DateTimeFormatter.ofPattern(model.getTimePattern()), slots);
                 view.displaySchedulePageOptions();
             }
 
             option = Input.readString();
             displayMenu = true;
+
+            switch (option) {
+                case "p":
+                    localDate = localDate.minusDays(1);
+                    break;
+                case "n":
+                    localDate = localDate.plusDays(1);
+                    break;
+                case "0":
+                    break;
+                default:
+                    displayMenu = false;
+                    view.displayMessage("Invalid option!\n");
+            }
+
+            if (displayMenu) {
+                view.displaySpacing();
+            }
         } while (!option.equals("0"));
     }
 

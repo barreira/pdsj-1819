@@ -5,6 +5,15 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Classe que representa uma tarefa presente num conjunto de slots.
+ * Uma tarefa é representada por uma data onde se inicia, um slot ao qual esta pertence, uma duração que indica o
+ * número de slots que ocupa, um título e está associada a um conjunto de pessoas.
+ *
+ * @author Diogo Silva
+ * @author João Barreira
+ * @author Rafael Braga
+ */
 public class Task implements Serializable {
 
     private final LocalDate date;

@@ -7,7 +7,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public class Schedule implements Serializable {
+class Schedule implements Serializable {
 
     private static final int DEFAULT_SLOT_SIZE = 60;
     private static final int MINUTES_OF_DAY = 1440;
@@ -17,7 +17,7 @@ public class Schedule implements Serializable {
     private int endSlotId;
     private final Map<LocalDate, List<Slot>> schedule;
 
-    public Schedule(final int slotSize) {
+    Schedule(final int slotSize) {
         this.slotSize = MINUTES_OF_DAY % slotSize == 0 ? slotSize : DEFAULT_SLOT_SIZE;
         this.startSlotId = 0;
         this.endSlotId = MINUTES_OF_DAY / this.slotSize - 1;
@@ -44,20 +44,6 @@ public class Schedule implements Serializable {
 
     int getEndSlotId() {
         return endSlotId;
-    }
-
-    int setStartSlot(int startSlot) {
-        this.startSlotId = startSlot < 0 || startSlot > endSlotId ? this.startSlotId : startSlot;
-
-        return this.startSlotId;
-    }
-
-    int setEndSlot(int endSlot) {
-        this.endSlotId = endSlot < startSlotId || endSlot > MINUTES_OF_DAY / this.slotSize - 1
-                ? this.endSlotId
-                : endSlot;
-
-        return this.endSlotId;
     }
 
     int openSlots(final LocalDate date, final int slotId, final int duration) {
