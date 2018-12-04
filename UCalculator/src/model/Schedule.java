@@ -7,7 +7,7 @@ import java.util.*;
 
 class Schedule implements Serializable {
 
-    private static final int DEFAULT_SLOT_SIZE = 30;
+    private static final int DEFAULT_SLOT_SIZE = 60;
     private static final int MINUTES_OF_DAY = 1440;
     
     private final int slotSize;
@@ -254,7 +254,6 @@ class Schedule implements Serializable {
     List<Slot> consult(final LocalDate date) {
         final List<Slot> result = new ArrayList<>();
         final List<Slot> slots = schedule.get(date);
-
 
         if (slots == null) {
             for (int i = startSlotId; i <= endSlotId; i++) {

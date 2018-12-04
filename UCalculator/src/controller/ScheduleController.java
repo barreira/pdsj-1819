@@ -1,6 +1,8 @@
 package controller;
 
+import model.BusySlot;
 import model.Slot;
+import model.Task;
 import model.UCalculatorModel;
 import view.UCalculatorView;
 
@@ -46,9 +48,12 @@ class ScheduleController {
                     this.closeSlots();
                     break;
                 case "4":
-                    this.consultEdit();
+                    this.consult();
                     break;
                 case "5":
+                    this.edit();
+                    break;
+                case "6":
                     this.remove();
                     break;
                 case "0":
@@ -68,19 +73,8 @@ class ScheduleController {
         view.displayMessage("Insert Title: ");
 
         final String title = Input.readString();
-        final List<String> people = new ArrayList<>();
-        String p;
 
-        do {
-            view.displayMessage("Add people (0 to finish): ");
-            p = Input.readString();
-
-            if (!p.equals("0")) {
-                people.add(p);
-            }
-        } while (!p.equals("0"));
-
-        if (model.addTask(entry.getKey(), slotId, duration, title, people)) {
+        if (model.addTask(entry.getKey(), slotId, duration, title, this.getPeople())) {
             view.displayMessage("Task added!\n");
         } else {
             view.displayMessage("Could not add task...\n");
@@ -113,8 +107,77 @@ class ScheduleController {
         this.stopExecution();
     }
 
-    private void consultEdit() {
+    private void consult() {
+        this.getSlotsOfDay();
+        this.stopExecution();
+    }
 
+    private void edit() {
+        final SimpleEntry<LocalDate, List<Slot>> entry = this.getSlotsOfDay();
+        final int slotId = this.getTaskSlotId(entry.getValue());
+        final BusySlot busySlot = (BusySlot)entry.getValue().get(slotId);
+        final Task task = busySlot.getTask();
+        LocalDate newLocalDate = entry.getKey();
+        int newSlotId = slotId;
+        int duration = task.getDuration();
+        String title = task.getTitle();
+        List<String> people = task.getPeople();
+        boolean hasChanges = false;
+        String option;
+        boolean displayMenu = true;
+
+        do {
+            if (displayMenu) {
+                view.displayMenu(10);
+            }
+
+            displayMenu = true;
+            view.displayMessage("Insert option: ");
+            option = Input.readString();
+
+            switch (option) {
+                case "1":
+                    view.displayMessage("Insert title: ");
+                    title = Input.readString();
+                    hasChanges = true;
+                    break;
+                case "2":
+                    view.displayMessage("Insert date (" + model.getDatePattern() + "): ");
+                    newLocalDate = Input.readDate(DateTimeFormatter.ofPattern(model.getDatePattern()));
+                    hasChanges = true;
+                    break;
+                case "3":
+                    newSlotId = this.getSlotId(entry.getValue());
+                    hasChanges = true;
+                    break;
+                case "4":
+                    duration = this.getDuration();
+                    hasChanges = true;
+                    break;
+                case "5":
+                    people = this.getPeople();
+                    hasChanges = true;
+                    break;
+                case "6":
+                    if (hasChanges) {
+                        if (model.editTask(entry.getKey(), slotId, newLocalDate, newSlotId, duration) &&
+                                model.editTask(newLocalDate, newSlotId, title, people)) {
+                            view.displayMessage("Changes committed!\n");
+                        } else {
+                            view.displayMessage("Could not commit changes...\n");
+                        }
+
+                        this.stopExecution();
+                    }
+
+                    break;
+                case "0":
+                    break;
+                default:
+                    displayMenu = false;
+                    view.displayMessage("Invalid option!\n");
+            }
+        } while (!option.equals("0") && !option.equals("6"));
     }
 
     private void remove() {
@@ -158,6 +221,23 @@ class ScheduleController {
         return slotId;
     }
 
+    private int getTaskSlotId(final List<Slot> slots) {
+        int slotId;
+
+        view.displayMessage("Select Task: ");
+
+        do {
+            slotId = Input.readInt();
+
+            if (slotId < 0 || slotId >= slots.size() || !slots.get(slotId).getClass().equals(BusySlot.class)) {
+                view.displayMessage("Invalid value! Must select a Task. Try again: ");
+            }
+        } while (slotId < 0 || slotId >= slots.size());
+
+        return slotId;
+    }
+
+
     private int getDuration() {
         int duration;
 
@@ -172,6 +252,22 @@ class ScheduleController {
         } while (duration <= 0);
 
         return duration;
+    }
+
+    private List<String> getPeople() {
+        final List<String> people = new ArrayList<>();
+        String p;
+
+        do {
+            view.displayMessage("Add people (0 to finish): ");
+            p = Input.readString();
+
+            if (!p.equals("0")) {
+                people.add(p);
+            }
+        } while (!p.equals("0"));
+
+        return people;
     }
 
     private void stopExecution() {

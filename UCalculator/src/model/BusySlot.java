@@ -14,11 +14,11 @@ public class BusySlot extends Slot implements Serializable {
 
     BusySlot(BusySlot busySlot) {
         super(busySlot);
-        this.task = busySlot.getTask();
+        this.task = busySlot.getTask().clone();
     }
 
     public Task getTask() {
-        return task.clone();
+        return task;
     }
 
     @Override

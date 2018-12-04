@@ -38,7 +38,7 @@ public class Task implements Serializable {
         return slotId;
     }
 
-    int getDuration() {
+    public int getDuration() {
         return duration;
     }
 

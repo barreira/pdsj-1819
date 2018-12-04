@@ -83,18 +83,20 @@ public final class UCalculatorView {
                         new Option("Calculate Total Travel Time -", "2"),
                         new Option("Cancel ----------------------", "0")))),
                 entry(9, new Menu("*** SCHEDULER MANAGER ***", Arrays.asList(
-                        new Option("Add ----------", "1"),
-                        new Option("Open Slots ---", "2"),
-                        new Option("Close Slots --", "3"),
-                        new Option("Consult/Edit -", "4"),
-                        new Option("Remove -------", "5"),
-                        new Option("Back ---------", "0")))),
+                        new Option("Add Task ----", "1"),
+                        new Option("Open Slots --", "2"),
+                        new Option("Close Slots -", "3"),
+                        new Option("Consult -----", "4"),
+                        new Option("Edit Task ---", "5"),
+                        new Option("Remove Task -", "6"),
+                        new Option("Back --------", "0")))),
                 entry(10, new Menu("*** Edit Task ***", Arrays.asList(
                         new Option("Change Title ----", "1"),
-                        new Option("Change Slot -----", "2"),
-                        new Option("Change Duration -", "3"),
-                        new Option("Change People ---", "4"),
-                        new Option("Commit Changes --", "5"),
+                        new Option("Change Date -----", "2"),
+                        new Option("Change Slot -----", "3"),
+                        new Option("Change Duration -", "4"),
+                        new Option("Change People ---", "5"),
+                        new Option("Commit Changes --", "6"),
                         new Option("Back ------------", "0"))))
         );
     }
