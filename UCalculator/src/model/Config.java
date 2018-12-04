@@ -8,7 +8,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Properties;
 
-public class Config {
+class Config {
     private static final String dateTimePattern = "dd-MM-yyyy HH:mm";
     private static final String datePattern = "dd-MM-yyyy";
     private static final String timePattern = "HH:mm";
@@ -113,14 +113,14 @@ public class Config {
         return isValid;
     }
 
-    public static Config getInstance() {
+    static Config getInstance() {
         if (config == null) {
             config = new Config();
         }
         return config;
     }
 
-    public String getProperty(final String key) {
+    String getProperty(final String key) {
         return properties.getProperty(key);
     }
 }
