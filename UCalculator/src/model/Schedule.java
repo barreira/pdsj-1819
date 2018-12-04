@@ -63,8 +63,8 @@ public class Schedule implements Serializable {
     int openSlots(final LocalDate date, final int slotId, final int duration) {
         int slotsOpened = 0;
 
-        if (slotId >= startSlotId && slotId <= endSlotId && duration >= 1) {
-            int k = slotId;
+        if (startSlotId + slotId >= startSlotId && startSlotId + slotId <= endSlotId && duration >= 1) {
+            int k = slotId + startSlotId;
             LocalDate next = date;
             List<Slot> slots;
 
@@ -91,13 +91,13 @@ public class Schedule implements Serializable {
     boolean closeSlots(final LocalDate date, final int slotId, final int duration) {
         boolean success;
 
-        if (slotId < startSlotId || slotId > endSlotId || duration < 1) {
+        if (startSlotId + slotId < startSlotId || slotId + startSlotId > endSlotId || duration < 1) {
             success = false;
         } else {
             success = this.testSlots(date, slotId, duration);
 
             if (success) {
-                int k = slotId;
+                int k = slotId + startSlotId;
                 LocalDate next = date;
                 List<Slot> slots;
 
@@ -123,14 +123,14 @@ public class Schedule implements Serializable {
                     final String title, final List<String> people) {
         boolean success;
 
-        if (slotId < startSlotId || slotId > endSlotId || duration < 1) {
+        if (startSlotId + slotId < startSlotId || startSlotId + slotId > endSlotId || duration < 1) {
             success = false;
         } else {
             success = this.testSlots(date, slotId, duration);
 
             if (success) {
                 final Task task = new Task(date, slotId, duration, title, people);
-                int k = slotId;
+                int k = slotId + startSlotId;
                 LocalDate next = date;
                 List<Slot> slots;
 
@@ -155,7 +155,7 @@ public class Schedule implements Serializable {
     private boolean testSlots(final LocalDate date, final int slotId, final int duration) {
         boolean success = true;
         LocalDate next = date;
-        int k = slotId;
+        int k = slotId + startSlotId;
         List<Slot> slots;
 
         for (int i = 0; i < duration && success; i++) {
@@ -197,7 +197,7 @@ public class Schedule implements Serializable {
     Task removeTask(final LocalDate date, final int slotId) {
         Task task = null;
 
-        if (slotId >= startSlotId && slotId <= endSlotId) {
+        if (slotId + startSlotId >= startSlotId && startSlotId + slotId <= endSlotId) {
             List<Slot> slots = schedule.get(date);
             Slot slot;
 
@@ -227,7 +227,7 @@ public class Schedule implements Serializable {
                             final int newSlotId, final int newDuration) {
         boolean success = true;
 
-        if (newDuration >= 1 && newSlotId >= startSlotId && newSlotId <= endSlotId) {
+        if (newDuration >= 1 && newSlotId + startSlotId >= startSlotId && newSlotId + startSlotId <= endSlotId) {
             final Task task = this.removeTask(date, slotId);
 
             if (task == null) {
@@ -246,7 +246,8 @@ public class Schedule implements Serializable {
         boolean success = false;
         List<Slot> slots;
 
-        if (slotId >= startSlotId && slotId <= endSlotId && (slots = this.schedule.get(date)) != null) {
+        if (startSlotId + slotId >= startSlotId && slotId + startSlotId <= endSlotId &&
+                (slots = this.schedule.get(date)) != null) {
             if (slots.get(slotId).getClass().equals(BusySlot.class)) {
                 final Task task = ((BusySlot)slots.get(slotId)).getTask();
 

@@ -15,6 +15,11 @@ import static java.util.Map.entry;
 
 public final class UCalculatorView {
 
+    private static final String AVAILABLE_COLOR = "\u001B[32m";
+    private static final String BUSY_COLOR = "\u001B[36m";
+    private static final String NON_AVAILABLE_COLOR = "\u001B[31m";
+    private static final String RESET_COLOR = "\u001B[0m";
+
     private final Map<Integer, Menu> menus;
 
     public UCalculatorView() {
@@ -82,7 +87,7 @@ public final class UCalculatorView {
                         new Option("Add Connection --------------", "1"),
                         new Option("Calculate Total Travel Time -", "2"),
                         new Option("Cancel ----------------------", "0")))),
-                entry(9, new Menu("*** SCHEDULER MANAGER ***", Arrays.asList(
+                entry(9, new Menu("*** SCHEDULE MANAGER ***", Arrays.asList(
                         new Option("Add Task ----", "1"),
                         new Option("Open Slots --", "2"),
                         new Option("Close Slots -", "3"),
@@ -146,10 +151,26 @@ public final class UCalculatorView {
         for (int i = 0; i < slots.size(); i++) {
             this.displaySlot(slots.get(i), hourFormatter, i);
         }
+
+        System.out.print(RESET_COLOR);
+    }
+
+    public void displaySchedulePageOptions() {
+        System.out.println("n -> Next day\np <- Previous day\n0 - Exit");
     }
 
     private void displaySlot(final Slot s, final DateTimeFormatter formatter, final int slotIndex) {
-        System.out.print("Slot " + slotIndex + " -> ");
+        String color;
+
+        if (s.getClass().equals(OpenSlot.class)) {
+            color = AVAILABLE_COLOR;
+        } else if (s.getClass().equals(ClosedSlot.class)) {
+            color = NON_AVAILABLE_COLOR;
+        } else {
+            color = BUSY_COLOR;
+        }
+
+        System.out.print(color + "Slot " + slotIndex + " -> ");
         this.displayHour(s.getStartTime(), formatter);
         System.out.print(" - ");
         this.displayHour(s.getEndTime(), formatter);
