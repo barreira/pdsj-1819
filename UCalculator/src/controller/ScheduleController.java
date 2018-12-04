@@ -8,6 +8,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.AbstractMap.SimpleEntry;
 
 class ScheduleController {
     private UCalculatorView view;
@@ -39,9 +40,15 @@ class ScheduleController {
                     this.add();
                     break;
                 case "2":
-                    this.consultEdit();
+                    this.openSlots();
                     break;
                 case "3":
+                    this.closeSlots();
+                    break;
+                case "4":
+                    this.consultEdit();
+                    break;
+                case "5":
                     this.remove();
                     break;
                 case "0":
@@ -54,34 +61,9 @@ class ScheduleController {
     }
 
     private void add() {
-        view.displayMessage("Insert date (" + model.getDatePattern() + "): ");
-
-        final LocalDate localDate = Input.readDate(DateTimeFormatter.ofPattern(model.getDatePattern()));
-        final List<Slot> slots = model.consult(localDate);
-        int slotId;
-        int duration;
-
-        view.displaySlots(localDate, DateTimeFormatter.ofPattern(model.getDatePattern()),
-                DateTimeFormatter.ofPattern(model.getTimePattern()), slots);
-        view.displayMessage("Select Slot number: ");
-
-        do {
-            slotId = Input.readInt();
-
-            if (slotId < 0 || slotId >= slots.size()) {
-                view.displayMessage("Invalid slot! Try again: ");
-            }
-        } while (slotId < 0 || slotId >= slots.size());
-
-        view.displayMessage("Number of slots: ");
-
-        do {
-            duration = Input.readInt();
-
-            if (duration <= 0) {
-                view.displayMessage("Invalid number of slots! Try again: ");
-            }
-        } while (duration <= 0);
+        final SimpleEntry<LocalDate, List<Slot>> entry = this.getSlotsOfDay();
+        final int slotId = this.getSlotId(entry.getValue());
+        int duration = this.getDuration();
 
         view.displayMessage("Insert Title: ");
 
@@ -98,10 +80,38 @@ class ScheduleController {
             }
         } while (!p.equals("0"));
 
-        if (model.addTask(localDate, slotId, duration, title, people)) {
+        if (model.addTask(entry.getKey(), slotId, duration, title, people)) {
             view.displayMessage("Task added!\n");
         } else {
             view.displayMessage("Could not add task...\n");
+        }
+
+        this.stopExecution();
+    }
+
+    private void openSlots() {
+        final SimpleEntry<LocalDate, List<Slot>> entry = this.getSlotsOfDay();
+        final int slotId = this.getSlotId(entry.getValue());
+        final int duration = this.getDuration();
+
+        if (model.openSlots(entry.getKey(), slotId, duration)) {
+            view.displayMessage("Slots opened!\n");
+        } else {
+            view.displayMessage("Could not open slots...\n");
+        }
+
+        this.stopExecution();
+    }
+
+    private void closeSlots() {
+        final SimpleEntry<LocalDate, List<Slot>> entry = this.getSlotsOfDay();
+        final int slotId = this.getSlotId(entry.getValue());
+        final int duration = this.getDuration();
+
+        if (model.closeSlots(entry.getKey(), slotId, duration)) {
+            view.displayMessage("Slots closed!\n");
+        } else {
+            view.displayMessage("Could not close slots...\n");
         }
 
         this.stopExecution();
@@ -113,6 +123,50 @@ class ScheduleController {
 
     private void remove() {
 
+    }
+
+    private SimpleEntry<LocalDate, List<Slot>> getSlotsOfDay() {
+        view.displayMessage("Insert date (" + model.getDatePattern() + "): ");
+
+        final LocalDate localDate = Input.readDate(DateTimeFormatter.ofPattern(model.getDatePattern()));
+        final List<Slot> slots = model.consult(localDate);
+
+        view.displaySlots(localDate, DateTimeFormatter.ofPattern(model.getDatePattern()),
+                DateTimeFormatter.ofPattern(model.getTimePattern()), slots);
+
+        return new SimpleEntry<>(localDate, slots);
+    }
+
+    private int getSlotId(final List<Slot> slots) {
+        int slotId;
+
+        view.displayMessage("Select Slot number: ");
+
+        do {
+            slotId = Input.readInt();
+
+            if (slotId < 0 || slotId >= slots.size()) {
+                view.displayMessage("Invalid slot! Try again: ");
+            }
+        } while (slotId < 0 || slotId >= slots.size());
+
+        return slotId;
+    }
+
+    private int getDuration() {
+        int duration;
+
+        view.displayMessage("Number of slots: ");
+
+        do {
+            duration = Input.readInt();
+
+            if (duration <= 0) {
+                view.displayMessage("Invalid number of slots! Try again: ");
+            }
+        } while (duration <= 0);
+
+        return duration;
     }
 
     private void stopExecution() {
