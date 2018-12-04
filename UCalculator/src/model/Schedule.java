@@ -28,6 +28,12 @@ public class Schedule implements Serializable {
         this(DEFAULT_SLOT_SIZE);
     }
 
+    Schedule(final int slotSize, final LocalTime startTime, final LocalTime endTime) {
+        this(slotSize);
+        this.setStartSlot(startTime);
+        this.setEndSlot(endTime);
+    }
+
     int getSlotSize() {
         return slotSize;
     }
@@ -270,7 +276,7 @@ public class Schedule implements Serializable {
         return result;
     }
 
-    public int setStartSlot(LocalTime time) {
+    int setStartSlot(LocalTime time) {
         List<LocalTime> startSlots =
                 IntStream.range(0, 1440 / slotSize)
                 .mapToObj(i -> LocalTime.of(0, 0).plusMinutes(i * slotSize))
@@ -284,7 +290,7 @@ public class Schedule implements Serializable {
                 .orElse(this.startSlotId);
     }
 
-    public int setEndSlot(LocalTime time) {
+    int setEndSlot(LocalTime time) {
         List<LocalTime> endSlots =
                 IntStream.range(0, 1440 / slotSize)
                         .mapToObj(i -> LocalTime.of(0, 0).plusMinutes(i * slotSize))

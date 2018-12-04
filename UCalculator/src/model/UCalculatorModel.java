@@ -7,6 +7,7 @@ import java.io.ObjectOutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.*;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.AbstractMap.SimpleEntry;
@@ -410,7 +411,11 @@ public final class UCalculatorModel {
         try (ObjectInputStream ois = new ObjectInputStream(Files.newInputStream(Path.of("schedule")))) {
             schedule = (Schedule) ois.readObject();
         } catch (IOException | ClassNotFoundException e) {
-            schedule = new Schedule();
+            schedule = new Schedule(
+                    Integer.parseInt(config.getProperty("SLOT_SIZE")),
+                    LocalTime.parse(config.getProperty("START_SLOT_TIME"), DateTimeFormatter.ofPattern("HH:mm")),
+                    LocalTime.parse(config.getProperty("END_SLOT_TIME"), DateTimeFormatter.ofPattern("HH:mm"))
+            );
         }
         return schedule;
     }
