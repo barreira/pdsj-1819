@@ -283,7 +283,6 @@ class Schedule implements Serializable {
                         .mapToObj(i -> LocalTime.of(0, 0).plusMinutes((i + 1) * slotSize))
                         .collect(Collectors.toList());
 
-        System.out.println(endSlots);
         return endSlotId = IntStream
                 .range(1, endSlots.size())
                 .filter(i -> time.isBefore(endSlots.get(i)) || time.equals(endSlots.get(i)))

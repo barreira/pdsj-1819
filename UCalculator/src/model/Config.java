@@ -1,6 +1,8 @@
 package model;
 
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalTime;
@@ -140,15 +142,41 @@ class Config {
         return properties.getProperty("TIME_PATTERN");
     }
 
-    Integer getSlotSize() {
+    private Integer getSlotSize() {
         return Integer.parseInt(properties.getProperty("SLOT_SIZE"));
     }
 
-    LocalTime getStartSlotTime() {
+    private LocalTime getStartSlotTime() {
         return LocalTime.parse(properties.getProperty("START_SLOT_TIME"), DateTimeFormatter.ofPattern("HH:mm"));
     }
 
-    LocalTime getEndSlotTime() {
+    private LocalTime getEndSlotTime() {
         return LocalTime.parse(properties.getProperty("END_SLOT_TIME"), DateTimeFormatter.ofPattern("HH:mm"));
+    }
+
+    Schedule readSchedule() {
+        Schedule schedule;
+        try (ObjectInputStream ois = new ObjectInputStream(Files.newInputStream(Path.of("schedule")))) {
+            schedule = (Schedule) ois.readObject();
+            if (schedule.getSlotSize() != config.getSlotSize()) {
+                schedule = new Schedule(config.getSlotSize());
+            }
+            schedule.setStartSlot(config.getStartSlotTime());
+            schedule.setEndSlot(config.getEndSlotTime());
+        } catch (IOException | ClassNotFoundException e) {
+            schedule = new Schedule(config.getSlotSize(), config.getStartSlotTime(), config.getEndSlotTime());
+            // System.out.println("DEBUG " + schedule.getSlotSize() + " " + schedule.getStartSlotId() + " " + schedule.getEndSlotId());
+        }
+        return schedule;
+    }
+
+    boolean writeSchedule(Schedule schedule) {
+        boolean success = true;
+        try (ObjectOutputStream ous = new ObjectOutputStream(Files.newOutputStream(Path.of("schedule")))) {
+            ous.writeObject(schedule);
+        } catch (IOException e) {
+            success = false;
+        }
+        return success;
     }
 }
