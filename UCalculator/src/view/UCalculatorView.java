@@ -24,7 +24,7 @@ public final class UCalculatorView {
 
     public UCalculatorView() {
         menus = Map.ofEntries(
-                entry(0, new Menu("\t\t*** MAIN MENU ***", Arrays.asList(
+                entry(0, new Menu("\t*** MAIN MENU ***", Arrays.asList(
                         new Option("Local Date Calculator -", "1"),
                         new Option("Timezone Calculator ---", "2"),
                         new Option("Schedule --------------", "3"),
