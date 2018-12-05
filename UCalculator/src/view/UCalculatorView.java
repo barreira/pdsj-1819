@@ -57,7 +57,7 @@ public final class UCalculatorView {
                         new Option("Years --------", "6"),
                         new Option("Period -------", "7"),
                         new Option("Cancel -------", "0")))),
-                entry(5, new Menu("\t*** Weeks Calculator ***", Arrays.asList(
+                entry(5, new Menu("\t*** WEEKS CALCULATOR ***", Arrays.asList(
                         new Option("Week number of Date -------", "1"),
                         new Option("Date of Week number -------", "2"),
                         new Option("Days of the Week in Month -", "3"),
@@ -79,7 +79,7 @@ public final class UCalculatorView {
                         new Option("Fifth --", "5"),
                         new Option("All ----", "6"),
                         new Option("Cancel -", "0")))),
-                entry(8, new Menu("*** Timezone Calculator ***", Arrays.asList(
+                entry(8, new Menu("*** TIMEZONE CALCULATOR ***", Arrays.asList(
                         new Option("Timezone Converter -", "1"),
                         new Option("Travel Calculator --", "2"),
                         new Option("Back ---------------", "0")))),
@@ -95,7 +95,7 @@ public final class UCalculatorView {
                         new Option("Edit Task ---", "5"),
                         new Option("Remove Task -", "6"),
                         new Option("Back --------", "0")))),
-                entry(10, new Menu("*** Edit Task ***", Arrays.asList(
+                entry(10, new Menu("*** EDIT TASK ***", Arrays.asList(
                         new Option("Change Title ----", "1"),
                         new Option("Change Date -----", "2"),
                         new Option("Change Slot -----", "3"),
