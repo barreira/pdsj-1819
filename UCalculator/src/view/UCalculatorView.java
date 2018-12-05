@@ -29,7 +29,7 @@ public final class UCalculatorView {
                         new Option("Timezone Calculator ---", "2"),
                         new Option("Schedule --------------", "3"),
                         new Option("End Session -----------", "0")))),
-                entry(1, new Menu("*** LOCAL DATE TIME CALCULATOR ***", Arrays.asList(
+                entry(1, new Menu("*** LOCAL DATE CALCULATOR ***", Arrays.asList(
                         new Option("Date Calculator -----", "1"),
                         new Option("Interval Calculator -", "2"),
                         new Option("Weeks Calculator ----", "3"),
