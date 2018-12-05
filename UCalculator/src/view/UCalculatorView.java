@@ -25,10 +25,10 @@ public final class UCalculatorView {
     public UCalculatorView() {
         menus = Map.ofEntries(
                 entry(0, new Menu("\t\t*** MAIN MENU ***", Arrays.asList(
-                        new Option("Local Date Time Calculator ----", "1"),
-                        new Option("Timezone Date Time Calculator -", "2"),
-                        new Option("Schedule ----------------------", "3"),
-                        new Option("End Session -------------------", "0")))),
+                        new Option("Local Date Calculator -", "1"),
+                        new Option("Timezone Calculator ---", "2"),
+                        new Option("Schedule --------------", "3"),
+                        new Option("End Session -----------", "0")))),
                 entry(1, new Menu("*** LOCAL DATE TIME CALCULATOR ***", Arrays.asList(
                         new Option("Date Calculator -----", "1"),
                         new Option("Interval Calculator -", "2"),
@@ -83,11 +83,11 @@ public final class UCalculatorView {
                         new Option("Timezone Converter -", "1"),
                         new Option("Travel Calculator --", "2"),
                         new Option("Back ---------------", "0")))),
-                entry(19, new Menu("\t*** ADD CONNECTION ***", Arrays.asList(
+                entry(9, new Menu("\t*** ADD CONNECTION ***", Arrays.asList(
                         new Option("Add Connection --------------", "1"),
                         new Option("Calculate Total Travel Time -", "2"),
                         new Option("Cancel ----------------------", "0")))),
-                entry(9, new Menu("*** SCHEDULE MANAGER ***", Arrays.asList(
+                entry(10, new Menu("*** SCHEDULE MANAGER ***", Arrays.asList(
                         new Option("Add Task ----", "1"),
                         new Option("Open Slots --", "2"),
                         new Option("Close Slots -", "3"),
@@ -95,7 +95,7 @@ public final class UCalculatorView {
                         new Option("Edit Task ---", "5"),
                         new Option("Remove Task -", "6"),
                         new Option("Back --------", "0")))),
-                entry(10, new Menu("*** EDIT TASK ***", Arrays.asList(
+                entry(11, new Menu("*** EDIT TASK ***", Arrays.asList(
                         new Option("Change Title ----", "1"),
                         new Option("Change Date -----", "2"),
                         new Option("Change Slot -----", "3"),

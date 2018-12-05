@@ -129,7 +129,7 @@ class TimeZoneController {
 
         do {
             if (displayMenu) {
-                view.displayMenu(19);
+                view.displayMenu(9);
             }
 
             displayMenu = true;

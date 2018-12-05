@@ -30,7 +30,7 @@ class ScheduleController {
 
         do {
             if (displayMenu) {
-                view.displayMenu(9);
+                view.displayMenu(10);
             }
 
             displayMenu = true;
@@ -161,7 +161,7 @@ class ScheduleController {
 
         do {
             if (displayMenu) {
-                view.displayMenu(10);
+                view.displayMenu(11);
             }
 
             displayMenu = true;
