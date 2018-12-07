@@ -13,7 +13,7 @@ import java.time.LocalTime;
 public class ClosedSlot extends Slot implements Serializable {
 
     /**
-     * Inicializa um slot como um slot fechado.
+     * Inicializa um slot como um slot fechado/indisponível.
      *
      * @param id        Id do slot.
      * @param startTime Hora de início do slot.

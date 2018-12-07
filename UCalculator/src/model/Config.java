@@ -10,6 +10,10 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Properties;
 
+/**
+ * Classe responsável por persistir e gerir configurações assim como a estrutura do horário.
+ * Esta classe faz uso do padrão de desenho Singleton.
+ */
 class Config {
     private static final String dateTimePattern = "dd-MM-yyyy HH:mm";
     private static final String datePattern = "dd-MM-yyyy";
@@ -17,10 +21,14 @@ class Config {
     private static final String slotSize = "60";
     private static final String startSlotTime = "08:00";
     private static final String endSlotTime = "18:00";
-    private static final String CONFIG_PATH = "UDCalculator.config";
+    private static final String CONFIG_PATH = "UCalculator.config";
     private static volatile Config config = null;
     private final Properties properties;
 
+    /**
+     * Construtor privado.
+     * Não permite instanciação por reflexão.
+     */
     private Config() {
         if (config != null){
             throw new RuntimeException("Singleton: use getInstance() method to retrieve the instance of this class.");
@@ -65,6 +73,12 @@ class Config {
         }
     }
 
+    /**
+     * Método privado responsável por validar a data e hora do padrão definido pelo utilizador.
+     *
+     * @param pattern Padrão definido pelo utilizador.
+     * @return Se válido devolve true senão devolve false.
+     */
     private boolean isValidDateTimePattern(String pattern) {
         boolean isValid;
         try {
@@ -76,6 +90,12 @@ class Config {
         return isValid;
     }
 
+    /**
+     * Método privado responsável por validar a data do padrão definido pelo utilizador.
+     *
+     * @param pattern Padrão definido pelo utilizador.
+     * @return Se válido devolve true senão devolve false.
+     */
     private boolean isValidDatePattern(String pattern) {
         boolean isValid;
         try {
@@ -87,6 +107,12 @@ class Config {
         return isValid;
     }
 
+    /**
+     * Método privado responsável por validar a hora do padrão definido pelo utilizador.
+     *
+     * @param pattern Padrão definido pelo utilizador.
+     * @return Se válido devolve true senão devolve false.
+     */
     private boolean isValidTimePattern(String pattern) {
         boolean isValid;
         try {
@@ -98,6 +124,12 @@ class Config {
         return isValid;
     }
 
+    /**
+     * Método privado responsável por validar a duração do slot em minutos definido pelo utilizador.
+     *
+     * @param pattern Padrão definido pelo utilizador.
+     * @return Se válido devolve true senão devolve false.
+     */
     private boolean isValidSlotSize(String pattern) {
         boolean isValid;
         try {
@@ -109,6 +141,13 @@ class Config {
         return isValid;
     }
 
+    /**
+     * Método privado responsável por validar a hora de início e fim do horário definidas pelo utilizador.
+     *
+     * @param startSlotTime Hora de início do horário.
+     * @param endSlotTime   Hora de fim do horário.
+     * @return Se válido devolve true senão devolve false.
+     */
     private boolean isValidSlotsTime(String startSlotTime, String endSlotTime) {
         boolean isValid;
         try {
@@ -119,12 +158,14 @@ class Config {
         return isValid;
     }
 
+    /**
+     * @return Devolve a única instância de Config.
+     */
     static Config getInstance() {
-        // Avoid overhead of method synchronized
         if (config == null) {
+            // Avoid overhead of method synchronized
             synchronized (Config.class) {
                 config = new Config();
-
             }
         }
         return config;
@@ -154,6 +195,11 @@ class Config {
         return LocalTime.parse(properties.getProperty("END_SLOT_TIME"), DateTimeFormatter.ofPattern("HH:mm"));
     }
 
+    /**
+     * Método responsável por ler o estado anterior persistido da Schedule.
+     *
+     * @return Devolve uma instância de Schedule.
+     */
     Schedule readSchedule() {
         Schedule schedule;
         try (ObjectInputStream ois = new ObjectInputStream(Files.newInputStream(Path.of("schedule")))) {
@@ -165,11 +211,16 @@ class Config {
             schedule.setEndSlot(config.getEndSlotTime());
         } catch (IOException | ClassNotFoundException e) {
             schedule = new Schedule(config.getSlotSize(), config.getStartSlotTime(), config.getEndSlotTime());
-            // System.out.println("DEBUG " + schedule.getSlotSize() + " " + schedule.getStartSlotId() + " " + schedule.getEndSlotId());
         }
         return schedule;
     }
 
+    /**
+     * Método responsável por persistir uma instância de Schedule.
+     *
+     * @param schedule O horário a persistir.
+     * @return Se foi possível persistir devolve true senão devolve false.
+     */
     boolean writeSchedule(Schedule schedule) {
         boolean success = true;
         try (ObjectOutputStream ous = new ObjectOutputStream(Files.newOutputStream(Path.of("schedule")))) {

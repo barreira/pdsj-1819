@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.time.LocalTime;
 
 /**
- * Classe que representa um slot aberto que permite que lhe sejam adicioanadas tarefas.
+ * Classe que sinaliza um slot aberto/disponível.
  *
  * @author Diogo Silva
  * @author João Barreira
