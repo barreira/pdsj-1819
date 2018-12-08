@@ -422,7 +422,7 @@ public final class UCalculatorModel {
     }
 
     public boolean setEndTime(LocalTime time) {
-        return config.setEndTime(time) && schedule.setStartTime(time);
+        return config.setEndTime(time) && schedule.setEndTime(time);
     }
 
     public int getSlotSize() {
