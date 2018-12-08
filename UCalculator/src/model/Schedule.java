@@ -8,8 +8,8 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 /**
- * Schedule é a classe responsável por representar um horário organizado por dias e
- * dividido em slots.
+ * Schedule é a classe responsável por representar uma agenda organizada por dias e
+ * dividida em slots.
  */
 class Schedule implements Serializable {
 
@@ -22,9 +22,9 @@ class Schedule implements Serializable {
     private final Map<LocalDate, List<Slot>> schedule;
 
     /**
-     * Inicializa um Schedule.
+     * Inicializa uma instância de Schedule.
      *
-     * @param slotSize Tamanho do slot em minutos.
+     * @param slotSize Duração do slot em minutos.
      */
     Schedule(final int slotSize) {
         this.slotSize = MINUTES_OF_DAY % slotSize == 0 ? slotSize : DEFAULT_SLOT_SIZE;
@@ -34,9 +34,9 @@ class Schedule implements Serializable {
     }
 
     /**
-     * Inicializa um Schedule restringindo os slots disponíveis.
+     * Inicializa um Schedule restringindo os slots disponíveis, i.e. a hora de início e fim.
      *
-     * @param slotSize  Tamanho do slot em minutos.
+     * @param slotSize  Duração do slot em minutos.
      * @param startTime A hora de início do horário.
      * @param endTime   A hora de fim do horário.
      */
@@ -60,12 +60,12 @@ class Schedule implements Serializable {
 
     /**
      * Método responsável por abrir slots previamente fechados.
-     * Se encontrar algum slot que se está no estado ocupado avança para o próximo.
+     * Se encontrar algum slot no estado ocupado avança para o próximo.
      *
      * @param date     Data a abrir os slots previamente fechados.
      * @param slotId   Id do slot inicial.
      * @param duration Número de slots a aplicar.
-     * @return Número de slots abertos.
+     * @return Devolve o número de slots abertos.
      */
     int openSlots(final LocalDate date, final int slotId, final int duration) {
         int slotsOpened = 0;
@@ -102,7 +102,7 @@ class Schedule implements Serializable {
      * @param date     Data a fechar os slots.
      * @param slotId   Id do slot inicial.
      * @param duration Número de slots a aplicar a operação.
-     * @return Se foi possível concluir a operação.
+     * @return Devolve true se foi possível concluir a operação, false caso contrário.
      */
     boolean closeSlots(final LocalDate date, final int slotId, final int duration) {
         boolean success;
@@ -135,7 +135,7 @@ class Schedule implements Serializable {
     }
 
     /**
-     * Método responsável por adicionar uma tarefa ao horário.
+     * Método responsável por adicionar uma tarefa à agenda.
      * A tarefa poderá ocupar vários slots e transportar-se para outros dias.
      *
      * @param date     Data de início da tarefa.
@@ -217,7 +217,7 @@ class Schedule implements Serializable {
      * ao horário.
      *
      * @param date Data a inicializar os slots.
-     * @return Devolve A lista de slots criados e adicionados à estrutura interna do horário.
+     * @return Devolve a lista de slots criados e adicionados à estrutura interna do horário.
      */
     private List<Slot> addOpenSlots(LocalDate date) {
         final int totalSlots = MINUTES_OF_DAY / this.slotSize;
@@ -331,7 +331,7 @@ class Schedule implements Serializable {
     }
 
     /**
-     * Método responsável por consultar uma determinada data no horário.
+     * Método responsável por consultar uma determinada data na agenda.
      *
      * @param date Data a consultar.
      * @return Devolve uma cópia de todos os slots.
@@ -359,7 +359,7 @@ class Schedule implements Serializable {
      * será o específicado para a nova hora de início.
      *
      * @param time Nova hora de início.
-     * @return true se foi possível atualizar a hora de início do horário ou false caso contrário.
+     * @return Devolve true se foi possível atualizar a hora de início do horário, false caso contrário.
      */
     boolean setStartTime(LocalTime time) {
         int slotId = this.startSlotId;

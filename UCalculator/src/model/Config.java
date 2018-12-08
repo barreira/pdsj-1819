@@ -11,7 +11,7 @@ import java.time.format.DateTimeParseException;
 import java.util.Properties;
 
 /**
- * Classe responsável por persistir e gerir configurações assim como a estrutura do horário.
+ * Classe responsável por persistir e gerir configurações assim como a estrutura da agenda.
  * Esta classe faz uso do padrão de desenho Singleton.
  */
 class Config {
@@ -319,6 +319,11 @@ class Config {
         setDefault(true);
     }
 
+    /**
+     * Método privado responsável por resetar as configurações para os valores por defeito.
+     *
+     * @param store Indica se é prentendido persistir as alterações.
+     */
     private void setDefault(boolean store) {
         properties.setProperty("DATE_TIME_PATTERN", dateTimePattern);
         properties.setProperty("DATE_PATTERN", datePattern);
