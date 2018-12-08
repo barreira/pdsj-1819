@@ -319,7 +319,7 @@ class Config {
         setDefault(true);
     }
 
-    void setDefault(boolean store) {
+    private void setDefault(boolean store) {
         properties.setProperty("DATE_TIME_PATTERN", dateTimePattern);
         properties.setProperty("DATE_PATTERN", datePattern);
         properties.setProperty("TIME_PATTERN", timePattern);
@@ -329,7 +329,7 @@ class Config {
 
         if (store) {
             try {
-                properties.store(Files.newOutputStream(Path.of(CONFIG_PATH)), "Defaults");
+                properties.store(Files.newOutputStream(Path.of(CONFIG_PATH)), "Default");
             } catch (IOException ignored) {
             }
         }
