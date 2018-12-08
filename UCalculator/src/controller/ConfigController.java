@@ -104,15 +104,12 @@ class ConfigController {
     }
 
     private void editSlotSize() {
-        view.displayMessage("This change resets the Schedule. Do you still want to proceed? Y/n\n");
+        view.displayMessage("This change resets the Schedule. ");
         String option;
 
         do {
+            view.displayMessage("Do you still want to proceed? Y/n\n");
             option = Input.readString();
-
-            if (!option.equals("Y") && !option.equals("n")) {
-                view.displayMessage("Invalid option! Try again: ");
-            }
         } while (!option.equals("Y") && !option.equals("n"));
 
         if (option.equals("Y")) {
