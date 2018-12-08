@@ -293,7 +293,7 @@ public final class UCalculatorModel {
      * @return True caso a operação seja efetuada com sucesso e false caso contrário.
      */
     public boolean closeSlots(final LocalDate date, final int slotId, final int duration) {
-        return schedule.closeSlots(date, slotId, duration);
+        return schedule.closeSlots(date, slotId, duration) && config.writeSchedule(schedule);
     }
 
     /**
