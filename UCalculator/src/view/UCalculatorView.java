@@ -104,14 +104,15 @@ public final class UCalculatorView {
                         new Option("Change People ---", "5"),
                         new Option("Commit Changes --", "6"),
                         new Option("Back ------------", "0")))),
-                entry(12, new Menu("CONFIGURATIONS", Arrays.asList(
+                entry(12, new Menu("*** CONFIGURATIONS ***", Arrays.asList(
                         new Option("Edit date time pattern ---", "1"),
                         new Option("Edit date pattern --------", "2"),
                         new Option("Edit time pattern --------", "3"),
                         new Option("Edit slot duration (m) ---", "4"),
                         new Option("Edit start schedule time -", "5"),
                         new Option("Edit end schedule time ---", "6"),
-                        new Option("Set to default -----------", "7"))))
+                        new Option("Set to default -----------", "7"),
+                        new Option("Back ---------------------", "0"))))
         );
     }
 

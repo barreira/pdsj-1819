@@ -20,8 +20,14 @@ class ConfigController {
 
     void startFlow() {
         String option;
+        boolean displayMenu = true;
+
         do {
-            view.displayMenu(12);
+            if (displayMenu) {
+                view.displayMenu(12);
+            }
+
+            displayMenu = true;
             view.displayMessage("Insert option: ");
             option = Input.readString();
 
@@ -57,6 +63,7 @@ class ConfigController {
                 case "0":
                     break;
                 default:
+                    displayMenu = false;
                     view.displayMessage("Invalid option!\n");
                     break;
             }

@@ -347,9 +347,10 @@ class LocalCalculatorController {
         final SimpleEntry<LocalDate, LocalDate> res = model.dateOfWeekNumber(weekNumber, year);
         final LocalDate start = res.getKey();
         final LocalDate end = res.getValue();
+        final String pattern = model.getDatePattern();
 
-        view.displayMessage("Week number " + weekNumber + " of " + year + " starts at " + start.toString() +
-                " and ends at " + end.toString() + ".\n");
+        view.displayMessage("Week number " + weekNumber + " of " + year + " starts at " + start.format(DateTimeFormatter.ofPattern(pattern)) +
+                " and ends at " + end.format(DateTimeFormatter.ofPattern(pattern)) + ".\n");
         this.stopExecution();
     }
 
