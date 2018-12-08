@@ -290,4 +290,14 @@ final class DateUtils {
         return DateUtils.convertToTimezone(timezoneId, departureTime).plusHours(travelTime.getHour())
                                                                      .plusMinutes(travelTime.getMinute());
     }
+
+    static SimpleEntry<LocalDateTime, LocalDateTime> getTravelDateTimes(LocalDateTime beginTime, LocalTime timeBetween, LocalTime duration) {
+        LocalDateTime start;
+        LocalDateTime end;
+
+        start = beginTime.plusHours(timeBetween.getHour()).plusMinutes(timeBetween.getMinute());
+        end = start.plusHours(duration.getHour()).plusMinutes(duration.getMinute());
+
+        return new SimpleEntry<>(start, end);
+    }
 }

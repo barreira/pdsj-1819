@@ -158,9 +158,10 @@ class TimeZoneController {
         for (Entry<String, SimpleEntry<LocalTime, LocalTime>> c : connections.entrySet()) {
             LocalTime duration = c.getValue().getKey();
             LocalTime timeBetween = c.getValue().getValue();
+            final SimpleEntry<LocalDateTime, LocalDateTime> travelTimes = model.getTravelDateTimes(start, timeBetween, duration);
 
-            start = start.plusHours(timeBetween.getHour()).plusMinutes(timeBetween.getMinute());
-            end = start.plusHours(duration.getHour()).plusMinutes(duration.getMinute());
+            start = travelTimes.getKey();
+            end = travelTimes.getValue();
             endLocal = model.getArrivalTime(c.getKey(), start, duration);
 
             view.displayMessage("Arrival at " + c.getKey() + " at ");

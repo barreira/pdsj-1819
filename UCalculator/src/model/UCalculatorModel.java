@@ -269,6 +269,11 @@ public final class UCalculatorModel {
         return DateUtils.getArrivalTime(timezoneId, departureTime, travelTime);
     }
 
+
+    public SimpleEntry<LocalDateTime, LocalDateTime> getTravelDateTimes(LocalDateTime beginTime, LocalTime timeBetween, LocalTime duration) {
+        return DateUtils.getTravelDateTimes(beginTime, timeBetween, duration);
+    }
+
     /* ********************************************* Schedule ********************************************************/
 
     /**
