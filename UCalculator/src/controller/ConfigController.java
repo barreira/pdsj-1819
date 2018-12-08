@@ -105,7 +105,17 @@ class ConfigController {
 
     private void editSlotSize() {
         view.displayMessage("This change resets the Schedule. Do you still want to proceed? Y/n\n");
-        if (Input.readString().equals("Y")) {
+        String option;
+
+        do {
+            option = Input.readString();
+
+            if (!option.equals("Y") && !option.equals("n")) {
+                view.displayMessage("Invalid option! Try again: ");
+            }
+        } while (!option.equals("Y") && !option.equals("n"));
+
+        if (option.equals("Y")) {
             view.displayMessage("Old slot duration is " + model.getSlotSize() + "\n");
             view.displayMessage("Insert new slot duration (m): ");
             int slotSize = Input.readInt();
@@ -120,7 +130,7 @@ class ConfigController {
                 }
             }
         } else {
-            view.displayMessage("Operation canceled.");
+            view.displayMessage("Operation canceled.\n");
         }
     }
 
