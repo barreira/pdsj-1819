@@ -204,7 +204,7 @@ public final class UCalculatorView {
 
     private void displayTask(final Task task) {
         final List<String> people = task.getPeople();
-        final StringBuilder sb = new StringBuilder("Title: " + task.getTitle());
+        final StringBuilder sb = new StringBuilder("Task: " + task.getTitle());
 
         if (people.size() > 0) {
             sb.append(" -> With: ");
@@ -214,7 +214,7 @@ public final class UCalculatorView {
             for (String p : people) {
                 sb.append(delimiter);
                 sb.append(p);
-                delimiter = ",";
+                delimiter = ", ";
             }
         }
 
