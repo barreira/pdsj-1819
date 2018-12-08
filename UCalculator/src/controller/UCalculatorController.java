@@ -23,7 +23,6 @@ public class UCalculatorController {
             if (displayMenu) {
                 view.displayMenu(0);
             }
-
             displayMenu = true;
             view.displayMessage("Insert option: ");
             option = Input.readString();
@@ -31,15 +30,12 @@ public class UCalculatorController {
             switch (option) {
                 case "1":
                     LocalCalculatorController localCalculatorController = new LocalCalculatorController();
-
                     localCalculatorController.setView(view);
                     localCalculatorController.setModel(model);
                     localCalculatorController.startFlow();
-
                     break;
                 case "2":
                     TimeZoneController timeZoneController = new TimeZoneController();
-
                     timeZoneController.setView(view);
                     timeZoneController.setModel(model);
                     timeZoneController.startFlow();
@@ -49,7 +45,12 @@ public class UCalculatorController {
                     schedulerController.setView(view);
                     schedulerController.setModel(model);
                     schedulerController.startFlow();
-
+                    break;
+                case "4":
+                    ConfigController configController = new ConfigController();
+                    configController.setView(view);
+                    configController.setModel(model);
+                    configController.startFlow();
                     break;
                 case "0":
                     break;

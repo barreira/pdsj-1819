@@ -398,4 +398,44 @@ public final class UCalculatorModel {
     public String getTimePattern() {
         return config.getTimePattern();
     }
+
+    public boolean setDateTimePattern(String pattern) {
+        return config.setDateTimePattern(pattern);
+    }
+
+    public boolean setDatePattern(String pattern) {
+        return config.setDatePattern(pattern);
+    }
+
+    public boolean setTimePattern(String pattern) {
+        return config.setTimePattern(pattern);
+    }
+
+    public boolean setSlotSize(int slotSize) {
+        return config.setSlotSize(slotSize);
+    }
+
+    public boolean setStartSlotTime(LocalTime time) {
+        return config.setStartSlotTime(time);
+    }
+
+    public boolean setEndSlotTime(LocalTime time) {
+        return config.setEndSlotTime(time);
+    }
+
+    public int getSlotSize() {
+        return schedule.getSlotSize();
+    }
+
+    public LocalTime getStartTime() {
+        return schedule.getStartTime();
+    }
+
+    public LocalTime getEndTime() {
+        return schedule.getEndTime();
+    }
+
+    public void setDefault() {
+        config.setDefault();
+    }
 }

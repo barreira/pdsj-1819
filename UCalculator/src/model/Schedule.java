@@ -42,20 +42,20 @@ class Schedule implements Serializable {
      */
     Schedule(final int slotSize, final LocalTime startTime, final LocalTime endTime) {
         this(slotSize);
-        this.setStartSlot(startTime);
-        this.setEndSlot(endTime);
+        this.setStartTime(startTime);
+        this.setEndTime(endTime);
     }
 
     int getSlotSize() {
         return slotSize;
     }
 
-    int getStartSlotId() {
-        return startSlotId;
+    LocalTime getStartTime() {
+        return slotTime(startSlotId);
     }
 
-    int getEndSlotId() {
-        return endSlotId;
+    LocalTime getEndTime() {
+        return slotTime(endSlotId + 1);
     }
 
     /**
@@ -359,15 +359,14 @@ class Schedule implements Serializable {
      * será o específicado para a nova hora de início.
      *
      * @param time Nova hora de início.
-     * @return Devolve o id interno do slot de início.
      */
-    int setStartSlot(LocalTime time) {
+    void setStartTime(LocalTime time) {
         List<LocalTime> startSlots =
                 IntStream.range(0, 1440 / slotSize)
                 .mapToObj(i -> LocalTime.of(0, 0).plusMinutes(i * slotSize))
                 .collect(Collectors.toList());
 
-        return startSlotId = IntStream
+        this.startSlotId = IntStream
                 .range(1, startSlots.size())
                 .filter(i -> time.isBefore(startSlots.get(i)))
                 .map(i -> i - 1)
@@ -383,13 +382,13 @@ class Schedule implements Serializable {
      * @param time Nova hora de fim.
      * @return Devolve o id interno do slot de fim do horário.
      */
-    int setEndSlot(LocalTime time) {
+    void setEndTime(LocalTime time) {
         List<LocalTime> endSlots =
                 IntStream.range(0, 1440 / slotSize)
                         .mapToObj(i -> LocalTime.of(0, 0).plusMinutes((i + 1) * slotSize))
                         .collect(Collectors.toList());
 
-        return endSlotId = IntStream
+        this.endSlotId = IntStream
                 .range(1, endSlots.size())
                 .filter(i -> time.isBefore(endSlots.get(i)) || time.equals(endSlots.get(i)))
                 .findFirst()

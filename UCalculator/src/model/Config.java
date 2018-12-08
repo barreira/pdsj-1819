@@ -19,8 +19,8 @@ class Config {
     private static final String datePattern = "dd-MM-yyyy";
     private static final String timePattern = "HH:mm";
     private static final String slotSize = "60";
-    private static final String startSlotTime = "08:00";
-    private static final String endSlotTime = "18:00";
+    private static final String startTime = "08:00";
+    private static final String endTime = "18:00";
     private static final String CONFIG_PATH = "UCalculator.config";
     private static volatile Config config = null;
     private final Properties properties;
@@ -34,13 +34,8 @@ class Config {
             throw new RuntimeException("Singleton: use getInstance() method to retrieve the instance of this class.");
         }
 
-        properties = new Properties();
-        properties.setProperty("DATE_TIME_PATTERN", dateTimePattern);
-        properties.setProperty("DATE_PATTERN", datePattern);
-        properties.setProperty("TIME_PATTERN", timePattern);
-        properties.setProperty("SLOT_SIZE", slotSize);
-        properties.setProperty("START_SLOT_TIME", startSlotTime);
-        properties.setProperty("END_SLOT_TIME", endSlotTime);
+        properties = new Properties(6);
+        setDefault(false);
 
         try {
             properties.load(Files.newInputStream(Path.of(CONFIG_PATH)));
@@ -61,15 +56,17 @@ class Config {
                 properties.setProperty("SLOT_SIZE", slotSize);
             }
 
-            if (!isValidSlotsTime(properties.getProperty("START_SLOT_TIME"), properties.getProperty("END_SLOT_TIME"))) {
-                properties.setProperty("START_SLOT_TIME", startSlotTime);
-                properties.setProperty("END_SLOT_TIME", endSlotTime);
+            if (!isValidSlotsTime(properties.getProperty("START_TIME"), properties.getProperty("END_TIME"))) {
+                properties.setProperty("START_TIME", startTime);
+                properties.setProperty("END_TIME", endTime);
             }
         } catch (IOException e) {
-            try {
-                properties.store(Files.newOutputStream(Path.of(CONFIG_PATH)), "Defaults");
-            } catch (IOException ignored) {
-            }
+            setDefault();
+        }
+
+        try {
+            properties.store(Files.newOutputStream(Path.of(CONFIG_PATH)), "Custom");
+        } catch (IOException ignored) {
         }
     }
 
@@ -188,11 +185,11 @@ class Config {
     }
 
     private LocalTime getStartSlotTime() {
-        return LocalTime.parse(properties.getProperty("START_SLOT_TIME"), DateTimeFormatter.ofPattern("HH:mm"));
+        return LocalTime.parse(properties.getProperty("START_TIME"), DateTimeFormatter.ofPattern("HH:mm"));
     }
 
     private LocalTime getEndSlotTime() {
-        return LocalTime.parse(properties.getProperty("END_SLOT_TIME"), DateTimeFormatter.ofPattern("HH:mm"));
+        return LocalTime.parse(properties.getProperty("END_TIME"), DateTimeFormatter.ofPattern("HH:mm"));
     }
 
     /**
@@ -207,8 +204,8 @@ class Config {
             if (schedule.getSlotSize() != config.getSlotSize()) {
                 schedule = new Schedule(config.getSlotSize());
             }
-            schedule.setStartSlot(config.getStartSlotTime());
-            schedule.setEndSlot(config.getEndSlotTime());
+            schedule.setStartTime(config.getStartSlotTime());
+            schedule.setEndTime(config.getEndSlotTime());
         } catch (IOException | ClassNotFoundException e) {
             schedule = new Schedule(config.getSlotSize(), config.getStartSlotTime(), config.getEndSlotTime());
         }
@@ -229,5 +226,114 @@ class Config {
             success = false;
         }
         return success;
+    }
+
+    boolean setDateTimePattern(String pattern) {
+        boolean success = false;
+        if (isValidDateTimePattern(pattern)) {
+            success = true;
+            properties.setProperty("DATE_TIME_PATTERN", pattern);
+            try {
+                properties.store(Files.newOutputStream(Path.of(CONFIG_PATH)), "Custom");
+            } catch (IOException e) {
+                success = false;
+            }
+        }
+
+        return success;
+    }
+
+    boolean setDatePattern(String pattern) {
+        boolean success = false;
+        if (isValidDatePattern(pattern)) {
+            success = true;
+            properties.setProperty("DATE_PATTERN", pattern);
+            try {
+                properties.store(Files.newOutputStream(Path.of(CONFIG_PATH)), "Custom");
+            } catch (IOException e) {
+                success = false;
+            }
+        }
+
+        return success;
+    }
+
+    boolean setTimePattern(String pattern) {
+        boolean success = false;
+        if (isValidTimePattern(pattern)) {
+            success = true;
+            properties.setProperty("TIME_PATTERN", pattern);
+            try {
+                properties.store(Files.newOutputStream(Path.of(CONFIG_PATH)), "Custom");
+            } catch (IOException e) {
+                success = false;
+            }
+        }
+
+        return success;
+    }
+
+    boolean setSlotSize(int slotSize) {
+        boolean success = false;
+        if (slotSize > 0 && slotSize < 1441) {
+            success = true;
+            properties.setProperty("SLOT_SIZE", String.valueOf(slotSize));
+            try {
+                properties.store(Files.newOutputStream(Path.of(CONFIG_PATH)), "Custom");
+            } catch (IOException e) {
+                success = false;
+            }
+        }
+        return success;
+    }
+
+    boolean setStartSlotTime(LocalTime time) {
+        boolean success = false;
+        if (time.isBefore(LocalTime.parse(properties.getProperty("END_TIME")))) {
+            success = true;
+            System.out.println(time.format(DateTimeFormatter.ofPattern("HH:mm")));
+            properties.setProperty("START_TIME", time.toString());
+            try {
+                properties.store(Files.newOutputStream(Path.of(CONFIG_PATH)), "Custom");
+            } catch (IOException e) {
+                success = false;
+            }
+        }
+        return success;
+    }
+
+    boolean setEndSlotTime(LocalTime time) {
+        boolean success = false;
+        if (time.isAfter(LocalTime.parse(properties.getProperty("START_TIME")))) {
+            success = true;
+            System.out.println(time.format(DateTimeFormatter.ofPattern("HH:mm")));
+            properties.setProperty("END_TIME", time.toString());
+            try {
+                properties.store(Files.newOutputStream(Path.of(CONFIG_PATH)), "Custom");
+            } catch (IOException e) {
+                success = false;
+            }
+        }
+        return success;
+    }
+
+    void setDefault() {
+        setDefault(true);
+    }
+
+    void setDefault(boolean store) {
+        properties.setProperty("DATE_TIME_PATTERN", dateTimePattern);
+        properties.setProperty("DATE_PATTERN", datePattern);
+        properties.setProperty("TIME_PATTERN", timePattern);
+        properties.setProperty("SLOT_SIZE", slotSize);
+        properties.setProperty("START_TIME", startTime);
+        properties.setProperty("END_TIME", endTime);
+
+        if (store) {
+            try {
+                properties.store(Files.newOutputStream(Path.of(CONFIG_PATH)), "Defaults");
+            } catch (IOException ignored) {
+            }
+        }
     }
 }
