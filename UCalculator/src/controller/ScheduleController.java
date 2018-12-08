@@ -265,7 +265,7 @@ class ScheduleController {
             if (slotId < 0 || slotId >= slots.size() || !slots.get(slotId).getClass().equals(BusySlot.class)) {
                 view.displayMessage("Invalid value! Must select a Task. Try again: ");
             }
-        } while (slotId < 0 || slotId >= slots.size());
+        } while (slotId < 0 || slotId >= slots.size() || !slots.get(slotId).getClass().equals(BusySlot.class));
 
         return slotId;
     }

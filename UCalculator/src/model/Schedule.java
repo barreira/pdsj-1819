@@ -252,7 +252,7 @@ class Schedule implements Serializable {
             List<Slot> slots = schedule.get(date);
             Slot slot;
 
-            if (slots != null && (slot = slots.get(slotId)).getClass().equals(BusySlot.class)) {
+            if (slots != null && (slot = slots.get(slotId + startSlotId)).getClass().equals(BusySlot.class)) {
                 task = ((BusySlot) slot).getTask();
                 int k = task.getSlotId();
                 LocalDate next = task.getDate();
@@ -318,8 +318,8 @@ class Schedule implements Serializable {
 
         if (startSlotId + slotId >= startSlotId && slotId + startSlotId <= endSlotId &&
                 (slots = this.schedule.get(date)) != null) {
-            if (slots.get(slotId).getClass().equals(BusySlot.class)) {
-                final Task task = ((BusySlot) slots.get(slotId)).getTask();
+            if (slots.get(slotId + startSlotId).getClass().equals(BusySlot.class)) {
+                final Task task = ((BusySlot) slots.get(slotId + startSlotId)).getTask();
 
                 task.setTitle(title);
                 task.setPeople(people);
