@@ -359,8 +359,12 @@ class Schedule implements Serializable {
      * será o específicado para a nova hora de início.
      *
      * @param time Nova hora de início.
+     * @return true se foi possível atualizar a hora de início do horário ou false caso contrário.
      */
-    void setStartTime(LocalTime time) {
+    boolean setStartTime(LocalTime time) {
+        int slotId = this.startSlotId;
+        boolean isValid = true;
+
         List<LocalTime> startSlots =
                 IntStream.range(0, 1440 / slotSize)
                 .mapToObj(i -> LocalTime.of(0, 0).plusMinutes(i * slotSize))
@@ -372,6 +376,13 @@ class Schedule implements Serializable {
                 .map(i -> i - 1)
                 .findFirst()
                 .orElse(this.startSlotId);
+
+        if (startSlotId >= endSlotId) {
+            startSlotId = slotId;
+            isValid = false;
+        }
+
+        return isValid;
     }
 
     /**
@@ -380,9 +391,12 @@ class Schedule implements Serializable {
      * será o específicado para a nova hora de fim.
      *
      * @param time Nova hora de fim.
-     * @return Devolve o id interno do slot de fim do horário.
+     * @return true se foi possível atualizar a hora de fim do horário ou false caso contrário.
      */
-    void setEndTime(LocalTime time) {
+    boolean setEndTime(LocalTime time) {
+        int slotId = this.endSlotId;
+        boolean isValid = true;
+
         List<LocalTime> endSlots =
                 IntStream.range(0, 1440 / slotSize)
                         .mapToObj(i -> LocalTime.of(0, 0).plusMinutes((i + 1) * slotSize))
@@ -393,6 +407,13 @@ class Schedule implements Serializable {
                 .filter(i -> time.isBefore(endSlots.get(i)) || time.equals(endSlots.get(i)))
                 .findFirst()
                 .orElse(this.endSlotId);
+
+        if (endSlotId <= startSlotId) {
+            endSlotId = slotId;
+            isValid = false;
+        }
+
+        return isValid;
     }
 
     /**

@@ -287,11 +287,10 @@ class Config {
         return success;
     }
 
-    boolean setStartSlotTime(LocalTime time) {
+    boolean setStartTime(LocalTime time) {
         boolean success = false;
         if (time.isBefore(LocalTime.parse(properties.getProperty("END_TIME")))) {
             success = true;
-            System.out.println(time.format(DateTimeFormatter.ofPattern("HH:mm")));
             properties.setProperty("START_TIME", time.toString());
             try {
                 properties.store(Files.newOutputStream(Path.of(CONFIG_PATH)), "Custom");
@@ -302,11 +301,10 @@ class Config {
         return success;
     }
 
-    boolean setEndSlotTime(LocalTime time) {
+    boolean setEndTime(LocalTime time) {
         boolean success = false;
         if (time.isAfter(LocalTime.parse(properties.getProperty("START_TIME")))) {
             success = true;
-            System.out.println(time.format(DateTimeFormatter.ofPattern("HH:mm")));
             properties.setProperty("END_TIME", time.toString());
             try {
                 properties.store(Files.newOutputStream(Path.of(CONFIG_PATH)), "Custom");

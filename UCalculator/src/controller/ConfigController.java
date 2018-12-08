@@ -118,7 +118,7 @@ class ConfigController {
         view.displayMessage("Insert new start time (" + model.getTimePattern() + "): ");
         LocalTime time = Input.readTime(DateTimeFormatter.ofPattern(model.getTimePattern()));
 
-        if (model.setStartSlotTime(time)) {
+        if (model.setStartTime(time)) {
             view.displayMessage("Success setting the start time.\n");
         } else {
             view.displayMessage("An error occurred setting the start time.\n");
@@ -130,7 +130,7 @@ class ConfigController {
         view.displayMessage("Insert new end time (" + model.getTimePattern() + "): ");
         LocalTime time = Input.readTime(DateTimeFormatter.ofPattern(model.getTimePattern()));
 
-        if (model.setEndSlotTime(time)) {
+        if (model.setEndTime(time)) {
             view.displayMessage("Success setting the end time.\n");
         } else {
             view.displayMessage("An error occurred setting the end time.\n");

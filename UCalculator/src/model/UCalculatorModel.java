@@ -415,12 +415,14 @@ public final class UCalculatorModel {
         return config.setSlotSize(slotSize);
     }
 
-    public boolean setStartSlotTime(LocalTime time) {
-        return config.setStartSlotTime(time);
+    public boolean setStartTime(LocalTime time) {
+        // O resultado de schedule.setStartTime nunca vai ser falso caso
+        // o resultado de config.setStartTime seja verdadeiro.
+        return config.setStartTime(time) && schedule.setStartTime(time);
     }
 
-    public boolean setEndSlotTime(LocalTime time) {
-        return config.setEndSlotTime(time);
+    public boolean setEndTime(LocalTime time) {
+        return config.setEndTime(time) && schedule.setStartTime(time);
     }
 
     public int getSlotSize() {
