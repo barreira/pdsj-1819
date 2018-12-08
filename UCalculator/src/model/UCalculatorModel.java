@@ -293,7 +293,12 @@ public final class UCalculatorModel {
      * @return True caso a operação seja efetuada com sucesso e false caso contrário.
      */
     public boolean closeSlots(final LocalDate date, final int slotId, final int duration) {
-        return schedule.closeSlots(date, slotId, duration) && config.writeSchedule(schedule);
+        boolean closedSlots = false;
+        if (schedule.closeSlots(date, slotId, duration)) {
+            closedSlots = true;
+            config.storeSchedule(schedule);
+        }
+        return closedSlots;
     }
 
     /**
@@ -312,7 +317,7 @@ public final class UCalculatorModel {
                            final String title, final List<String> people) {
         boolean taskAdded = true;
         if (schedule.addTask(date, slotId, duration, title, people)) {
-            config.writeSchedule(schedule);
+            config.storeSchedule(schedule);
         } else {
             taskAdded = false;
         }
@@ -329,7 +334,7 @@ public final class UCalculatorModel {
     public boolean removeTask(final LocalDate date, final int slotId) {
         boolean taskRemoved = true;
         if (schedule.removeTask(date, slotId) != null) {
-            config.writeSchedule(schedule);
+            config.storeSchedule(schedule);
         } else {
             taskRemoved = false;
         }
@@ -361,7 +366,7 @@ public final class UCalculatorModel {
                         final int newSlotId, final int newDuration) {
         boolean taskEdited = true;
         if (schedule.editTask(date, slotId, newDate, newSlotId, newDuration)) {
-            config.writeSchedule(schedule);
+            config.storeSchedule(schedule);
         } else {
             taskEdited = false;
         }
@@ -380,7 +385,7 @@ public final class UCalculatorModel {
     public boolean editTask(final LocalDate date, final int slotId, final String title, final List<String> people) {
         boolean taskEdited = true;
         if(schedule.editTask(date, slotId, title, people)) {
-            config.writeSchedule(schedule);
+            config.storeSchedule(schedule);
         } else {
             taskEdited = false;
         }

@@ -218,7 +218,7 @@ class Config {
      * @param schedule O horário a persistir.
      * @return Se foi possível persistir devolve true senão devolve false.
      */
-    boolean writeSchedule(Schedule schedule) {
+    boolean storeSchedule(Schedule schedule) {
         boolean success = true;
         try (ObjectOutputStream ous = new ObjectOutputStream(Files.newOutputStream(Path.of("schedule")))) {
             ous.writeObject(schedule);
