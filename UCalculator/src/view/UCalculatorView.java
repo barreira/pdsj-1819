@@ -191,7 +191,7 @@ public final class UCalculatorView {
         if (s.getClass().equals(OpenSlot.class)) {
             System.out.println(": Available");
         } else if (s.getClass().equals(ClosedSlot.class)) {
-            System.out.println(": Non Available");
+            System.out.println(": Unavailable");
         } else if (s.getClass().equals(BusySlot.class)) {
             System.out.print(": ");
             this.displayTask(((BusySlot)s).getTask());
