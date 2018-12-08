@@ -8,8 +8,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 /**
- * Schedule È a classe respons·vel por representar uma agenda organizada por dias e
- * dividida em slots.
+ * Schedule √© a classe respons√°vel por representar uma agenda organizada por dias e dividida em slots.
  */
 class Schedule implements Serializable {
 
@@ -22,9 +21,9 @@ class Schedule implements Serializable {
     private final Map<LocalDate, List<Slot>> schedule;
 
     /**
-     * Inicializa uma inst‚ncia de Schedule.
+     * Inicializa uma inst√¢ncia de Schedule.
      *
-     * @param slotSize DuraÁ„o do slot em minutos.
+     * @param slotSize Dura√ß√£o do slot em minutos.
      */
     Schedule(final int slotSize) {
         this.slotSize = MINUTES_OF_DAY % slotSize == 0 ? slotSize : DEFAULT_SLOT_SIZE;
@@ -34,11 +33,11 @@ class Schedule implements Serializable {
     }
 
     /**
-     * Inicializa um Schedule restringindo os slots disponÌveis, i.e. a hora de inÌcio e fim.
+     * Inicializa um Schedule restringindo os slots dispon√≠veis, i.e. a hora de in√≠cio e fim.
      *
-     * @param slotSize  DuraÁ„o do slot em minutos.
-     * @param startTime A hora de inÌcio do hor·rio.
-     * @param endTime   A hora de fim do hor·rio.
+     * @param slotSize  Dura√ß√£o do slot em minutos.
+     * @param startTime A hora de in√≠cio do hor√°rio.
+     * @param endTime   A hora de fim do hor√°rio.
      */
     Schedule(final int slotSize, final LocalTime startTime, final LocalTime endTime) {
         this(slotSize);
@@ -59,13 +58,13 @@ class Schedule implements Serializable {
     }
 
     /**
-     * MÈtodo respons·vel por abrir slots previamente fechados.
-     * Se encontrar algum slot no estado ocupado avanÁa para o prÛximo.
+     * M√©todo respons√°vel por abrir slots previamente fechados.
+     * Se encontrar algum slot no estado ocupado avan√ßa para o pr√≥ximo.
      *
      * @param date     Data a abrir os slots previamente fechados.
      * @param slotId   Id do slot inicial.
-     * @param duration N˙mero de slots a aplicar.
-     * @return Devolve o n˙mero de slots abertos.
+     * @param duration N√∫mero de slots a aplicar.
+     * @return Devolve o n√∫mero de slots abertos.
      */
     int openSlots(final LocalDate date, final int slotId, final int duration) {
         int slotsOpened = 0;
@@ -96,13 +95,13 @@ class Schedule implements Serializable {
     }
 
     /**
-     * MÈtodo respons·vel por fechar slots.
-     * Apenas efetua a operaÁ„o se n„o encontrar nenhum slot ocupado.
+     * M√©todo respons√°vel por fechar slots.
+     * Apenas efetua a opera√ß√£o se n√£o encontrar nenhum slot ocupado.
      *
      * @param date     Data a fechar os slots.
      * @param slotId   Id do slot inicial.
-     * @param duration N˙mero de slots a aplicar a operaÁ„o.
-     * @return Devolve true se foi possÌvel concluir a operaÁ„o, false caso contr·rio.
+     * @param duration N√∫mero de slots a aplicar a opera√ß√£o.
+     * @return Devolve true se foi poss√≠vel concluir a opera√ß√£o, false caso contr√°rio.
      */
     boolean closeSlots(final LocalDate date, final int slotId, final int duration) {
         boolean success;
@@ -135,15 +134,15 @@ class Schedule implements Serializable {
     }
 
     /**
-     * MÈtodo respons·vel por adicionar uma tarefa ‡ agenda.
-     * A tarefa poder· ocupar v·rios slots e transportar-se para outros dias.
+     * M√©todo respons√°vel por adicionar uma tarefa √† agenda.
+     * A tarefa poder√° ocupar v√°rios slots e transportar-se para outros dias.
      *
-     * @param date     Data de inÌcio da tarefa.
+     * @param date     Data de in√≠cio da tarefa.
      * @param slotId   Id do slot inicial.
-     * @param duration DuraÁ„o da tarefa representada atravÈs do n˙mero de slots.
-     * @param title    TÌtulo descritivo da tarefa.
+     * @param duration Dura√ß√£o da tarefa representada atrav√©s do n√∫mero de slots.
+     * @param title    T√≠tulo descritivo da tarefa.
      * @param people   Lista de pessoas envolvidas na tarefa.
-     * @return Se a operaÁ„o foi efetuada com sucesso devolve true sen„o false.
+     * @return Se a opera√ß√£o foi efetuada com sucesso devolve true sen√£o false.
      */
     boolean addTask(final LocalDate date, final int slotId, final int duration, 
                     final String title, final List<String> people) {
@@ -179,13 +178,13 @@ class Schedule implements Serializable {
     }
 
     /**
-     * MÈtodo auxiliar para determinar se numa determinada duraÁ„o todos os slots
-     * est„o livres.
+     * M√©todo auxiliar para determinar se numa determinada dura√ß√£o todos os slots
+     * est√£o livres.
      *
-     * @param date     Data do hor·rio.
+     * @param date     Data do hor√°rio.
      * @param slotId   Id do slot inicial.
-     * @param duration N˙mero de slots a aplicar a operaÁ„o.
-     * @return Se todos os slots estiverem livres devolve true sen„o devolve false.
+     * @param duration N√∫mero de slots a aplicar a opera√ß√£o.
+     * @return Se todos os slots estiverem livres devolve true sen√£o devolve false.
      */
     private boolean testSlots(final LocalDate date, final int slotId, final int duration) {
         boolean success = true;
@@ -213,11 +212,11 @@ class Schedule implements Serializable {
     }
 
     /**
-     * MÈtodo auxiliar que inicializa os slots numa determinada data
-     * ao hor·rio.
+     * M√©todo auxiliar que inicializa os slots numa determinada data
+     * ao hor√°rio.
      *
      * @param date Data a inicializar os slots.
-     * @return Devolve a lista de slots criados e adicionados ‡ estrutura interna do hor·rio.
+     * @return Devolve a lista de slots criados e adicionados √† estrutura interna do hor√°rio.
      */
     private List<Slot> addOpenSlots(LocalDate date) {
         final int totalSlots = MINUTES_OF_DAY / this.slotSize;
@@ -237,9 +236,9 @@ class Schedule implements Serializable {
     }
 
     /**
-     * MÈtodo respons·vel por remover uma tarefa.
+     * M√©todo respons√°vel por remover uma tarefa.
      * Para tal basta indicar um dia e slot onde essa tarefa esteja contida.
-     * Todos os restantes slots tambÈm sofrer„o alteraÁıes.
+     * Todos os restantes slots tamb√©m sofrer√£o altera√ß√µes.
      *
      * @param date   Uma data onde se encontre parte da tarefa.
      * @param slotId Id do slot onde a tarefa esteja contida.
@@ -276,14 +275,14 @@ class Schedule implements Serializable {
     }
 
     /**
-     * MÈtodo respons·vel por editar a data e slot de inÌcio de uma tarefa.
+     * M√©todo respons√°vel por editar a data e slot de in√≠cio de uma tarefa.
      *
      * @param date        Data onde se encontre a tarefa.
      * @param slotId      Id do slot onde se encontre a tarefa.
-     * @param newDate     Nova data de inÌcio da tarefa.
-     * @param newSlotId   Novo id do slot de inÌcio da tarefa.
-     * @param newDuration Nova duraÁ„o da tarefa traduzida em n˙mero de slots.
-     * @return Se foi possÌvel editar a tarefa devolve true sen„o devolve false.
+     * @param newDate     Nova data de in√≠cio da tarefa.
+     * @param newSlotId   Novo id do slot de in√≠cio da tarefa.
+     * @param newDuration Nova dura√ß√£o da tarefa traduzida em n√∫mero de slots.
+     * @return Se foi poss√≠vel editar a tarefa devolve true sen√£o devolve false.
      */
     boolean editTask(final LocalDate date, final int slotId, final LocalDate newDate,
                             final int newSlotId, final int newDuration) {
@@ -305,13 +304,13 @@ class Schedule implements Serializable {
     }
 
     /**
-     * MÈtodo respons·vel por editar o tÌtulo e lista de pessoas envolvidas na tarefa.
+     * M√©todo respons√°vel por editar o t√≠tulo e lista de pessoas envolvidas na tarefa.
      *
      * @param date   Data em que se encontra a tarefa.
      * @param slotId Id externo do slot em que se encontre a tarefa.
-     * @param title  Novo tÌtulo da tarefa.
-     * @param people Nova lista de indivÌduos envolvidos na tarefa.
-     * @return Se foi possÌvel editar a tarefa devolve true sen„o devolve false.
+     * @param title  Novo t√≠tulo da tarefa.
+     * @param people Nova lista de indiv√≠duos envolvidos na tarefa.
+     * @return Se foi poss√≠vel editar a tarefa devolve true sen√£o devolve false.
      */
     boolean editTask(final LocalDate date, final int slotId, final String title, final List<String> people) {
         boolean success = false;
@@ -332,10 +331,10 @@ class Schedule implements Serializable {
     }
 
     /**
-     * MÈtodo respons·vel por consultar uma determinada data na agenda.
+     * M√©todo respons√°vel por consultar uma determinada data na agenda.
      *
      * @param date Data a consultar.
-     * @return Devolve uma cÛpia de todos os slots.
+     * @return Devolve uma c√≥pia de todos os slots.
      */
     List<Slot> consult(final LocalDate date) {
         final List<Slot> result = new ArrayList<>();
@@ -355,12 +354,12 @@ class Schedule implements Serializable {
     }
 
     /**
-     * MÈtodo respons·vel por definir o slot de inÌcio do hor·rio.
-     * Se n„o for possÌvel definir na hora especÌficada, o slot imediatamente anterior
-     * ser· o especÌficado para a nova hora de inÌcio.
+     * M√©todo respons√°vel por definir o slot de in√≠cio do hor√°rio.
+     * Se n√£o for poss√≠vel definir na hora especificada, o slot imediatamente anterior
+     * ser√° o especificado para a nova hora de in√≠cio.
      *
-     * @param time Nova hora de inÌcio.
-     * @return Devolve true se foi possÌvel atualizar a hora de inÌcio do hor·rio, false caso contr·rio.
+     * @param time Nova hora de in√≠cio.
+     * @return Devolve true se foi poss√≠vel atualizar a hora de in√≠cio do hor√°rio, false caso contr√°rio.
      */
     boolean setStartTime(LocalTime time) {
         int slotId = this.startSlotId;
@@ -387,12 +386,12 @@ class Schedule implements Serializable {
     }
 
     /**
-     * MÈtodo respons·vel por definir o slot de fim do hor·rio.
-     * Se n„o for possÌvel definir na hora especÌficada, o slot imediatamente posterior
-     * ser· o especÌficado para a nova hora de fim.
+     * M√©todo respons√°vel por definir o slot de fim do hor√°rio.
+     * Se n√£o for poss√≠vel definir na hora especificada, o slot imediatamente posterior
+     * ser√° o especificado para a nova hora de fim.
      *
      * @param time Nova hora de fim.
-     * @return true se foi possÌvel atualizar a hora de fim do hor·rio ou false caso contr·rio.
+     * @return true se foi poss√≠vel atualizar a hora de fim do hor√°rio ou false caso contr√°rio.
      */
     boolean setEndTime(LocalTime time) {
         int slotId = this.endSlotId;
@@ -418,20 +417,20 @@ class Schedule implements Serializable {
     }
 
     /**
-     * MÈtodo privado e auxiliar respons·vel por adicionar novamente uma tarefa ao hor·rio.
+     * M√©todo privado e auxiliar respons√°vel por adicionar novamente uma tarefa ao hor√°rio.
      *
      * @param task Tarefa a adicionar.
-     * @return Se foi possÌvel concluir a operaÁ„o devolve true sen„o devolve false.
+     * @return Se foi poss√≠vel concluir a opera√ß√£o devolve true sen√£o devolve false.
      */
     private boolean addTask(Task task) {
         return this.addTask(task.getDate(), task.getSlotId(), task.getDuration(), task.getTitle(), task.getPeople());
     }
 
     /**
-     * MÈtodo privado respons·vel por traduzir o id interno de um slot para a sua hora de inÌcio.
+     * M√©todo privado respons√°vel por traduzir o id interno de um slot para a sua hora de in√≠cio.
      *
      * @param slotId Id interno do slot.
-     * @return Hora em que o slot se inÌcia.
+     * @return Hora em que o slot se inicia.
      */
     private LocalTime slotTime(final int slotId) {
         return LocalTime.of(0, 0).plusMinutes(slotId * this.slotSize);

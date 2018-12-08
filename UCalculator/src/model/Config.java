@@ -11,8 +11,8 @@ import java.time.format.DateTimeParseException;
 import java.util.Properties;
 
 /**
- * Classe respons·vel por persistir e gerir configuraÁıes assim como a estrutura da agenda.
- * Esta classe faz uso do padr„o de desenho Singleton.
+ * Classe respons√°vel por persistir e gerir configura√ß√µes assim como a estrutura da agenda.
+ * Esta classe faz uso do padr√£o de desenho Singleton.
  */
 class Config {
     private static final String dateTimePattern = "dd-MM-yyyy HH:mm";
@@ -27,7 +27,7 @@ class Config {
 
     /**
      * Construtor privado.
-     * N„o permite instanciaÁ„o por reflex„o.
+     * N√£o permite instancia√ß√£oo por reflex√£o.
      */
     private Config() {
         if (config != null){
@@ -71,10 +71,10 @@ class Config {
     }
 
     /**
-     * MÈtodo privado respons·vel por validar a data e hora do padr„o definido pelo utilizador.
+     * M√©todo privado respons√°vel por validar a data e hora do padr√£o definido pelo utilizador.
      *
-     * @param pattern Padr„o definido pelo utilizador.
-     * @return Se v·lido devolve true sen„o devolve false.
+     * @param pattern Padr√£o definido pelo utilizador.
+     * @return Se v√°lido devolve true sen√£o devolve false.
      */
     private boolean isValidDateTimePattern(String pattern) {
         boolean isValid;
@@ -88,10 +88,10 @@ class Config {
     }
 
     /**
-     * MÈtodo privado respons·vel por validar a data do padr„o definido pelo utilizador.
+     * M√©todo privado respons√°vel por validar a data do padr√£o definido pelo utilizador.
      *
-     * @param pattern Padr„o definido pelo utilizador.
-     * @return Se v·lido devolve true sen„o devolve false.
+     * @param pattern Padr√£o definido pelo utilizador.
+     * @return Se v√°lido devolve true sen√£o devolve false.
      */
     private boolean isValidDatePattern(String pattern) {
         boolean isValid;
@@ -105,10 +105,10 @@ class Config {
     }
 
     /**
-     * MÈtodo privado respons·vel por validar a hora do padr„o definido pelo utilizador.
+     * M√©todo privado respons√°vel por validar a hora do padr√£o definido pelo utilizador.
      *
-     * @param pattern Padr„o definido pelo utilizador.
-     * @return Se v·lido devolve true sen„o devolve false.
+     * @param pattern Padr√£o definido pelo utilizador.
+     * @return Se v√°lido devolve true sen√£o devolve false.
      */
     private boolean isValidTimePattern(String pattern) {
         boolean isValid;
@@ -122,10 +122,10 @@ class Config {
     }
 
     /**
-     * MÈtodo privado respons·vel por validar a duraÁ„o do slot em minutos definido pelo utilizador.
+     * M√©todo privado respons√°vel por validar a dura√ß√£o do slot em minutos definido pelo utilizador.
      *
-     * @param pattern Padr„o definido pelo utilizador.
-     * @return Se v·lido devolve true sen„o devolve false.
+     * @param pattern Padr√£o definido pelo utilizador.
+     * @return Se v√°lido devolve true sen√£o devolve false.
      */
     private boolean isValidSlotSize(String pattern) {
         boolean isValid;
@@ -139,11 +139,11 @@ class Config {
     }
 
     /**
-     * MÈtodo privado respons·vel por validar a hora de inÌcio e fim do hor·rio definidas pelo utilizador.
+     * M√©todo privado respons√°vel por validar a hora de in√≠cio e fim do hor√°rio definidas pelo utilizador.
      *
-     * @param startSlotTime Hora de inÌcio do hor·rio.
-     * @param endSlotTime   Hora de fim do hor·rio.
-     * @return Se v·lido devolve true sen„o devolve false.
+     * @param startSlotTime Hora de in√≠cio do hor√°rio.
+     * @param endSlotTime   Hora de fim do hor√°rio.
+     * @return Se v√°lido devolve true sen√£o devolve false.
      */
     private boolean isValidSlotsTime(String startSlotTime, String endSlotTime) {
         boolean isValid;
@@ -156,7 +156,7 @@ class Config {
     }
 
     /**
-     * @return Devolve a ˙nica inst‚ncia de Config.
+     * @return Devolve a √∫nica inst√¢ncia de Config.
      */
     static Config getInstance() {
         if (config == null) {
@@ -193,9 +193,9 @@ class Config {
     }
 
     /**
-     * MÈtodo respons·vel por ler o estado anterior persistido da Schedule.
+     * M√©todo respons√°vel por ler o estado anterior persistido da Schedule.
      *
-     * @return Devolve uma inst‚ncia de Schedule.
+     * @return Devolve uma inst√¢ncia de Schedule.
      */
     Schedule readSchedule() {
         Schedule schedule;
@@ -213,10 +213,10 @@ class Config {
     }
 
     /**
-     * MÈtodo respons·vel por persistir uma inst‚ncia de Schedule.
+     * M√©todo respons√°vel por persistir uma inst√¢ncia de Schedule.
      *
-     * @param schedule O hor·rio a persistir.
-     * @return Se foi possÌvel persistir devolve true sen„o devolve false.
+     * @param schedule O hor√°rio a persistir.
+     * @return Se foi poss√≠vel persistir devolve true sen√£o devolve false.
      */
     boolean storeSchedule(Schedule schedule) {
         boolean success = true;
@@ -320,9 +320,9 @@ class Config {
     }
 
     /**
-     * MÈtodo privado respons·vel por resetar as configuraÁıes para os valores por defeito.
+     * M√©todo privado respons√°vel por resetar as configura√ß√µes para os valores por defeito.
      *
-     * @param store Indica se È prentendido persistir as alteraÁıes.
+     * @param store Indica se √© prentendido persistir as altera√ß√µes.
      */
     private void setDefault(boolean store) {
         properties.setProperty("DATE_TIME_PATTERN", dateTimePattern);
