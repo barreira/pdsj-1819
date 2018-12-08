@@ -103,10 +103,14 @@ class ConfigController {
             view.displayMessage("Insert new slot duration (m): ");
             int slotSize = Input.readInt();
 
-            if (model.setSlotSize(slotSize)) {
-                view.displayMessage("Success. You need to restart the app for changes to take effect.\n");
+            if (slotSize == model.getSlotSize()) {
+                view.displayMessage("The new slot duration is the same as the old value.\n");
             } else {
-                view.displayMessage("An error occurred setting the slot duration.\n");
+                if (model.setSlotSize(slotSize)) {
+                    view.displayMessage("The new slot duration was set. The schedule was reset.\n");
+                } else {
+                    view.displayMessage("An error occurred setting the slot duration.\n");
+                }
             }
         } else {
             view.displayMessage("Operation canceled.");

@@ -417,7 +417,13 @@ public final class UCalculatorModel {
     }
 
     public boolean setSlotSize(int slotSize) {
-        return config.setSlotSize(slotSize);
+        boolean success = false;
+        if(config.setSlotSize(slotSize)) {
+            success = true;
+            schedule = config.readSchedule();
+            config.storeSchedule(schedule);
+        }
+        return success;
     }
 
     public boolean setStartTime(LocalTime time) {
