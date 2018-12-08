@@ -291,6 +291,14 @@ final class DateUtils {
                                                                      .plusMinutes(travelTime.getMinute());
     }
 
+    /**
+     * Calcula os tempos (LocalDateTime) de início e fim de um voo.
+     *
+     * @param beginTime   Tempo de fim do voo anterior
+     * @param timeBetween Tempo entre o fim do voo anterior e o início do voo atual
+     * @param duration    Duração do voo
+     * @return SimpleEntry contendo LocalDateTime de início e de fim do voo
+     */
     static SimpleEntry<LocalDateTime, LocalDateTime> getTravelDateTimes(LocalDateTime beginTime, LocalTime timeBetween, LocalTime duration) {
         LocalDateTime start;
         LocalDateTime end;
