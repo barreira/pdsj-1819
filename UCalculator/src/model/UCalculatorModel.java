@@ -280,7 +280,11 @@ public final class UCalculatorModel {
      * @return Devolve o conjunto de slots tornados disponíveis.
      */
     public int openSlots(final LocalDate date, final int slotId, final int duration) {
-        return schedule.openSlots(date, slotId, duration);
+        int openedSlots = schedule.openSlots(date, slotId, duration);
+        if (openedSlots > 0) {
+            config.storeSchedule(schedule);
+        }
+        return openedSlots;
     }
 
     /**
