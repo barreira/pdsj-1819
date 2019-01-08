@@ -6,5 +6,5 @@ Trabalhos práticos da U.C. de __Processamento de Dados com Streams de Java__ (2
 Mestrado Integrado em Engenharia Informática - 4.º ano - Universidade do Minho
 
 * Diogo Silva (@diogols)
-* João Pires Barreira (@jpiresbarreira)
+* João Pires Barreira (@barreira)
 * Rafael Braga (@rafaelbraga25)
